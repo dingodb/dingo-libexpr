@@ -1,0 +1,9 @@
+{
+    "C/C++ Include Guard.File Path Pascal Case to Snake Case": true,
+    "C/C++ Include Guard.Macro Type": "Filepath",
+    "C/C++ Include Guard.Path Skip": 1,
+    "C/C++ Include Guard.Path Depth": 0,
+    "C/C++ Include Guard.Prefix": "_",
+    "C/C++ Include Guard.Spaces After Endif": 1,
+    "C/C++ Include Guard.Suffix": "_H_"
+}

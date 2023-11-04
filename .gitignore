@@ -1,0 +1,13 @@
+.*
+!.clang-format
+!.clang-tidy
+!.editorconfig
+!.gitattributes
+!.github
+!.gitignore
+
+# VSCode files
+!.vscode/
+
+# CMake build directory
+build/

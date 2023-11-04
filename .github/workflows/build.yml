@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.h"
+      - "**/*.cc"
+      - "**/CMakeLists.txt"
+      - ".github/workflows/build.yml"
+  pull_request:
+    branches:
+      - main
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GTest
+        run: sudo apt satisfy libgtest-dev
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build
+        working-directory: ${{github.workspace}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - name: Test
+        working-directory: ${{github.workspace}}/build/test
+        run: ctest -C ${{env.BUILD_TYPE}}

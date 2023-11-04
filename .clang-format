@@ -1,0 +1,29 @@
+---
+BasedOnStyle: LLVM
+ColumnLimit: 120
+IndentWidth: 4
+UseTab: Never
+BreakBeforeBraces: Linux
+IndentCaseLabels: false
+MaxEmptyLinesToKeep: 1
+BinPackParameters: false
+BinPackArguments: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+AlignArrayOfStructures: Right
+AlignAfterOpenBracket: BlockIndent
+AlignConsecutiveMacros: true
+AlignTrailingComments: true
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+---
+Language: Cpp
+AccessModifierOffset: -4
+PackConstructorInitializers: CurrentLine
+BreakConstructorInitializers: BeforeComma
+---
+Language: Proto
+BasedOnStyle: Google
+ColumnLimit: 120
+...
