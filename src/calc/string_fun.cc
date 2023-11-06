@@ -98,4 +98,70 @@ String RTrim(String v)
     return std::make_shared<std::string>(v->substr(0, v->crend() - e));
 }
 
+String Substr(String v0, int32_t v1, int32_t v2)
+{
+    int len = v0->length();
+    if (v1 < 0) {
+        v1 = 0;
+    }
+    if (v1 == 0) {
+        if (v2 >= len) {
+            return v0;
+        } else {
+            return std::make_shared<std::string>(v0->substr(v1, v2 - v1));
+        }
+    } else {
+        if (v2 >= len) {
+            return std::make_shared<std::string>(v0->substr(v1));
+        } else {
+            return std::make_shared<std::string>(v0->substr(v1, v2 - v1));
+        }
+    }
+}
+
+String Substr(String v0, int32_t v1)
+{
+    int len = v0->length();
+    if (v1 < 0) {
+        v1 = 0;
+    }
+    if (v1 == 0) {
+        return v0;
+    } else {
+        return std::make_shared<std::string>(v0->substr(v1));
+    }
+}
+
+Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1, const Wrap<int32_t> &v2)
+{
+    if (v1.has_value() && v2.has_value()) {
+        if (v0.has_value() && *v1 != 0 && *v2 > 0) {
+            int len = (*v0)->length();
+            // `start` begins at 1.
+            int32_t start = ((*v1 < 0) ? *v1 + len : *v1 - 1);
+            if (start + *v2 >= len) {
+                return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start)));
+            } else {
+                return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start, *v2)));
+            }
+        }
+        return Wrap<String>(std::make_shared<std::string>(""));
+    }
+    return Wrap<String>();
+}
+
+Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1)
+{
+    if (v1.has_value()) {
+        if (v0.has_value() && *v1 != 0) {
+            int len = (*v0)->length();
+            // `start` begins at 1.
+            int32_t start = ((*v1 < 0) ? *v1 + len : *v1 - 1);
+            return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start)));
+        }
+        return Wrap<String>(std::make_shared<std::string>(""));
+    }
+    return Wrap<String>();
+}
+
 } // namespace dingodb::expr::calc

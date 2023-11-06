@@ -160,6 +160,45 @@ using BinaryArithmeticOperator = BinaryOperator<R, R, R, Calc>;
 template <Byte T, bool (*Calc)(TypeOf<T>, TypeOf<T>)>
 using BinaryRelationOperator = BinaryOperator<TYPE_BOOL, T, T, Calc>;
 
+template <Byte R, Byte T0, Byte T1, Byte T2, TypeOf<R> (*Calc)(TypeOf<T0>, TypeOf<T1>, TypeOf<T2>)>
+class TertiaryOperator : public OperatorBase<R>
+{
+public:
+    void operator()(OperandStack &stack) const override
+    {
+        auto v2 = stack.Get<TypeOf<T2>>();
+        stack.Pop();
+        auto v1 = stack.Get<TypeOf<T1>>();
+        stack.Pop();
+        auto v0 = stack.Get<TypeOf<T0>>();
+        if (v0.has_value() && v1.has_value() && v2.has_value()) {
+            stack.Set<TypeOf<R>>(Calc(*v0, *v1, *v2));
+        } else {
+            stack.Set<TypeOf<R>>();
+        }
+    }
+};
+
+template <
+    Byte R,
+    Byte T0,
+    Byte T1,
+    Byte T2,
+    Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &, const Wrap<TypeOf<T2>> &)>
+class TertiaryOperatorV1 : public OperatorBase<R>
+{
+public:
+    void operator()(OperandStack &stack) const override
+    {
+        auto v2 = stack.Get<TypeOf<T2>>();
+        stack.Pop();
+        auto v1 = stack.Get<TypeOf<T1>>();
+        stack.Pop();
+        auto v0 = stack.Get<TypeOf<T0>>();
+        stack.SetWrapped<TypeOf<R>>(Calc(v0, v1, v2));
+    }
+};
+
 class NotOperator : public OperatorBase<TYPE_BOOL>
 {
 public:
