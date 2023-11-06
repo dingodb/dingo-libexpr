@@ -25,9 +25,7 @@ namespace dingodb::expr
 class OperatorVector
 {
 public:
-    OperatorVector() : m_vector(), m_toRelease()
-    {
-    }
+    OperatorVector() = default;
 
     virtual ~OperatorVector()
     {
@@ -41,19 +39,20 @@ public:
         return m_vector.back()->GetType();
     }
 
-    auto begin()
+    auto begin() // NOLINT(readability-identifier-naming)
     {
         return m_vector.begin();
     }
 
-    auto end()
+    auto end() // NOLINT(readability-identifier-naming)
     {
         return m_vector.end();
     }
+    /* clang-tidy on */
 
 private:
     std::vector<const Operator *> m_vector;
-    std::vector<const Operator *> m_toRelease;
+    std::vector<const Operator *> m_to_release;
 
     static std::string ConvertBytesToHex(const Byte *data, size_t len);
 
@@ -65,15 +64,15 @@ private:
     void AddRelease(const Operator *op)
     {
         m_vector.push_back(op);
-        m_toRelease.push_back(op);
+        m_to_release.push_back(op);
     }
 
     void Release()
     {
-        for (auto op : m_toRelease) {
+        for (const auto *op : m_to_release) {
             delete op;
         }
-        m_toRelease.clear();
+        m_to_release.clear();
         m_vector.clear();
     }
 

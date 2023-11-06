@@ -158,9 +158,9 @@ CheckOptions:
   - key: readability-identifier-naming.FunctionCase
     value: CamelCase
   - key: readability-identifier-naming.GlobalConstantCase
-    value: CamelCase
+    value: UPPER_CASE
   - key: readability-identifier-naming.GlobalConstantPrefix
-    value: k
+    value: ""
   - key: readability-identifier-naming.StaticConstantCase
     value: CamelCase
   - key: readability-identifier-naming.StaticConstantPrefix
@@ -174,7 +174,7 @@ CheckOptions:
   - key: readability-identifier-naming.MemberCase
     value: lower_case
   - key: readability-identifier-naming.PrivateMemberSuffix
-    value: _
+    value: ""
   - key: readability-identifier-naming.PublicMemberSuffix
     value: ""
   - key: readability-identifier-naming.NamespaceCase

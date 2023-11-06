@@ -69,6 +69,10 @@
 #define IS_TRUE  0xA2
 #define IS_FALSE 0xA3
 
+#define MIN 0xB1
+#define MAX 0xB2
+#define ABS 0xB3
+
 #define NOT 0x51
 #define AND 0x52
 #define OR  0x53
@@ -251,6 +255,11 @@ void OperatorVector::Decode(const Byte code[], size_t len)
             successful = AddOperatorByType(OP_DIV, *p);
             ++p;
             break;
+        case MOD:
+            ++p;
+            successful = AddOperatorByType(OP_MOD, *p);
+            ++p;
+            break;
         case EQ:
             ++p;
             successful = AddOperatorByType(OP_EQ, *p);
@@ -294,6 +303,21 @@ void OperatorVector::Decode(const Byte code[], size_t len)
         case IS_FALSE:
             ++p;
             successful = AddOperatorByType(OP_IS_FALSE, *p);
+            ++p;
+            break;
+        case MIN:
+            ++p;
+            successful = AddOperatorByType(OP_MIN, *p);
+            ++p;
+            break;
+        case MAX:
+            ++p;
+            successful = AddOperatorByType(OP_MAX, *p);
+            ++p;
+            break;
+        case ABS:
+            ++p;
+            successful = AddOperatorByType(OP_ABS, *p);
             ++p;
             break;
         case NOT:
@@ -340,7 +364,7 @@ std::string OperatorVector::ConvertBytesToHex(const Byte *data, size_t len)
 
 bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type)
 {
-    auto op = ops[type];
+    const auto *op = ops[type];
     if (op != nullptr) {
         Add(op);
         return true;
@@ -355,7 +379,7 @@ bool OperatorVector::AddCastOperator(Byte b)
     if (dst == src) {
         return true;
     }
-    auto op = OP_CAST[dst][src];
+    const auto *op = OP_CAST[dst][src];
     if (op != nullptr) {
         Add(op);
         return true;
@@ -365,7 +389,7 @@ bool OperatorVector::AddCastOperator(Byte b)
 
 bool OperatorVector::AddFunOperator(Byte b)
 {
-    auto op = OP_FUN[b];
+    const auto *op = OP_FUN[b];
     if (op != nullptr) {
         Add(op);
         return true;

@@ -19,69 +19,14 @@
 namespace dingodb::expr::calc
 {
 
-double Ceil(double v)
+template <> String Min(String v0, String v1)
 {
-    return ceil(v);
+    return std::make_shared<std::string>(std::min(*v0, *v1));
 }
 
-double Floor(double v)
+template <> String Max(String v0, String v1)
 {
-    return floor(v);
-}
-
-double Sin(double v)
-{
-    return sin(v);
-}
-
-double Cos(double v)
-{
-    return cosf((float)v);
-}
-
-double Tan(double v)
-{
-    return tan(v);
-}
-
-double Asin(double v)
-{
-    return asin(v);
-}
-
-double Acos(double v)
-{
-    return acos(v);
-}
-
-double Atan(double v)
-{
-    return atan(v);
-}
-
-double Sinh(double v)
-{
-    return sinh(v);
-}
-
-double Cosh(double v)
-{
-    return cosh(v);
-}
-
-double Tanh(double v)
-{
-    return tanh(v);
-}
-
-double Exp(double v)
-{
-    return exp(v);
-}
-
-double Log(double v)
-{
-    return log(v);
+    return std::make_shared<std::string>(std::max(*v0, *v1));
 }
 
 } // namespace dingodb::expr::calc

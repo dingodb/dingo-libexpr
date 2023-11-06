@@ -15,34 +15,31 @@
 #ifndef _CALC_MATHEMATIC_H_
 #define _CALC_MATHEMATIC_H_
 
+#include <algorithm>
+
+#include "../types.h"
+
 namespace dingodb::expr::calc
 {
 
-double Ceil(double v);
+template <typename T> T Min(T v0, T v1)
+{
+    return std::min(v0, v1);
+}
 
-double Floor(double v);
+template <> String Min(String v0, String v1);
 
-double Sin(double v);
+template <typename T> T Max(T v0, T v1)
+{
+    return std::max(v0, v1);
+}
 
-double Cos(double v);
+template <> String Max(String v0, String v1);
 
-double Tan(double v);
-
-double Asin(double v);
-
-double Acos(double v);
-
-double Atan(double v);
-
-double Sinh(double v);
-
-double Cosh(double v);
-
-double Tanh(double v);
-
-double Exp(double v);
-
-double Log(double v);
+template <typename T> T Abs(T v)
+{
+    return std::abs(v);
+}
 
 } // namespace dingodb::expr::calc
 

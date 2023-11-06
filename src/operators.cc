@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cmath>
+
 #include "operators.h"
 
 #include "calc/arithmetic.h"
@@ -170,6 +172,17 @@ const Operator *const OP_DIV[] = {
     [TYPE_STRING] = nullptr,
 };
 
+const Operator *const OP_MOD[] = {
+    [TYPE_NULL] = nullptr,
+    [TYPE_INT32] = new BinaryArithmeticOperator<TYPE_INT32, calc::Mod>,
+    [TYPE_INT64] = new BinaryArithmeticOperator<TYPE_INT64, calc::Mod>,
+    [TYPE_BOOL] = nullptr,
+    [TYPE_FLOAT] = nullptr,
+    [TYPE_DOUBLE] = nullptr,
+    [TYPE_DECIMAL] = nullptr,
+    [TYPE_STRING] = nullptr,
+};
+
 const Operator *const OP_EQ[] = {
     [TYPE_NULL] = nullptr,
     [TYPE_INT32] = new BinaryRelationOperator<TYPE_INT32, calc::Eq>,
@@ -269,29 +282,62 @@ const Operator *const OP_IS_FALSE[] = {
     [TYPE_STRING] = new UnarySpecialOperator<TYPE_STRING, calc::IsFalse>,
 };
 
+const Operator *const OP_MIN[] = {
+    [TYPE_NULL] = nullptr,
+    [TYPE_INT32] = new BinaryArithmeticOperator<TYPE_INT32, calc::Min>,
+    [TYPE_INT64] = new BinaryArithmeticOperator<TYPE_INT64, calc::Min>,
+    [TYPE_BOOL] = new BinaryArithmeticOperator<TYPE_BOOL, calc::Min>,
+    [TYPE_FLOAT] = new BinaryArithmeticOperator<TYPE_FLOAT, calc::Min>,
+    [TYPE_DOUBLE] = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Min>,
+    [TYPE_DECIMAL] = nullptr,
+    [TYPE_STRING] = new BinaryArithmeticOperator<TYPE_STRING, calc::Min>,
+};
+
+const Operator *const OP_MAX[] = {
+    [TYPE_NULL] = nullptr,
+    [TYPE_INT32] = new BinaryArithmeticOperator<TYPE_INT32, calc::Max>,
+    [TYPE_INT64] = new BinaryArithmeticOperator<TYPE_INT64, calc::Max>,
+    [TYPE_BOOL] = new BinaryArithmeticOperator<TYPE_BOOL, calc::Max>,
+    [TYPE_FLOAT] = new BinaryArithmeticOperator<TYPE_FLOAT, calc::Max>,
+    [TYPE_DOUBLE] = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Max>,
+    [TYPE_DECIMAL] = nullptr,
+    [TYPE_STRING] = new BinaryArithmeticOperator<TYPE_STRING, calc::Max>,
+};
+
+const Operator *const OP_ABS[] = {
+    [TYPE_NULL] = nullptr,
+    [TYPE_INT32] = new UnaryArithmeticOperator<TYPE_INT32, calc::Abs>,
+    [TYPE_INT64] = new UnaryArithmeticOperator<TYPE_INT64, calc::Abs>,
+    [TYPE_BOOL] = nullptr,
+    [TYPE_FLOAT] = new UnaryArithmeticOperator<TYPE_FLOAT, calc::Abs>,
+    [TYPE_DOUBLE] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Abs>,
+    [TYPE_DECIMAL] = nullptr,
+    [TYPE_STRING] = nullptr,
+};
+
 const Operator *const OP_NOT = new NotOperator();
 const Operator *const OP_AND = new AndOperator();
 const Operator *const OP_OR = new OrOperator();
 
 const Operator *const OP_FUN[] = {
     [0x00] = nullptr,
-    [0x01] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Ceil>,
-    [0x02] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Floor>,
+    [0x01] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::ceil>,
+    [0x02] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::floor>,
     [0x03] = nullptr,
     [0x04] = nullptr,
     [0x05] = nullptr,
     [0x06] = nullptr,
-    [0x07] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Sin>,
-    [0x08] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Cos>,
-    [0x09] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Tan>,
-    [0x0A] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Asin>,
-    [0x0B] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Acos>,
-    [0x0C] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Atan>,
-    [0x0D] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Sinh>,
-    [0x0E] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Cosh>,
-    [0x0F] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Tanh>,
-    [0x10] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Exp>,
-    [0x11] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Log>,
+    [0x07] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::sin>,
+    [0x08] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::cos>,
+    [0x09] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::tan>,
+    [0x0A] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::asin>,
+    [0x0B] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::acos>,
+    [0x0C] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::atan>,
+    [0x0D] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::sinh>,
+    [0x0E] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::cosh>,
+    [0x0F] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::tanh>,
+    [0x10] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::exp>,
+    [0x11] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::log>,
     [0x12] = nullptr,
     [0x13] = nullptr,
     [0x14] = nullptr,

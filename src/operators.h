@@ -33,6 +33,8 @@ extern const Operator *const OP_ADD[TYPE_NUM];
 extern const Operator *const OP_SUB[TYPE_NUM];
 extern const Operator *const OP_MUL[TYPE_NUM];
 extern const Operator *const OP_DIV[TYPE_NUM];
+extern const Operator *const OP_MOD[TYPE_NUM];
+
 extern const Operator *const OP_EQ[TYPE_NUM];
 extern const Operator *const OP_NE[TYPE_NUM];
 extern const Operator *const OP_GT[TYPE_NUM];
@@ -43,6 +45,10 @@ extern const Operator *const OP_LE[TYPE_NUM];
 extern const Operator *const OP_IS_NULL[TYPE_NUM];
 extern const Operator *const OP_IS_TRUE[TYPE_NUM];
 extern const Operator *const OP_IS_FALSE[TYPE_NUM];
+
+extern const Operator *const OP_MAX[TYPE_NUM];
+extern const Operator *const OP_MIN[TYPE_NUM];
+extern const Operator *const OP_ABS[TYPE_NUM];
 
 extern const Operator *const OP_NOT;
 extern const Operator *const OP_AND;

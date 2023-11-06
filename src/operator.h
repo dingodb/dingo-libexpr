@@ -28,9 +28,7 @@ namespace dingodb::expr
 class Operator
 {
 public:
-    virtual ~Operator()
-    {
-    }
+    virtual ~Operator() = default;
 
     virtual void operator()(OperandStack &stack) const = 0;
 
@@ -74,9 +72,7 @@ private:
 template <bool V> class ConstBoolOperator : public OperatorBase<TYPE_BOOL>
 {
 public:
-    ConstBoolOperator()
-    {
-    }
+    ConstBoolOperator() = default;
 
     void operator()(OperandStack &stack) const override
     {
@@ -118,7 +114,7 @@ template <Byte R, Byte T> using CastOperator = UnaryOperator<R, T, calc::Cast>;
 
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)> using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;
 
-template <Byte T, bool (*Calc)(const wrap<TypeOf<T>> &)> class UnarySpecialOperator : public OperatorBase<TYPE_BOOL>
+template <Byte T, bool (*Calc)(const Wrap<TypeOf<T>> &)> class UnarySpecialOperator : public OperatorBase<TYPE_BOOL>
 {
 public:
     void operator()(OperandStack &stack) const override
@@ -145,7 +141,7 @@ public:
     }
 };
 
-template <Byte R, Byte T0, Byte T1, wrap<TypeOf<R>> (*Calc)(const wrap<TypeOf<T0>> &, const wrap<TypeOf<T1>> &)>
+template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &)>
 class BinaryOperatorV1 : public OperatorBase<R>
 {
 public:

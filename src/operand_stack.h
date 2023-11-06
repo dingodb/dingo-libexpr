@@ -26,7 +26,7 @@ namespace dingodb::expr
 class OperandStack
 {
 public:
-    OperandStack() : m_stack(), m_tuple(nullptr), m_ownTuple(false)
+    OperandStack() : m_tuple(nullptr), m_own_tuple(false)
     {
     }
 
@@ -45,9 +45,9 @@ public:
         return m_stack.top();
     }
 
-    template <typename T> wrap<T> Get() const
+    template <typename T> Wrap<T> Get() const
     {
-        return std::any_cast<wrap<T>>(m_stack.top());
+        return std::any_cast<Wrap<T>>(m_stack.top());
     }
 
     void PushRaw(const Operand &v)
@@ -57,34 +57,34 @@ public:
 
     template <typename T> void Push(T v)
     {
-        m_stack.push(Operand(wrap<T>(v)));
+        m_stack.push(Operand(Wrap<T>(v)));
     }
 
     template <typename T> void Push()
     {
-        m_stack.push(Operand(wrap<T>()));
+        m_stack.push(Operand(Wrap<T>()));
     }
 
-    template <typename T> void SetWrapped(const wrap<T> &v)
+    template <typename T> void SetWrapped(const Wrap<T> &v)
     {
-        m_stack.top().emplace<wrap<T>>(v);
+        m_stack.top().emplace<Wrap<T>>(v);
     }
 
     template <typename T> void Set(T v)
     {
-        m_stack.top().emplace<wrap<T>>(wrap<T>(v));
+        m_stack.top().emplace<Wrap<T>>(Wrap<T>(v));
     }
 
     template <typename T> void Set()
     {
-        m_stack.top().emplace<wrap<T>>(wrap<T>());
+        m_stack.top().emplace<Wrap<T>>(Wrap<T>());
     }
 
-    void BindTuple(const Tuple *tuple, bool ownTuple)
+    void BindTuple(const Tuple *tuple, bool own_tuple)
     {
         Release();
         m_tuple = tuple;
-        m_ownTuple = ownTuple;
+        m_own_tuple = own_tuple;
     }
 
     void PushVar(uint32_t index)
@@ -106,11 +106,11 @@ public:
 private:
     std::stack<Operand> m_stack;
     const Tuple *m_tuple;
-    bool m_ownTuple;
+    bool m_own_tuple;
 
     void Release()
     {
-        if (m_ownTuple) {
+        if (m_own_tuple) {
             delete m_tuple;
         }
     }
