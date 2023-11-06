@@ -22,11 +22,11 @@
 namespace dingodb::expr
 {
 
-template <typename T> using wrap = std::optional<T>;
+template <typename T> using Wrap = std::optional<T>;
 
-typedef std::any Operand;
+using Operand = std::any;
 
-typedef std::vector<Operand> Tuple;
+using Tuple = std::vector<Operand>;
 
 } // namespace dingodb::expr
 

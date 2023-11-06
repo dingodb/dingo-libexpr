@@ -52,6 +52,11 @@ template <typename T> T Div(T v0, T v1)
     return v0 / v1;
 }
 
+template <typename T> T Mod(T v0, T v1)
+{
+    return v0 % v1;
+}
+
 } // namespace dingodb::expr::calc
 
 #endif /* _CALC_ARITHMETIC_H_ */

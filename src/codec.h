@@ -42,7 +42,7 @@ const Byte *DecodeDouble(double &value, const Byte *data);
 
 const Byte *DecodeString(String &value, const Byte *data);
 
-int HexToNibble(const char hex);
+int HexToNibble(char hex);
 
 char NibbleToHex(int nibble);
 

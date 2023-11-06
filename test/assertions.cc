@@ -19,8 +19,8 @@ namespace dingodb::expr
 
 template <> testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected)
 {
-    auto a = std::any_cast<wrap<typename CxxTraits<TYPE_STRING>::type>>(actual);
-    auto e = std::any_cast<wrap<typename CxxTraits<TYPE_STRING>::type>>(expected);
+    auto a = std::any_cast<Wrap<String>>(actual);
+    auto e = std::any_cast<Wrap<String>>(expected);
     if (a == e) {
         return testing::AssertionSuccess();
     }

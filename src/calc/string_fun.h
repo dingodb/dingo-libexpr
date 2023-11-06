@@ -21,15 +21,15 @@
 namespace dingodb::expr::calc
 {
 
-wrap<String> Concat(const wrap<String> &v0, const wrap<String> &v1);
+Wrap<String> Concat(const Wrap<String> &v0, const Wrap<String> &v1);
 
 String Lower(String v);
 
 String Upper(String v);
 
-wrap<String> Left(const wrap<String> &v0, const wrap<int32_t> &v1);
+Wrap<String> Left(const Wrap<String> &v0, const Wrap<int32_t> &v1);
 
-wrap<String> Right(const wrap<String> &v0, const wrap<int32_t> &v1);
+Wrap<String> Right(const Wrap<String> &v0, const Wrap<int32_t> &v1);
 
 String Trim(String v);
 

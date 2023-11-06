@@ -19,11 +19,11 @@
 namespace dingodb::expr::calc
 {
 
-wrap<String> Concat(const wrap<String> &v0, const wrap<String> &v1)
+Wrap<String> Concat(const Wrap<String> &v0, const Wrap<String> &v1)
 {
     if (v0.has_value()) {
         if (v1.has_value()) {
-            return wrap<String>(std::make_shared<std::string>(**v0 + **v1));
+            return Wrap<String>(std::make_shared<std::string>(**v0 + **v1));
         }
         return v0;
     }
@@ -44,34 +44,34 @@ String Upper(String v)
     return std::make_shared<std::string>(str);
 }
 
-wrap<String> Left(const wrap<String> &v0, const wrap<int32_t> &v1)
+Wrap<String> Left(const Wrap<String> &v0, const Wrap<int32_t> &v1)
 {
     if (v1.has_value()) {
         if (v0.has_value() && *v1 > 0) {
             auto len = (*v0)->length();
             if (*v1 < len) {
-                return wrap<String>(std::make_shared<std::string>((*v0)->substr(0, *v1)));
+                return Wrap<String>(std::make_shared<std::string>((*v0)->substr(0, *v1)));
             }
             return v0;
         }
-        return wrap<String>(std::make_shared<std::string>());
+        return Wrap<String>(std::make_shared<std::string>());
     }
-    return wrap<String>();
+    return Wrap<String>();
 }
 
-wrap<String> Right(const wrap<String> &v0, const wrap<int32_t> &v1)
+Wrap<String> Right(const Wrap<String> &v0, const Wrap<int32_t> &v1)
 {
     if (v1.has_value()) {
         if (v0.has_value() && *v1 > 0) {
             auto len = (*v0)->length();
             if (*v1 < len) {
-                return wrap<String>(std::make_shared<std::string>((*v0)->substr(len - *v1)));
+                return Wrap<String>(std::make_shared<std::string>((*v0)->substr(len - *v1)));
             }
             return v0;
         }
-        return wrap<String>(std::make_shared<std::string>());
+        return Wrap<String>(std::make_shared<std::string>());
     }
-    return wrap<String>();
+    return Wrap<String>();
 }
 
 static bool IsSpace(unsigned char ch)

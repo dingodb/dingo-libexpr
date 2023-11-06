@@ -23,24 +23,24 @@
 namespace dingodb::expr::calc
 {
 
-template <typename T> bool IsNull(const wrap<T> &v)
+template <typename T> bool IsNull(const Wrap<T> &v)
 {
     return !v.has_value();
 }
 
-template <typename T> bool IsTrue(const wrap<T> &v)
+template <typename T> bool IsTrue(const Wrap<T> &v)
 {
     return v.has_value() && *v;
 }
 
-template <> bool IsTrue(const wrap<String> &v);
+template <> bool IsTrue(const Wrap<String> &v);
 
-template <typename T> bool IsFalse(const wrap<T> &v)
+template <typename T> bool IsFalse(const Wrap<T> &v)
 {
     return v.has_value() && !*v;
 }
 
-template <> bool IsFalse(const wrap<String> &v);
+template <> bool IsFalse(const Wrap<String> &v);
 
 } // namespace dingodb::expr::calc
 

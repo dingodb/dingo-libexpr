@@ -25,50 +25,46 @@ namespace dingodb::expr
 class Runner
 {
 public:
-    Runner() : m_operandStack(), m_operatorVector()
-    {
-    }
+    Runner() = default;
 
-    virtual ~Runner()
-    {
-    }
+    virtual ~Runner() = default;
 
     void Decode(const Byte *code, size_t len)
     {
-        m_operatorVector.Decode(code, len);
+        m_operator_vector.Decode(code, len);
     }
 
-    void BindTuple(const Tuple *tuple, bool ownTuple = false)
+    void BindTuple(const Tuple *tuple, bool own_tuple = false)
     {
-        m_operandStack.BindTuple(tuple, ownTuple);
+        m_operand_stack.BindTuple(tuple, own_tuple);
     }
 
     void Run()
     {
-        m_operandStack.Clear();
-        for (auto op : m_operatorVector) {
-            (*op)(m_operandStack);
+        m_operand_stack.Clear();
+        for (const auto *op : m_operator_vector) {
+            (*op)(m_operand_stack);
         }
     }
 
     Operand GetRawResult() const
     {
-        return m_operandStack.GetRaw();
+        return m_operand_stack.GetRaw();
     }
 
-    template <typename T> wrap<T> GetResult() const
+    template <typename T> Wrap<T> GetResult() const
     {
-        return m_operandStack.Get<T>();
+        return m_operand_stack.Get<T>();
     }
 
     Byte GetType()
     {
-        return m_operatorVector.GetType();
+        return m_operator_vector.GetType();
     }
 
 private:
-    OperandStack m_operandStack;
-    OperatorVector m_operatorVector;
+    OperandStack m_operand_stack;
+    OperatorVector m_operator_vector;
 };
 
 } // namespace dingodb::expr

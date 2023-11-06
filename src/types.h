@@ -32,10 +32,10 @@
 namespace dingodb::expr
 {
 
-typedef unsigned char Byte;
+using Byte = unsigned char;
 
-typedef long double Decimal; // TODO: what's the real type?
-typedef std::shared_ptr<std::string> String;
+using Decimal = long double; // TODO: what's the real type?
+using String = std::shared_ptr<std::string>;
 
 template <int T> class CxxTraits
 {
@@ -44,48 +44,48 @@ template <int T> class CxxTraits
 template <> class CxxTraits<TYPE_INT32>
 {
 public:
-    typedef int32_t type;
+    using Type = int32_t;
 };
 
 template <> class CxxTraits<TYPE_INT64>
 {
 public:
-    typedef int64_t type;
+    using Type = int64_t;
 };
 
 template <> class CxxTraits<TYPE_BOOL>
 {
 public:
-    typedef bool type;
+    using Type = bool;
 };
 
 template <> class CxxTraits<TYPE_FLOAT>
 {
 public:
-    typedef float type;
+    using Type = float;
 };
 
 template <> class CxxTraits<TYPE_DOUBLE>
 {
 public:
-    typedef double type;
+    using Type = double;
 };
 
 template <> class CxxTraits<TYPE_DECIMAL>
 {
 public:
-    typedef Decimal type;
+    using Type = Decimal;
 };
 
 template <> class CxxTraits<TYPE_STRING>
 {
 public:
-    typedef String type;
+    using Type = String;
 };
 
 const char *TypeName(Byte type);
 
-template <Byte B> using TypeOf = typename CxxTraits<B>::type;
+template <Byte B> using TypeOf = typename CxxTraits<B>::Type;
 
 } // namespace dingodb::expr
 
