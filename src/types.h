@@ -29,64 +29,63 @@
 #define TYPE_STRING  0x07
 #define TYPE_NUM     0x08
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
 using Byte = unsigned char;
 
-using Decimal = long double; // TODO: what's the real type?
+using Decimal = long double;  // TODO: what's the real type?
 using String = std::shared_ptr<std::string>;
 
-template <int T> class CxxTraits
-{
+template <int T>
+class CxxTraits {};
+
+template <>
+class CxxTraits<TYPE_INT32> {
+ public:
+  using Type = int32_t;
 };
 
-template <> class CxxTraits<TYPE_INT32>
-{
-public:
-    using Type = int32_t;
+template <>
+class CxxTraits<TYPE_INT64> {
+ public:
+  using Type = int64_t;
 };
 
-template <> class CxxTraits<TYPE_INT64>
-{
-public:
-    using Type = int64_t;
+template <>
+class CxxTraits<TYPE_BOOL> {
+ public:
+  using Type = bool;
 };
 
-template <> class CxxTraits<TYPE_BOOL>
-{
-public:
-    using Type = bool;
+template <>
+class CxxTraits<TYPE_FLOAT> {
+ public:
+  using Type = float;
 };
 
-template <> class CxxTraits<TYPE_FLOAT>
-{
-public:
-    using Type = float;
+template <>
+class CxxTraits<TYPE_DOUBLE> {
+ public:
+  using Type = double;
 };
 
-template <> class CxxTraits<TYPE_DOUBLE>
-{
-public:
-    using Type = double;
+template <>
+class CxxTraits<TYPE_DECIMAL> {
+ public:
+  using Type = Decimal;
 };
 
-template <> class CxxTraits<TYPE_DECIMAL>
-{
-public:
-    using Type = Decimal;
-};
-
-template <> class CxxTraits<TYPE_STRING>
-{
-public:
-    using Type = String;
+template <>
+class CxxTraits<TYPE_STRING> {
+ public:
+  using Type = String;
 };
 
 const char *TypeName(Byte type);
 
-template <Byte B> using TypeOf = typename CxxTraits<B>::Type;
+template <Byte B>
+using TypeOf = typename CxxTraits<B>::Type;
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _TYPES_H_ */

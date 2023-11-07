@@ -82,317 +82,312 @@
 
 using namespace dingodb::expr;
 
-void OperatorVector::Decode(const Byte code[], size_t len)
-{
-    Release();
-    bool successful = true;
-    const Byte *b;
-    for (const Byte *p = code; successful && p < code + len;) {
-        b = p;
-        switch (*p) {
-        case NULL_INT32:
-            ++p;
-            Add(OP_NULL[TYPE_INT32]);
-            break;
-        case NULL_INT64:
-            ++p;
-            Add(OP_NULL[TYPE_INT64]);
-            break;
-        case NULL_BOOL:
-            ++p;
-            Add(OP_NULL[TYPE_BOOL]);
-            break;
-        case NULL_FLOAT:
-            ++p;
-            Add(OP_NULL[TYPE_FLOAT]);
-            break;
-        case NULL_DOUBLE:
-            ++p;
-            Add(OP_NULL[TYPE_DOUBLE]);
-            break;
-        case NULL_STRING:
-            ++p;
-            Add(OP_NULL[TYPE_STRING]);
-            break;
-        case CONST_INT32: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new ConstOperator<TYPE_INT32>(v));
-            break;
-        }
-        case CONST_INT64: {
-            ++p;
-            int64_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new ConstOperator<TYPE_INT64>(v));
-            break;
-        }
-        case CONST_BOOL:
-            ++p;
-            Add(OP_CONST_TRUE);
-            break;
-        case CONST_FLOAT: {
-            ++p;
-            float v;
-            p = DecodeFloat(v, p);
-            AddRelease(new ConstOperator<TYPE_FLOAT>(v));
-            break;
-        }
-        case CONST_DOUBLE: {
-            ++p;
-            double v;
-            p = DecodeDouble(v, p);
-            AddRelease(new ConstOperator<TYPE_DOUBLE>(v));
-            break;
-        }
-        case CONST_DECIMAL: {
-            ++p;
-            // TODO
-            break;
-        }
-        case CONST_STRING: {
-            ++p;
-            String v;
-            p = DecodeString(v, p);
-            AddRelease(new ConstOperator<TYPE_STRING>(v));
-            break;
-        }
-        case CONST_N_INT32: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new ConstOperator<TYPE_INT32>(-v));
-            break;
-        }
-        case CONST_N_INT64: {
-            ++p;
-            int64_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new ConstOperator<TYPE_INT64>(-v));
-            break;
-        }
-        case CONST_N_BOOL:
-            ++p;
-            Add(OP_CONST_FALSE);
-            break;
-        case VAR_I_INT32: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_INT32>(v));
-            break;
-        }
-        case VAR_I_INT64: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_INT64>(v));
-            break;
-        }
-        case VAR_I_BOOL: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_BOOL>(v));
-            break;
-        }
-        case VAR_I_FLOAT: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_FLOAT>(v));
-            break;
-        }
-        case VAR_I_DOUBLE: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_DOUBLE>(v));
-            break;
-        }
-        case VAR_I_DECIMAL: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_DECIMAL>(v));
-            break;
-        }
-        case VAR_I_STRING: {
-            ++p;
-            int32_t v;
-            p = DecodeVarint(v, p);
-            AddRelease(new IndexedVarOperator<TYPE_STRING>(v));
-            break;
-        }
-        case POS:
-            ++p;
-            successful = AddOperatorByType(OP_POS, *p);
-            ++p;
-            break;
-        case NEG:
-            ++p;
-            successful = AddOperatorByType(OP_NEG, *p);
-            ++p;
-            break;
-        case ADD:
-            ++p;
-            successful = AddOperatorByType(OP_ADD, *p);
-            ++p;
-            break;
-        case SUB:
-            ++p;
-            successful = AddOperatorByType(OP_SUB, *p);
-            ++p;
-            break;
-        case MUL:
-            ++p;
-            successful = AddOperatorByType(OP_MUL, *p);
-            ++p;
-            break;
-        case DIV:
-            ++p;
-            successful = AddOperatorByType(OP_DIV, *p);
-            ++p;
-            break;
-        case MOD:
-            ++p;
-            successful = AddOperatorByType(OP_MOD, *p);
-            ++p;
-            break;
-        case EQ:
-            ++p;
-            successful = AddOperatorByType(OP_EQ, *p);
-            ++p;
-            break;
-        case GE:
-            ++p;
-            successful = AddOperatorByType(OP_GE, *p);
-            ++p;
-            break;
-        case GT:
-            ++p;
-            successful = AddOperatorByType(OP_GT, *p);
-            ++p;
-            break;
-        case LE:
-            ++p;
-            successful = AddOperatorByType(OP_LE, *p);
-            ++p;
-            break;
-        case LT:
-            ++p;
-            successful = AddOperatorByType(OP_LT, *p);
-            ++p;
-            break;
-        case NE:
-            ++p;
-            successful = AddOperatorByType(OP_NE, *p);
-            ++p;
-            break;
-        case IS_NULL:
-            ++p;
-            successful = AddOperatorByType(OP_IS_NULL, *p);
-            ++p;
-            break;
-        case IS_TRUE:
-            ++p;
-            successful = AddOperatorByType(OP_IS_TRUE, *p);
-            ++p;
-            break;
-        case IS_FALSE:
-            ++p;
-            successful = AddOperatorByType(OP_IS_FALSE, *p);
-            ++p;
-            break;
-        case MIN:
-            ++p;
-            successful = AddOperatorByType(OP_MIN, *p);
-            ++p;
-            break;
-        case MAX:
-            ++p;
-            successful = AddOperatorByType(OP_MAX, *p);
-            ++p;
-            break;
-        case ABS:
-            ++p;
-            successful = AddOperatorByType(OP_ABS, *p);
-            ++p;
-            break;
-        case NOT:
-            Add(OP_NOT);
-            ++p;
-            break;
-        case AND:
-            Add(OP_AND);
-            ++p;
-            break;
-        case OR:
-            Add(OP_OR);
-            ++p;
-            break;
-        case CAST:
-            ++p;
-            successful = AddCastOperator(*p);
-            ++p;
-            break;
-        case FUN:
-            ++p;
-            successful = AddFunOperator(*p);
-            ++p;
-            break;
-        default:
-            successful = false;
-            break;
-        }
+void OperatorVector::Decode(const Byte code[], size_t len) {
+  Release();
+  bool successful = true;
+  const Byte *b;
+  for (const Byte *p = code; successful && p < code + len;) {
+    b = p;
+    switch (*p) {
+    case NULL_INT32:
+      ++p;
+      Add(OP_NULL[TYPE_INT32]);
+      break;
+    case NULL_INT64:
+      ++p;
+      Add(OP_NULL[TYPE_INT64]);
+      break;
+    case NULL_BOOL:
+      ++p;
+      Add(OP_NULL[TYPE_BOOL]);
+      break;
+    case NULL_FLOAT:
+      ++p;
+      Add(OP_NULL[TYPE_FLOAT]);
+      break;
+    case NULL_DOUBLE:
+      ++p;
+      Add(OP_NULL[TYPE_DOUBLE]);
+      break;
+    case NULL_STRING:
+      ++p;
+      Add(OP_NULL[TYPE_STRING]);
+      break;
+    case CONST_INT32: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new ConstOperator<TYPE_INT32>(v));
+      break;
     }
-    if (!successful) {
-        throw std::runtime_error("Unknown instruction, bytes = " + ConvertBytesToHex(b, len - (b - code)));
+    case CONST_INT64: {
+      ++p;
+      int64_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new ConstOperator<TYPE_INT64>(v));
+      break;
     }
+    case CONST_BOOL:
+      ++p;
+      Add(OP_CONST_TRUE);
+      break;
+    case CONST_FLOAT: {
+      ++p;
+      float v;
+      p = DecodeFloat(v, p);
+      AddRelease(new ConstOperator<TYPE_FLOAT>(v));
+      break;
+    }
+    case CONST_DOUBLE: {
+      ++p;
+      double v;
+      p = DecodeDouble(v, p);
+      AddRelease(new ConstOperator<TYPE_DOUBLE>(v));
+      break;
+    }
+    case CONST_DECIMAL: {
+      ++p;
+      // TODO
+      break;
+    }
+    case CONST_STRING: {
+      ++p;
+      String v;
+      p = DecodeString(v, p);
+      AddRelease(new ConstOperator<TYPE_STRING>(v));
+      break;
+    }
+    case CONST_N_INT32: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new ConstOperator<TYPE_INT32>(-v));
+      break;
+    }
+    case CONST_N_INT64: {
+      ++p;
+      int64_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new ConstOperator<TYPE_INT64>(-v));
+      break;
+    }
+    case CONST_N_BOOL:
+      ++p;
+      Add(OP_CONST_FALSE);
+      break;
+    case VAR_I_INT32: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_INT32>(v));
+      break;
+    }
+    case VAR_I_INT64: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_INT64>(v));
+      break;
+    }
+    case VAR_I_BOOL: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_BOOL>(v));
+      break;
+    }
+    case VAR_I_FLOAT: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_FLOAT>(v));
+      break;
+    }
+    case VAR_I_DOUBLE: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_DOUBLE>(v));
+      break;
+    }
+    case VAR_I_DECIMAL: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_DECIMAL>(v));
+      break;
+    }
+    case VAR_I_STRING: {
+      ++p;
+      int32_t v;
+      p = DecodeVarint(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_STRING>(v));
+      break;
+    }
+    case POS:
+      ++p;
+      successful = AddOperatorByType(OP_POS, *p);
+      ++p;
+      break;
+    case NEG:
+      ++p;
+      successful = AddOperatorByType(OP_NEG, *p);
+      ++p;
+      break;
+    case ADD:
+      ++p;
+      successful = AddOperatorByType(OP_ADD, *p);
+      ++p;
+      break;
+    case SUB:
+      ++p;
+      successful = AddOperatorByType(OP_SUB, *p);
+      ++p;
+      break;
+    case MUL:
+      ++p;
+      successful = AddOperatorByType(OP_MUL, *p);
+      ++p;
+      break;
+    case DIV:
+      ++p;
+      successful = AddOperatorByType(OP_DIV, *p);
+      ++p;
+      break;
+    case MOD:
+      ++p;
+      successful = AddOperatorByType(OP_MOD, *p);
+      ++p;
+      break;
+    case EQ:
+      ++p;
+      successful = AddOperatorByType(OP_EQ, *p);
+      ++p;
+      break;
+    case GE:
+      ++p;
+      successful = AddOperatorByType(OP_GE, *p);
+      ++p;
+      break;
+    case GT:
+      ++p;
+      successful = AddOperatorByType(OP_GT, *p);
+      ++p;
+      break;
+    case LE:
+      ++p;
+      successful = AddOperatorByType(OP_LE, *p);
+      ++p;
+      break;
+    case LT:
+      ++p;
+      successful = AddOperatorByType(OP_LT, *p);
+      ++p;
+      break;
+    case NE:
+      ++p;
+      successful = AddOperatorByType(OP_NE, *p);
+      ++p;
+      break;
+    case IS_NULL:
+      ++p;
+      successful = AddOperatorByType(OP_IS_NULL, *p);
+      ++p;
+      break;
+    case IS_TRUE:
+      ++p;
+      successful = AddOperatorByType(OP_IS_TRUE, *p);
+      ++p;
+      break;
+    case IS_FALSE:
+      ++p;
+      successful = AddOperatorByType(OP_IS_FALSE, *p);
+      ++p;
+      break;
+    case MIN:
+      ++p;
+      successful = AddOperatorByType(OP_MIN, *p);
+      ++p;
+      break;
+    case MAX:
+      ++p;
+      successful = AddOperatorByType(OP_MAX, *p);
+      ++p;
+      break;
+    case ABS:
+      ++p;
+      successful = AddOperatorByType(OP_ABS, *p);
+      ++p;
+      break;
+    case NOT:
+      Add(OP_NOT);
+      ++p;
+      break;
+    case AND:
+      Add(OP_AND);
+      ++p;
+      break;
+    case OR:
+      Add(OP_OR);
+      ++p;
+      break;
+    case CAST:
+      ++p;
+      successful = AddCastOperator(*p);
+      ++p;
+      break;
+    case FUN:
+      ++p;
+      successful = AddFunOperator(*p);
+      ++p;
+      break;
+    default:
+      successful = false;
+      break;
+    }
+  }
+  if (!successful) {
+    throw std::runtime_error("Unknown instruction, bytes = " + ConvertBytesToHex(b, len - (b - code)));
+  }
 }
 
-std::string OperatorVector::ConvertBytesToHex(const Byte *data, size_t len)
-{
-    char *buf = new char[len * 2 + 1];
-    BytesToHex(buf, data, len);
-    buf[len * 2] = '\0';
-    std::string result(buf);
-    delete[] buf;
-    return result;
+std::string OperatorVector::ConvertBytesToHex(const Byte *data, size_t len) {
+  char *buf = new char[len * 2 + 1];
+  BytesToHex(buf, data, len);
+  buf[len * 2] = '\0';
+  std::string result(buf);
+  delete[] buf;
+  return result;
 }
 
-bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type)
-{
-    const auto *op = ops[type];
-    if (op != nullptr) {
-        Add(op);
-        return true;
-    }
-    return false;
+bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {
+  const auto *op = ops[type];
+  if (op != nullptr) {
+    Add(op);
+    return true;
+  }
+  return false;
 }
 
-bool OperatorVector::AddCastOperator(Byte b)
-{
-    Byte dst = (Byte)(b >> 4);
-    Byte src = (Byte)(b & 0x0F);
-    if (dst == src) {
-        return true;
-    }
-    const auto *op = OP_CAST[dst][src];
-    if (op != nullptr) {
-        Add(op);
-        return true;
-    }
-    return false;
+bool OperatorVector::AddCastOperator(Byte b) {
+  Byte dst = (Byte)(b >> 4);
+  Byte src = (Byte)(b & 0x0F);
+  if (dst == src) {
+    return true;
+  }
+  const auto *op = OP_CAST[dst][src];
+  if (op != nullptr) {
+    Add(op);
+    return true;
+  }
+  return false;
 }
 
-bool OperatorVector::AddFunOperator(Byte b)
-{
-    const auto *op = OP_FUN[b];
-    if (op != nullptr) {
-        Add(op);
-        return true;
-    }
-    return false;
+bool OperatorVector::AddFunOperator(Byte b) {
+  const auto *op = OP_FUN[b];
+  if (op != nullptr) {
+    Add(op);
+    return true;
+  }
+  return false;
 }

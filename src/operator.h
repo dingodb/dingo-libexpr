@@ -17,141 +17,127 @@
 
 #include <functional>
 
+#include "calc/casting.h"
 #include "operand_stack.h"
 #include "types.h"
 
-#include "calc/casting.h"
+namespace dingodb::expr {
 
-namespace dingodb::expr
-{
+class Operator {
+ public:
+  virtual ~Operator() = default;
 
-class Operator
-{
-public:
-    virtual ~Operator() = default;
+  virtual void operator()(OperandStack &stack) const = 0;
 
-    virtual void operator()(OperandStack &stack) const = 0;
-
-    virtual Byte GetType() const = 0;
+  virtual Byte GetType() const = 0;
 };
 
-template <Byte R> class OperatorBase : public Operator
-{
-public:
-    Byte GetType() const override
-    {
-        return R;
-    }
+template <Byte R>
+class OperatorBase : public Operator {
+ public:
+  Byte GetType() const override {
+    return R;
+  }
 };
 
-template <Byte R> class NullOperator : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        stack.Push<TypeOf<R>>();
-    }
+template <Byte R>
+class NullOperator : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    stack.Push<TypeOf<R>>();
+  }
 };
 
-template <Byte R> class ConstOperator : public OperatorBase<R>
-{
-public:
-    ConstOperator(TypeOf<R> value) : m_value(value)
-    {
-    }
+template <Byte R>
+class ConstOperator : public OperatorBase<R> {
+ public:
+  ConstOperator(TypeOf<R> value) : m_value(value) {
+  }
 
-    void operator()(OperandStack &stack) const override
-    {
-        stack.Push(m_value);
-    }
+  void operator()(OperandStack &stack) const override {
+    stack.Push(m_value);
+  }
 
-private:
-    TypeOf<R> m_value;
+ private:
+  TypeOf<R> m_value;
 };
 
-template <bool V> class ConstBoolOperator : public OperatorBase<TYPE_BOOL>
-{
-public:
-    ConstBoolOperator() = default;
+template <bool V>
+class ConstBoolOperator : public OperatorBase<TYPE_BOOL> {
+ public:
+  ConstBoolOperator() = default;
 
-    void operator()(OperandStack &stack) const override
-    {
-        stack.Push(V);
-    }
+  void operator()(OperandStack &stack) const override {
+    stack.Push(V);
+  }
 };
 
-template <Byte R> class IndexedVarOperator : public OperatorBase<R>
-{
-public:
-    IndexedVarOperator(uint32_t index) : m_index(index)
-    {
-    }
+template <Byte R>
+class IndexedVarOperator : public OperatorBase<R> {
+ public:
+  IndexedVarOperator(uint32_t index) : m_index(index) {
+  }
 
-    void operator()(OperandStack &stack) const override
-    {
-        stack.PushVar(m_index);
-    }
+  void operator()(OperandStack &stack) const override {
+    stack.PushVar(m_index);
+  }
 
-private:
-    uint32_t m_index;
+ private:
+  uint32_t m_index;
 };
 
-template <Byte R, Byte T, TypeOf<R> (*Calc)(TypeOf<T>)> class UnaryOperator : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v = stack.Get<TypeOf<T>>();
-        if (v.has_value()) {
-            stack.Set<TypeOf<R>>(Calc(*v));
-        } else {
-            stack.Set<TypeOf<R>>();
-        }
+template <Byte R, Byte T, TypeOf<R> (*Calc)(TypeOf<T>)>
+class UnaryOperator : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v = stack.Get<TypeOf<T>>();
+    if (v.has_value()) {
+      stack.Set<TypeOf<R>>(Calc(*v));
+    } else {
+      stack.Set<TypeOf<R>>();
     }
+  }
 };
 
-template <Byte R, Byte T> using CastOperator = UnaryOperator<R, T, calc::Cast>;
+template <Byte R, Byte T>
+using CastOperator = UnaryOperator<R, T, calc::Cast>;
 
-template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)> using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;
+template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)>
+using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;
 
-template <Byte T, bool (*Calc)(const Wrap<TypeOf<T>> &)> class UnarySpecialOperator : public OperatorBase<TYPE_BOOL>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v = stack.Get<TypeOf<T>>();
-        stack.Set<bool>(Calc(v));
-    }
+template <Byte T, bool (*Calc)(const Wrap<TypeOf<T>> &)>
+class UnarySpecialOperator : public OperatorBase<TYPE_BOOL> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v = stack.Get<TypeOf<T>>();
+    stack.Set<bool>(Calc(v));
+  }
 };
 
 template <Byte R, Byte T0, Byte T1, TypeOf<R> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
-class BinaryOperator : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v1 = stack.Get<TypeOf<T1>>();
-        stack.Pop();
-        auto v0 = stack.Get<TypeOf<T0>>();
-        if (v0.has_value() && v1.has_value()) {
-            stack.Set<TypeOf<R>>(Calc(*v0, *v1));
-        } else {
-            stack.Set<TypeOf<R>>();
-        }
+class BinaryOperator : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v1 = stack.Get<TypeOf<T1>>();
+    stack.Pop();
+    auto v0 = stack.Get<TypeOf<T0>>();
+    if (v0.has_value() && v1.has_value()) {
+      stack.Set<TypeOf<R>>(Calc(*v0, *v1));
+    } else {
+      stack.Set<TypeOf<R>>();
     }
+  }
 };
 
 template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &)>
-class BinaryOperatorV1 : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v1 = stack.Get<TypeOf<T1>>();
-        stack.Pop();
-        auto v0 = stack.Get<TypeOf<T0>>();
-        stack.SetWrapped<TypeOf<R>>(Calc(v0, v1));
-    }
+class BinaryOperatorV1 : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v1 = stack.Get<TypeOf<T1>>();
+    stack.Pop();
+    auto v0 = stack.Get<TypeOf<T0>>();
+    stack.SetWrapped<TypeOf<R>>(Calc(v0, v1));
+  }
 };
 
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>, TypeOf<R>)>
@@ -161,22 +147,20 @@ template <Byte T, bool (*Calc)(TypeOf<T>, TypeOf<T>)>
 using BinaryRelationOperator = BinaryOperator<TYPE_BOOL, T, T, Calc>;
 
 template <Byte R, Byte T0, Byte T1, Byte T2, TypeOf<R> (*Calc)(TypeOf<T0>, TypeOf<T1>, TypeOf<T2>)>
-class TertiaryOperator : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v2 = stack.Get<TypeOf<T2>>();
-        stack.Pop();
-        auto v1 = stack.Get<TypeOf<T1>>();
-        stack.Pop();
-        auto v0 = stack.Get<TypeOf<T0>>();
-        if (v0.has_value() && v1.has_value() && v2.has_value()) {
-            stack.Set<TypeOf<R>>(Calc(*v0, *v1, *v2));
-        } else {
-            stack.Set<TypeOf<R>>();
-        }
+class TertiaryOperator : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v2 = stack.Get<TypeOf<T2>>();
+    stack.Pop();
+    auto v1 = stack.Get<TypeOf<T1>>();
+    stack.Pop();
+    auto v0 = stack.Get<TypeOf<T0>>();
+    if (v0.has_value() && v1.has_value() && v2.has_value()) {
+      stack.Set<TypeOf<R>>(Calc(*v0, *v1, *v2));
+    } else {
+      stack.Set<TypeOf<R>>();
     }
+  }
 };
 
 template <
@@ -185,38 +169,33 @@ template <
     Byte T1,
     Byte T2,
     Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &, const Wrap<TypeOf<T2>> &)>
-class TertiaryOperatorV1 : public OperatorBase<R>
-{
-public:
-    void operator()(OperandStack &stack) const override
-    {
-        auto v2 = stack.Get<TypeOf<T2>>();
-        stack.Pop();
-        auto v1 = stack.Get<TypeOf<T1>>();
-        stack.Pop();
-        auto v0 = stack.Get<TypeOf<T0>>();
-        stack.SetWrapped<TypeOf<R>>(Calc(v0, v1, v2));
-    }
+class TertiaryOperatorV1 : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v2 = stack.Get<TypeOf<T2>>();
+    stack.Pop();
+    auto v1 = stack.Get<TypeOf<T1>>();
+    stack.Pop();
+    auto v0 = stack.Get<TypeOf<T0>>();
+    stack.SetWrapped<TypeOf<R>>(Calc(v0, v1, v2));
+  }
 };
 
-class NotOperator : public OperatorBase<TYPE_BOOL>
-{
-public:
-    void operator()(OperandStack &stack) const override;
+class NotOperator : public OperatorBase<TYPE_BOOL> {
+ public:
+  void operator()(OperandStack &stack) const override;
 };
 
-class AndOperator : public OperatorBase<TYPE_BOOL>
-{
-public:
-    void operator()(OperandStack &stack) const override;
+class AndOperator : public OperatorBase<TYPE_BOOL> {
+ public:
+  void operator()(OperandStack &stack) const override;
 };
 
-class OrOperator : public OperatorBase<TYPE_BOOL>
-{
-public:
-    void operator()(OperandStack &stack) const override;
+class OrOperator : public OperatorBase<TYPE_BOOL> {
+ public:
+  void operator()(OperandStack &stack) const override;
 };
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _OPERATOR_H_ */

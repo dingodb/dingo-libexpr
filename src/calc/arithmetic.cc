@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <memory>
-
 #include "arithmetic.h"
 
-namespace dingodb::expr::calc
-{
+#include <memory>
 
-template <> String Add(String v0, String v1)
-{
-    return std::make_shared<std::string>(*v0 + *v1);
+namespace dingodb::expr::calc {
+
+template <>
+String Add(String v0, String v1) {
+  return std::make_shared<std::string>(*v0 + *v1);
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc

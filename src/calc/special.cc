@@ -14,17 +14,16 @@
 
 #include "special.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <> bool IsTrue(const Wrap<String> & /*v*/)
-{
-    return false;
+template <>
+bool IsTrue(const Wrap<String> & /*v*/) {
+  return false;
 }
 
-template <> bool IsFalse(const Wrap<String> &v)
-{
-    return v.has_value();
+template <>
+bool IsFalse(const Wrap<String> &v) {
+  return v.has_value();
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
