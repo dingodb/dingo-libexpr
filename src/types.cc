@@ -14,29 +14,27 @@
 
 #include "types.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-const char *TypeName(Byte type)
-{
-    switch (type) {
-    case TYPE_INT32:
-        return "INT32";
-    case TYPE_INT64:
-        return "INT64";
-    case TYPE_BOOL:
-        return "BOOL";
-    case TYPE_FLOAT:
-        return "FLOAT";
-    case TYPE_DOUBLE:
-        return "DOUBLE";
-    case TYPE_DECIMAL:
-        return "DECIMAL";
-    case TYPE_STRING:
-        return "STRING";
-    default:
-        return "UNKNOWN";
-    }
+const char *TypeName(Byte type) {
+  switch (type) {
+  case TYPE_INT32:
+    return "INT32";
+  case TYPE_INT64:
+    return "INT64";
+  case TYPE_BOOL:
+    return "BOOL";
+  case TYPE_FLOAT:
+    return "FLOAT";
+  case TYPE_DOUBLE:
+    return "DOUBLE";
+  case TYPE_DECIMAL:
+    return "DECIMAL";
+  case TYPE_STRING:
+    return "STRING";
+  default:
+    return "UNKNOWN";
+  }
 }
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr

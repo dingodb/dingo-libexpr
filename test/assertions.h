@@ -20,31 +20,31 @@
 #include "operand_stack.h"
 #include "types.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-template <int T> testing::AssertionResult Equals(const Operand &actual, const Operand &expected)
-{
-    auto a = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(actual);
-    auto e = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(expected);
-    if (a == e) {
-        return testing::AssertionSuccess();
+template <int T>
+testing::AssertionResult Equals(const Operand &actual, const Operand &expected) {
+  auto a = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(actual);
+  auto e = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(expected);
+  if (a == e) {
+    return testing::AssertionSuccess();
+  }
+  if (a.has_value()) {
+    if (e.has_value()) {
+      return testing::AssertionFailure() << *a << " != " << *e;
     }
-    if (a.has_value()) {
-        if (e.has_value()) {
-            return testing::AssertionFailure() << *a << " != " << *e;
-        }
-        return testing::AssertionFailure() << *a << " != null";
-    } else if (e.has_value()) {
-        return testing::AssertionFailure() << "null != " << *e;
-    }
-    return testing::AssertionFailure() << "both are null";
+    return testing::AssertionFailure() << *a << " != null";
+  } else if (e.has_value()) {
+    return testing::AssertionFailure() << "null != " << *e;
+  }
+  return testing::AssertionFailure() << "both are null";
 }
 
-template <> testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected);
+template <>
+testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected);
 
 testing::AssertionResult EqualsByType(int type, const Operand &actual, const Operand &expected);
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _ASSERTIONS_H_ */

@@ -19,28 +19,29 @@
 
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <typename T> T Min(T v0, T v1)
-{
-    return std::min(v0, v1);
+template <typename T>
+T Min(T v0, T v1) {
+  return std::min(v0, v1);
 }
 
-template <> String Min(String v0, String v1);
+template <>
+String Min(String v0, String v1);
 
-template <typename T> T Max(T v0, T v1)
-{
-    return std::max(v0, v1);
+template <typename T>
+T Max(T v0, T v1) {
+  return std::max(v0, v1);
 }
 
-template <> String Max(String v0, String v1);
+template <>
+String Max(String v0, String v1);
 
-template <typename T> T Abs(T v)
-{
-    return std::abs(v);
+template <typename T>
+T Abs(T v) {
+  return std::abs(v);
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_MATHEMATIC_H_ */

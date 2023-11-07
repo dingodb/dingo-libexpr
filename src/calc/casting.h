@@ -17,32 +17,44 @@
 
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <typename D, typename S> D Cast(S v)
-{
-    return (D)v;
+template <typename D, typename S>
+D Cast(S v) {
+  return (D)v;
 }
 
-template <> int32_t Cast(float v);
-template <> int32_t Cast(double v);
-template <> int32_t Cast(String v);
+template <>
+int32_t Cast(float v);
+template <>
+int32_t Cast(double v);
+template <>
+int32_t Cast(String v);
 
-template <> int64_t Cast(float v);
-template <> int64_t Cast(double v);
-template <> int64_t Cast(String v);
+template <>
+int64_t Cast(float v);
+template <>
+int64_t Cast(double v);
+template <>
+int64_t Cast(String v);
 
-template <> float Cast(String v);
+template <>
+float Cast(String v);
 
-template <> double Cast(String v);
+template <>
+double Cast(String v);
 
-template <> String Cast(int32_t v);
-template <> String Cast(int64_t v);
-template <> String Cast(bool v);
-template <> String Cast(float v);
-template <> String Cast(double v);
+template <>
+String Cast(int32_t v);
+template <>
+String Cast(int64_t v);
+template <>
+String Cast(bool v);
+template <>
+String Cast(float v);
+template <>
+String Cast(double v);
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_CASTING_H_ */

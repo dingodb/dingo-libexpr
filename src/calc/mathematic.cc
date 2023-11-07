@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cmath>
-
 #include "mathematic.h"
 
-namespace dingodb::expr::calc
-{
+#include <cmath>
 
-template <> String Min(String v0, String v1)
-{
-    return std::make_shared<std::string>(std::min(*v0, *v1));
+namespace dingodb::expr::calc {
+
+template <>
+String Min(String v0, String v1) {
+  return std::make_shared<std::string>(std::min(*v0, *v1));
 }
 
-template <> String Max(String v0, String v1)
-{
-    return std::make_shared<std::string>(std::max(*v0, *v1));
+template <>
+String Max(String v0, String v1) {
+  return std::make_shared<std::string>(std::max(*v0, *v1));
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc

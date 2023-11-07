@@ -14,54 +14,52 @@
 
 #include "assertions.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-template <> testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected)
-{
-    auto a = std::any_cast<Wrap<String>>(actual);
-    auto e = std::any_cast<Wrap<String>>(expected);
-    if (a == e) {
+template <>
+testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected) {
+  auto a = std::any_cast<Wrap<String>>(actual);
+  auto e = std::any_cast<Wrap<String>>(expected);
+  if (a == e) {
+    return testing::AssertionSuccess();
+  }
+  if (a.has_value()) {
+    if (e.has_value()) {
+      if (**a == **e) {
         return testing::AssertionSuccess();
+      }
+      return testing::AssertionFailure() << **a << " != " << **e;
     }
-    if (a.has_value()) {
-        if (e.has_value()) {
-            if (**a == **e) {
-                return testing::AssertionSuccess();
-            }
-            return testing::AssertionFailure() << **a << " != " << **e;
-        }
-        return testing::AssertionFailure() << **a << " != null";
-    } else if (e.has_value()) {
-        return testing::AssertionFailure() << "null != " << **e;
-    }
-    return testing::AssertionFailure() << "both are null";
+    return testing::AssertionFailure() << **a << " != null";
+  } else if (e.has_value()) {
+    return testing::AssertionFailure() << "null != " << **e;
+  }
+  return testing::AssertionFailure() << "both are null";
 }
 
-testing::AssertionResult EqualsByType(int type, const Operand &actual, const Operand &expected)
-{
-    switch (type) {
-    case TYPE_INT32:
-        return Equals<TYPE_INT32>(actual, expected);
-        break;
-    case TYPE_INT64:
-        return Equals<TYPE_INT64>(actual, expected);
-        break;
-    case TYPE_BOOL:
-        return Equals<TYPE_BOOL>(actual, expected);
-        break;
-    case TYPE_FLOAT:
-        return Equals<TYPE_FLOAT>(actual, expected);
-        break;
-    case TYPE_DOUBLE:
-        return Equals<TYPE_DOUBLE>(actual, expected);
-        break;
-    case TYPE_STRING:
-        return Equals<TYPE_STRING>(actual, expected);
-    default:
-        return testing::AssertionFailure() << "Unsupported type code " << type << " in assertion.";
-        break;
-    }
+testing::AssertionResult EqualsByType(int type, const Operand &actual, const Operand &expected) {
+  switch (type) {
+  case TYPE_INT32:
+    return Equals<TYPE_INT32>(actual, expected);
+    break;
+  case TYPE_INT64:
+    return Equals<TYPE_INT64>(actual, expected);
+    break;
+  case TYPE_BOOL:
+    return Equals<TYPE_BOOL>(actual, expected);
+    break;
+  case TYPE_FLOAT:
+    return Equals<TYPE_FLOAT>(actual, expected);
+    break;
+  case TYPE_DOUBLE:
+    return Equals<TYPE_DOUBLE>(actual, expected);
+    break;
+  case TYPE_STRING:
+    return Equals<TYPE_STRING>(actual, expected);
+  default:
+    return testing::AssertionFailure() << "Unsupported type code " << type << " in assertion.";
+    break;
+  }
 }
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr

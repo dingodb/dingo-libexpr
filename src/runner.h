@@ -19,54 +19,47 @@
 #include "operator_vector.h"
 #include "types.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-class Runner
-{
-public:
-    Runner() = default;
+class Runner {
+ public:
+  Runner() = default;
 
-    virtual ~Runner() = default;
+  virtual ~Runner() = default;
 
-    void Decode(const Byte *code, size_t len)
-    {
-        m_operator_vector.Decode(code, len);
+  void Decode(const Byte *code, size_t len) {
+    m_operator_vector.Decode(code, len);
+  }
+
+  void BindTuple(const Tuple *tuple, bool own_tuple = false) {
+    m_operand_stack.BindTuple(tuple, own_tuple);
+  }
+
+  void Run() {
+    m_operand_stack.Clear();
+    for (const auto *op : m_operator_vector) {
+      (*op)(m_operand_stack);
     }
+  }
 
-    void BindTuple(const Tuple *tuple, bool own_tuple = false)
-    {
-        m_operand_stack.BindTuple(tuple, own_tuple);
-    }
+  Operand GetRawResult() const {
+    return m_operand_stack.GetRaw();
+  }
 
-    void Run()
-    {
-        m_operand_stack.Clear();
-        for (const auto *op : m_operator_vector) {
-            (*op)(m_operand_stack);
-        }
-    }
+  template <typename T>
+  Wrap<T> GetResult() const {
+    return m_operand_stack.Get<T>();
+  }
 
-    Operand GetRawResult() const
-    {
-        return m_operand_stack.GetRaw();
-    }
+  Byte GetType() {
+    return m_operator_vector.GetType();
+  }
 
-    template <typename T> Wrap<T> GetResult() const
-    {
-        return m_operand_stack.Get<T>();
-    }
-
-    Byte GetType()
-    {
-        return m_operator_vector.GetType();
-    }
-
-private:
-    OperandStack m_operand_stack;
-    OperatorVector m_operator_vector;
+ private:
+  OperandStack m_operand_stack;
+  OperatorVector m_operator_vector;
 };
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _RUNNER_H_ */

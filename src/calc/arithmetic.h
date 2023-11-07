@@ -17,46 +17,46 @@
 
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <typename T> T Pos(T v)
-{
-    return v;
+template <typename T>
+T Pos(T v) {
+  return v;
 }
 
-template <typename T> T Neg(T v)
-{
-    return -v;
+template <typename T>
+T Neg(T v) {
+  return -v;
 }
 
-template <typename T> T Add(T v0, T v1)
-{
-    return v0 + v1;
+template <typename T>
+T Add(T v0, T v1) {
+  return v0 + v1;
 }
 
-template <> String Add(String v0, String v1);
+template <>
+String Add(String v0, String v1);
 
-template <typename T> T Sub(T v0, T v1)
-{
-    return v0 - v1;
+template <typename T>
+T Sub(T v0, T v1) {
+  return v0 - v1;
 }
 
-template <typename T> T Mul(T v0, T v1)
-{
-    return v0 * v1;
+template <typename T>
+T Mul(T v0, T v1) {
+  return v0 * v1;
 }
 
-template <typename T> T Div(T v0, T v1)
-{
-    return v0 / v1;
+template <typename T>
+T Div(T v0, T v1) {
+  return v0 / v1;
 }
 
-template <typename T> T Mod(T v0, T v1)
-{
-    return v0 % v1;
+template <typename T>
+T Mod(T v0, T v1) {
+  return v0 % v1;
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_ARITHMETIC_H_ */

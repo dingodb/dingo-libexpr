@@ -18,8 +18,7 @@
 #include "../operand.h"
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
 Wrap<String> Concat(const Wrap<String> &v0, const Wrap<String> &v1);
 
@@ -45,6 +44,6 @@ Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1, const Wrap<int
 
 Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1);
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_STRING_FUN_H_ */

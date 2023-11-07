@@ -19,85 +19,78 @@
 
 #include "operator.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-class OperatorVector
-{
-public:
-    OperatorVector() = default;
+class OperatorVector {
+ public:
+  OperatorVector() = default;
 
-    virtual ~OperatorVector()
-    {
-        Release();
+  virtual ~OperatorVector() {
+    Release();
+  }
+
+  void Decode(const Byte code[], size_t len);
+
+  Byte GetType() const {
+    return m_vector.back()->GetType();
+  }
+
+  auto begin()  // NOLINT(readability-identifier-naming)
+  {
+    return m_vector.begin();
+  }
+
+  auto end()  // NOLINT(readability-identifier-naming)
+  {
+    return m_vector.end();
+  }
+  /* clang-tidy on */
+
+ private:
+  std::vector<const Operator *> m_vector;
+  std::vector<const Operator *> m_to_release;
+
+  static std::string ConvertBytesToHex(const Byte *data, size_t len);
+
+  void Add(const Operator *op) {
+    m_vector.push_back(op);
+  }
+
+  void AddRelease(const Operator *op) {
+    m_vector.push_back(op);
+    m_to_release.push_back(op);
+  }
+
+  void Release() {
+    for (const auto *op : m_to_release) {
+      delete op;
     }
+    m_to_release.clear();
+    m_vector.clear();
+  }
 
-    void Decode(const Byte code[], size_t len);
+  /**
+   * @brief Add an operator of the specified type.
+   *
+   * @param ops The array of the operators
+   * @param type The type byte
+   * @return true Successful
+   * @return false Failed
+   */
+  [[nodiscard]] bool AddOperatorByType(const Operator *const ops[], Byte type);
 
-    Byte GetType() const
-    {
-        return m_vector.back()->GetType();
-    }
+  /**
+   * @brief  Add a cast operator of the specified type.
+   *
+   * @param b The byte indicating the source and target type
+   * @return true Successful
+   * @return false Failed
+   */
+  [[nodiscard]] bool AddCastOperator(Byte b);
 
-    auto begin() // NOLINT(readability-identifier-naming)
-    {
-        return m_vector.begin();
-    }
-
-    auto end() // NOLINT(readability-identifier-naming)
-    {
-        return m_vector.end();
-    }
-    /* clang-tidy on */
-
-private:
-    std::vector<const Operator *> m_vector;
-    std::vector<const Operator *> m_to_release;
-
-    static std::string ConvertBytesToHex(const Byte *data, size_t len);
-
-    void Add(const Operator *op)
-    {
-        m_vector.push_back(op);
-    }
-
-    void AddRelease(const Operator *op)
-    {
-        m_vector.push_back(op);
-        m_to_release.push_back(op);
-    }
-
-    void Release()
-    {
-        for (const auto *op : m_to_release) {
-            delete op;
-        }
-        m_to_release.clear();
-        m_vector.clear();
-    }
-
-    /**
-     * @brief Add an operator of the specified type.
-     *
-     * @param ops The array of the operators
-     * @param type The type byte
-     * @return true Successful
-     * @return false Failed
-     */
-    [[nodiscard]] bool AddOperatorByType(const Operator *const ops[], Byte type);
-
-    /**
-     * @brief  Add a cast operator of the specified type.
-     *
-     * @param b The byte indicating the source and target type
-     * @return true Successful
-     * @return false Failed
-     */
-    [[nodiscard]] bool AddCastOperator(Byte b);
-
-    [[nodiscard]] bool AddFunOperator(Byte b);
+  [[nodiscard]] bool AddFunOperator(Byte b);
 };
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _OPERATOR_VECTOR_H_ */

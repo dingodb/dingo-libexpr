@@ -1,9 +1,9 @@
 ---
-BasedOnStyle: LLVM
+BasedOnStyle: Google
 ColumnLimit: 120
-IndentWidth: 4
+#IndentWidth: 4
 UseTab: Never
-BreakBeforeBraces: Linux
+#BreakBeforeBraces: Linux
 IndentCaseLabels: false
 MaxEmptyLinesToKeep: 1
 BinPackParameters: false
@@ -19,11 +19,10 @@ AllowShortFunctionsOnASingleLine: false
 AllowShortBlocksOnASingleLine: false
 ---
 Language: Cpp
-AccessModifierOffset: -4
+#AccessModifierOffset: -4
 PackConstructorInitializers: CurrentLine
 BreakConstructorInitializers: BeforeComma
 ---
 Language: Proto
 BasedOnStyle: Google
 ColumnLimit: 120
-...

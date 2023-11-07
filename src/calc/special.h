@@ -20,28 +20,29 @@
 #include "../operand.h"
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <typename T> bool IsNull(const Wrap<T> &v)
-{
-    return !v.has_value();
+template <typename T>
+bool IsNull(const Wrap<T> &v) {
+  return !v.has_value();
 }
 
-template <typename T> bool IsTrue(const Wrap<T> &v)
-{
-    return v.has_value() && *v;
+template <typename T>
+bool IsTrue(const Wrap<T> &v) {
+  return v.has_value() && *v;
 }
 
-template <> bool IsTrue(const Wrap<String> &v);
+template <>
+bool IsTrue(const Wrap<String> &v);
 
-template <typename T> bool IsFalse(const Wrap<T> &v)
-{
-    return v.has_value() && !*v;
+template <typename T>
+bool IsFalse(const Wrap<T> &v) {
+  return v.has_value() && !*v;
 }
 
-template <> bool IsFalse(const Wrap<String> &v);
+template <>
+bool IsFalse(const Wrap<String> &v);
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_SPECIAL_H_ */

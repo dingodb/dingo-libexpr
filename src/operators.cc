@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cmath>
-
 #include "operators.h"
+
+#include <cmath>
 
 #include "calc/arithmetic.h"
 #include "calc/mathematic.h"
@@ -22,8 +22,7 @@
 #include "calc/special.h"
 #include "calc/string_fun.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
 const Operator *const OP_NULL[] = {
     [TYPE_NULL] = nullptr,
@@ -376,4 +375,4 @@ const Operator *const OP_FUN[] = {
     [0x35] = nullptr,
 };
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr

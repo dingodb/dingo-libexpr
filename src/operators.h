@@ -17,8 +17,7 @@
 
 #include "operator.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
 extern const Operator *const OP_NULL[TYPE_NUM];
 
@@ -56,6 +55,6 @@ extern const Operator *const OP_OR;
 
 extern const Operator *const OP_FUN[];
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
 #endif /* _OPERATORS_H_ */

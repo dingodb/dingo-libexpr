@@ -14,57 +14,53 @@
 
 #include "operator.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
-void NotOperator::operator()(OperandStack &stack) const
-{
-    auto v = stack.Get<bool>();
-    if (v.has_value()) {
-        stack.Set<bool>(!*v);
-    } else {
-        stack.Set<bool>();
-    }
+void NotOperator::operator()(OperandStack &stack) const {
+  auto v = stack.Get<bool>();
+  if (v.has_value()) {
+    stack.Set<bool>(!*v);
+  } else {
+    stack.Set<bool>();
+  }
 }
 
-void AndOperator::operator()(OperandStack &stack) const
-{
-    auto v1 = stack.Get<bool>();
-    stack.Pop();
-    auto v0 = stack.Get<bool>();
-    if (v0.has_value()) {
-        if (!*v0) {
-            stack.Set<bool>(false);
-        } else if (v1.has_value()) {
-            stack.Set<bool>(*v1);
-        } else {
-            stack.Set<bool>();
-        }
-    } else if (v1.has_value() && !*v1) {
-        stack.Set<bool>(false);
+void AndOperator::operator()(OperandStack &stack) const {
+  auto v1 = stack.Get<bool>();
+  stack.Pop();
+  auto v0 = stack.Get<bool>();
+  if (v0.has_value()) {
+    if (!*v0) {
+      stack.Set<bool>(false);
+    } else if (v1.has_value()) {
+      stack.Set<bool>(*v1);
     } else {
-        stack.Set<bool>();
+      stack.Set<bool>();
     }
+  } else if (v1.has_value() && !*v1) {
+    stack.Set<bool>(false);
+  } else {
+    stack.Set<bool>();
+  }
 }
 
-void OrOperator::operator()(OperandStack &stack) const
-{
-    auto v1 = stack.Get<bool>();
-    stack.Pop();
-    auto v0 = stack.Get<bool>();
-    if (v0.has_value()) {
-        if (*v0) {
-            stack.Set<bool>(true);
-        } else if (v1.has_value()) {
-            stack.Set<bool>(*v1);
-        } else {
-            stack.Set<bool>();
-        }
-    } else if (v1.has_value() && *v1) {
-        stack.Set<bool>(true);
+void OrOperator::operator()(OperandStack &stack) const {
+  auto v1 = stack.Get<bool>();
+  stack.Pop();
+  auto v0 = stack.Get<bool>();
+  if (v0.has_value()) {
+    if (*v0) {
+      stack.Set<bool>(true);
+    } else if (v1.has_value()) {
+      stack.Set<bool>(*v1);
     } else {
-        stack.Set<bool>();
+      stack.Set<bool>();
     }
+  } else if (v1.has_value() && *v1) {
+    stack.Set<bool>(true);
+  } else {
+    stack.Set<bool>();
+  }
 }
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr

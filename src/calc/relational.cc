@@ -14,37 +14,36 @@
 
 #include "relational.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <> bool Eq(String v0, String v1)
-{
-    return *v0 == *v1;
+template <>
+bool Eq(String v0, String v1) {
+  return *v0 == *v1;
 }
 
-template <> bool Ge(String v0, String v1)
-{
-    return *v0 >= *v1;
+template <>
+bool Ge(String v0, String v1) {
+  return *v0 >= *v1;
 }
 
-template <> bool Gt(String v0, String v1)
-{
-    return *v0 > *v1;
+template <>
+bool Gt(String v0, String v1) {
+  return *v0 > *v1;
 }
 
-template <> bool Le(String v0, String v1)
-{
-    return *v0 <= *v1;
+template <>
+bool Le(String v0, String v1) {
+  return *v0 <= *v1;
 }
 
-template <> bool Lt(String v0, String v1)
-{
-    return *v0 < *v1;
+template <>
+bool Lt(String v0, String v1) {
+  return *v0 < *v1;
 }
 
-template <> bool Ne(String v0, String v1)
-{
-    return *v0 != *v1;
+template <>
+bool Ne(String v0, String v1) {
+  return *v0 != *v1;
 }
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc

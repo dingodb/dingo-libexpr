@@ -19,21 +19,20 @@
 
 #include "types.h"
 
-namespace dingodb::expr
-{
+namespace dingodb::expr {
 
 // T can be int32_t or int64_t
-template <typename T> const Byte *DecodeVarint(T &value, const Byte *data)
-{
-    value = 0;
-    const Byte *p;
-    int shift = 0;
-    for (p = data; ((*p) & 0x80) != 0; ++p) {
-        value |= ((T)(*p & 0x7F) << shift);
-        shift += 7;
-    }
-    value |= ((T)(*p) << shift);
-    return p + 1;
+template <typename T>
+const Byte *DecodeVarint(T &value, const Byte *data) {
+  value = 0;
+  const Byte *p;
+  int shift = 0;
+  for (p = data; ((*p) & 0x80) != 0; ++p) {
+    value |= ((T)(*p & 0x7F) << shift);
+    shift += 7;
+  }
+  value |= ((T)(*p) << shift);
+  return p + 1;
 }
 
 const Byte *DecodeFloat(float &value, const Byte *data);
@@ -50,6 +49,6 @@ void HexToBytes(Byte *buf, const char *hex, size_t len);
 
 void BytesToHex(char *hex, const Byte *buf, size_t len);
 
-} // namespace dingodb::expr
+}  // namespace dingodb::expr
 
-#endif // DINGODB_EXPR_CODEC_H_
+#endif  // DINGODB_EXPR_CODEC_H_

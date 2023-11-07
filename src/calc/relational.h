@@ -17,51 +17,56 @@
 
 #include "../types.h"
 
-namespace dingodb::expr::calc
-{
+namespace dingodb::expr::calc {
 
-template <typename T> bool Eq(T v0, T v1)
-{
-    return v0 == v1;
+template <typename T>
+bool Eq(T v0, T v1) {
+  return v0 == v1;
 }
 
-template <> bool Eq(String v0, String v1);
+template <>
+bool Eq(String v0, String v1);
 
-template <typename T> bool Ge(T v0, T v1)
-{
-    return v0 >= v1;
+template <typename T>
+bool Ge(T v0, T v1) {
+  return v0 >= v1;
 }
 
-template <> bool Ge(String v0, String v1);
+template <>
+bool Ge(String v0, String v1);
 
-template <typename T> bool Gt(T v0, T v1)
-{
-    return v0 > v1;
+template <typename T>
+bool Gt(T v0, T v1) {
+  return v0 > v1;
 }
 
-template <> bool Gt(String v0, String v1);
+template <>
+bool Gt(String v0, String v1);
 
-template <typename T> bool Le(T v0, T v1)
-{
-    return v0 <= v1;
+template <typename T>
+bool Le(T v0, T v1) {
+  return v0 <= v1;
 }
 
-template <> bool Le(String v0, String v1);
+template <>
+bool Le(String v0, String v1);
 
-template <typename T> bool Lt(T v0, T v1)
-{
-    return v0 < v1;
+template <typename T>
+bool Lt(T v0, T v1) {
+  return v0 < v1;
 }
 
-template <> bool Lt(String v0, String v1);
+template <>
+bool Lt(String v0, String v1);
 
-template <typename T> bool Ne(T v0, T v1)
-{
-    return v0 != v1;
+template <typename T>
+bool Ne(T v0, T v1) {
+  return v0 != v1;
 }
 
-template <> bool Ne(String v0, String v1);
+template <>
+bool Ne(String v0, String v1);
 
-} // namespace dingodb::expr::calc
+}  // namespace dingodb::expr::calc
 
 #endif /* _CALC_RELATIONAL_H_ */
