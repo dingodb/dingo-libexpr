@@ -1,4 +1,4 @@
-# dingo-expr
+# dingo-libexpr
 
 [![Build](https://github.com/dingodb/dingo-libexpr/actions/workflows/build.yml/badge.svg)](https://github.com/dingodb/dingo-libexpr/actions/workflows/build.yml)
 
