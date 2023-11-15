@@ -15,6 +15,7 @@
 #ifndef _CALC_ARITHMETIC_H_
 #define _CALC_ARITHMETIC_H_
 
+#include "../operand.h"
 #include "../types.h"
 
 namespace dingodb::expr::calc {
@@ -53,8 +54,8 @@ T Div(T v0, T v1) {
 }
 
 template <typename T>
-T Mod(T v0, T v1) {
-  return v0 % v1;
+Wrap<T> Mod(T v0, T v1) {
+  return v1 != 0 ? Wrap<T>(v0 % v1) : Wrap<T>();
 }
 
 }  // namespace dingodb::expr::calc

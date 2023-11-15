@@ -140,6 +140,21 @@ class BinaryOperatorV1 : public OperatorBase<R> {
   }
 };
 
+template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
+class BinaryOperatorV2 : public OperatorBase<R> {
+ public:
+  void operator()(OperandStack &stack) const override {
+    auto v1 = stack.Get<TypeOf<T1>>();
+    stack.Pop();
+    auto v0 = stack.Get<TypeOf<T0>>();
+    if (v0.has_value() && v1.has_value()) {
+      stack.SetWrapped(Calc(*v0, *v1));
+    } else {
+      stack.Set<TypeOf<R>>();
+    }
+  }
+};
+
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>, TypeOf<R>)>
 using BinaryArithmeticOperator = BinaryOperator<R, R, R, Calc>;
 

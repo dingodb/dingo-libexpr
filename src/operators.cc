@@ -173,8 +173,8 @@ const Operator *const OP_DIV[] = {
 
 const Operator *const OP_MOD[] = {
     [TYPE_NULL] = nullptr,
-    [TYPE_INT32] = new BinaryArithmeticOperator<TYPE_INT32, calc::Mod>,
-    [TYPE_INT64] = new BinaryArithmeticOperator<TYPE_INT64, calc::Mod>,
+    [TYPE_INT32] = new BinaryOperatorV2<TYPE_INT32, TYPE_INT32, TYPE_INT32, calc::Mod>,
+    [TYPE_INT64] = new BinaryOperatorV2<TYPE_INT64, TYPE_INT64, TYPE_INT64, calc::Mod>,
     [TYPE_BOOL] = nullptr,
     [TYPE_FLOAT] = nullptr,
     [TYPE_DOUBLE] = nullptr,
