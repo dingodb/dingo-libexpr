@@ -120,34 +120,35 @@ String Substr(String v0, int32_t v1) {
   }
 }
 
-Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1, const Wrap<int32_t> &v2) {
-  if (v1.has_value() && v2.has_value()) {
-    if (v0.has_value() && *v1 != 0 && *v2 > 0) {
-      int len = (*v0)->length();
-      // `start` begins at 1.
-      int32_t start = ((*v1 < 0) ? *v1 + len : *v1 - 1);
-      if (start + *v2 >= len) {
-        return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start)));
-      } else {
-        return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start, *v2)));
-      }
+String Mid(String v0, int32_t v1, int32_t v2) {
+  if (v2 > 0) {
+    int len = v0->length();
+    if (0 < v1 && v1 < len) {
+      v1 -= 1;
+    } else if (-len <= v1 && v1 < 0) {
+      v1 += len;
+    } else {
+      return std::make_shared<std::string>();
     }
-    return Wrap<String>(std::make_shared<std::string>(""));
+    if (v1 + v2 >= len) {
+      return std::make_shared<std::string>(v0->substr(v1));
+    } else {
+      return std::make_shared<std::string>(v0->substr(v1, v2));
+    }
   }
-  return Wrap<String>();
+  return std::make_shared<std::string>();
 }
 
-Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1) {
-  if (v1.has_value()) {
-    if (v0.has_value() && *v1 != 0) {
-      int len = (*v0)->length();
-      // `start` begins at 1.
-      int32_t start = ((*v1 < 0) ? *v1 + len : *v1 - 1);
-      return Wrap<String>(std::make_shared<std::string>((*v0)->substr(start)));
-    }
-    return Wrap<String>(std::make_shared<std::string>(""));
+String Mid(String v0, int32_t v1) {
+  int len = v0->length();
+  if (0 < v1 && v1 < len) {
+    v1 -= 1;
+  } else if (-len <= v1 && v1 < 0) {
+    v1 += len;
+  } else {
+    return std::make_shared<std::string>();
   }
-  return Wrap<String>();
+  return std::make_shared<std::string>(v0->substr(v1));
 }
 
 }  // namespace dingodb::expr::calc

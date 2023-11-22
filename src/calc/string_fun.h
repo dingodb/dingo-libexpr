@@ -40,9 +40,9 @@ String Substr(String v0, int32_t v1, int32_t v2);
 
 String Substr(String v0, int32_t v1);
 
-Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1, const Wrap<int32_t> &v2);
+String Mid(String v0, int32_t v1, int32_t v2);
 
-Wrap<String> Mid(const Wrap<String> &v0, const Wrap<int32_t> &v1);
+String Mid(String v0, int32_t v1);
 
 }  // namespace dingodb::expr::calc
 
