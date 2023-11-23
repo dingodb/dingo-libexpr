@@ -49,8 +49,8 @@ T Mul(T v0, T v1) {
 }
 
 template <typename T>
-T Div(T v0, T v1) {
-  return v0 / v1;
+Wrap<T> Div(T v0, T v1) {
+  return (v1 != 0) ? Wrap<T>(v0 / v1) : Wrap<T>();
 }
 
 template <typename T>

@@ -20,15 +20,15 @@
 
 namespace dingodb::expr::calc {
 
-Wrap<String> Concat(const Wrap<String> &v0, const Wrap<String> &v1);
+String Concat(String v0, String v1);
 
 String Lower(String v);
 
 String Upper(String v);
 
-Wrap<String> Left(const Wrap<String> &v0, const Wrap<int32_t> &v1);
+String Left(String v0, int32_t v1);
 
-Wrap<String> Right(const Wrap<String> &v0, const Wrap<int32_t> &v1);
+String Right(String v0, int32_t v1);
 
 String Trim(String v);
 
