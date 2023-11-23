@@ -129,17 +129,6 @@ class BinaryOperator : public OperatorBase<R> {
   }
 };
 
-template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &)>
-class BinaryOperatorV1 : public OperatorBase<R> {
- public:
-  void operator()(OperandStack &stack) const override {
-    auto v1 = stack.Get<TypeOf<T1>>();
-    stack.Pop();
-    auto v0 = stack.Get<TypeOf<T0>>();
-    stack.SetWrapped<TypeOf<R>>(Calc(v0, v1));
-  }
-};
-
 template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
 class BinaryOperatorV2 : public OperatorBase<R> {
  public:
@@ -175,24 +164,6 @@ class TertiaryOperator : public OperatorBase<R> {
     } else {
       stack.Set<TypeOf<R>>();
     }
-  }
-};
-
-template <
-    Byte R,
-    Byte T0,
-    Byte T1,
-    Byte T2,
-    Wrap<TypeOf<R>> (*Calc)(const Wrap<TypeOf<T0>> &, const Wrap<TypeOf<T1>> &, const Wrap<TypeOf<T2>> &)>
-class TertiaryOperatorV1 : public OperatorBase<R> {
- public:
-  void operator()(OperandStack &stack) const override {
-    auto v2 = stack.Get<TypeOf<T2>>();
-    stack.Pop();
-    auto v1 = stack.Get<TypeOf<T1>>();
-    stack.Pop();
-    auto v0 = stack.Get<TypeOf<T0>>();
-    stack.SetWrapped<TypeOf<R>>(Calc(v0, v1, v2));
   }
 };
 
