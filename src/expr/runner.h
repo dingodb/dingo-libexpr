@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _RUNNER_H_
-#define _RUNNER_H_
+#ifndef _EXPR_RUNNER_H_
+#define _EXPR_RUNNER_H_
 
 #include "operand_stack.h"
 #include "operator_vector.h"
@@ -62,4 +62,4 @@ class Runner {
 
 }  // namespace dingodb::expr
 
-#endif /* _RUNNER_H_ */
+#endif /* _EXPR_RUNNER_H_ */

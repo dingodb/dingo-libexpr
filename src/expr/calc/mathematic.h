@@ -12,52 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CALC_ARITHMETIC_H_
-#define _CALC_ARITHMETIC_H_
+#ifndef _EXPR_CALC_MATHEMATIC_H_
+#define _EXPR_CALC_MATHEMATIC_H_
 
-#include "../operand.h"
+#include <algorithm>
+
 #include "../types.h"
 
 namespace dingodb::expr::calc {
 
 template <typename T>
-T Pos(T v) {
-  return v;
-}
-
-template <typename T>
-T Neg(T v) {
-  return -v;
-}
-
-template <typename T>
-T Add(T v0, T v1) {
-  return v0 + v1;
+T Min(T v0, T v1) {
+  return std::min(v0, v1);
 }
 
 template <>
-String Add(String v0, String v1);
+String Min(String v0, String v1);
 
 template <typename T>
-T Sub(T v0, T v1) {
-  return v0 - v1;
+T Max(T v0, T v1) {
+  return std::max(v0, v1);
 }
 
-template <typename T>
-T Mul(T v0, T v1) {
-  return v0 * v1;
-}
+template <>
+String Max(String v0, String v1);
 
 template <typename T>
-Wrap<T> Div(T v0, T v1) {
-  return (v1 != 0) ? Wrap<T>(v0 / v1) : Wrap<T>();
-}
-
-template <typename T>
-Wrap<T> Mod(T v0, T v1) {
-  return v1 != 0 ? Wrap<T>(v0 % v1) : Wrap<T>();
+T Abs(T v) {
+  return std::abs(v);
 }
 
 }  // namespace dingodb::expr::calc
 
-#endif /* _CALC_ARITHMETIC_H_ */
+#endif /* _EXPR_CALC_MATHEMATIC_H_ */

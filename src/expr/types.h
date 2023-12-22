@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _TYPES_H_
-#define _TYPES_H_
+#ifndef _EXPR_TYPES_H_
+#define _EXPR_TYPES_H_
 
 #include <cstdint>
 #include <memory>
@@ -88,4 +88,4 @@ using TypeOf = typename CxxTraits<B>::Type;
 
 }  // namespace dingodb::expr
 
-#endif /* _TYPES_H_ */
+#endif /* _EXPR_TYPES_H_ */

@@ -12,22 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _OPERAND_H_
-#define _OPERAND_H_
+#ifndef _EXPR_CALC_STRING_FUN_H_
+#define _EXPR_CALC_STRING_FUN_H_
 
-#include <any>
-#include <optional>
-#include <vector>
+#include "../operand.h"
+#include "../types.h"
 
-namespace dingodb::expr {
+namespace dingodb::expr::calc {
 
-template <typename T>
-using Wrap = std::optional<T>;
+String Concat(String v0, String v1);
 
-using Operand = std::any;
+String Lower(String v);
 
-using Tuple = std::vector<Operand>;
+String Upper(String v);
 
-}  // namespace dingodb::expr
+String Left(String v0, int32_t v1);
 
-#endif /* _OPERAND_H_ */
+String Right(String v0, int32_t v1);
+
+String Trim(String v);
+
+String LTrim(String v);
+
+String RTrim(String v);
+
+String Substr(String v0, int32_t v1, int32_t v2);
+
+String Substr(String v0, int32_t v1);
+
+String Mid(String v0, int32_t v1, int32_t v2);
+
+String Mid(String v0, int32_t v1);
+
+}  // namespace dingodb::expr::calc
+
+#endif /* _EXPR_CALC_STRING_FUN_H_ */

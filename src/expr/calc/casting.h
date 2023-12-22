@@ -12,38 +12,49 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CALC_STRING_FUN_H_
-#define _CALC_STRING_FUN_H_
+#ifndef _EXPR_CALC_CASTING_H_
+#define _EXPR_CALC_CASTING_H_
 
-#include "../operand.h"
 #include "../types.h"
 
 namespace dingodb::expr::calc {
 
-String Concat(String v0, String v1);
+template <typename D, typename S>
+D Cast(S v) {
+  return (D)v;
+}
 
-String Lower(String v);
+template <>
+int32_t Cast(float v);
+template <>
+int32_t Cast(double v);
+template <>
+int32_t Cast(String v);
 
-String Upper(String v);
+template <>
+int64_t Cast(float v);
+template <>
+int64_t Cast(double v);
+template <>
+int64_t Cast(String v);
 
-String Left(String v0, int32_t v1);
+template <>
+float Cast(String v);
 
-String Right(String v0, int32_t v1);
+template <>
+double Cast(String v);
 
-String Trim(String v);
-
-String LTrim(String v);
-
-String RTrim(String v);
-
-String Substr(String v0, int32_t v1, int32_t v2);
-
-String Substr(String v0, int32_t v1);
-
-String Mid(String v0, int32_t v1, int32_t v2);
-
-String Mid(String v0, int32_t v1);
+template <>
+String Cast(int32_t v);
+template <>
+String Cast(int64_t v);
+template <>
+String Cast(bool v);
+template <>
+String Cast(float v);
+template <>
+String Cast(double v);
 
 }  // namespace dingodb::expr::calc
 
-#endif /* _CALC_STRING_FUN_H_ */
+#endif /* _EXPR_CALC_CASTING_H_ */

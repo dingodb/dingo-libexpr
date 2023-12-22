@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-enable_testing()
+include_directories(${CMAKE_SOURCE_DIR}/src/expr)
 
-find_package(GTest REQUIRED)
+add_executable(test_expr
+    ../assertions.cc
+    test_expr.cc
+)
+target_link_libraries(test_expr
+    GTest::gtest_main
+    ${EXPR_LIB_NAME}
+)
 
-include_directories(${CMAKE_SOURCE_DIR}/test)
-
-add_subdirectory(expr)
+gtest_discover_tests(test_expr)

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-enable_testing()
+set(SRCS
+    op/filter_op.cc
+)
 
-find_package(GTest REQUIRED)
-
-include_directories(${CMAKE_SOURCE_DIR}/test)
-
-add_subdirectory(expr)
+add_library(${REL_LIB_NAME} STATIC ${SRCS})
+target_link_libraries(${REL_LIB_NAME} ${EXPR_LIB_NAME})

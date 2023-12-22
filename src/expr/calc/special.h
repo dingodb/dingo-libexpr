@@ -12,49 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CALC_CASTING_H_
-#define _CALC_CASTING_H_
+#ifndef _EXPR_CALC_SPECIAL_H_
+#define _EXPR_CALC_SPECIAL_H_
 
+#include <cstdint>
+
+#include "../operand.h"
 #include "../types.h"
 
 namespace dingodb::expr::calc {
 
-template <typename D, typename S>
-D Cast(S v) {
-  return (D)v;
+template <typename T>
+bool IsNull(const Wrap<T> &v) {
+  return !v.has_value();
+}
+
+template <typename T>
+bool IsTrue(const Wrap<T> &v) {
+  return v.has_value() && *v;
 }
 
 template <>
-int32_t Cast(float v);
-template <>
-int32_t Cast(double v);
-template <>
-int32_t Cast(String v);
+bool IsTrue(const Wrap<String> &v);
+
+template <typename T>
+bool IsFalse(const Wrap<T> &v) {
+  return v.has_value() && !*v;
+}
 
 template <>
-int64_t Cast(float v);
-template <>
-int64_t Cast(double v);
-template <>
-int64_t Cast(String v);
-
-template <>
-float Cast(String v);
-
-template <>
-double Cast(String v);
-
-template <>
-String Cast(int32_t v);
-template <>
-String Cast(int64_t v);
-template <>
-String Cast(bool v);
-template <>
-String Cast(float v);
-template <>
-String Cast(double v);
+bool IsFalse(const Wrap<String> &v);
 
 }  // namespace dingodb::expr::calc
 
-#endif /* _CALC_CASTING_H_ */
+#endif /* _EXPR_CALC_SPECIAL_H_ */

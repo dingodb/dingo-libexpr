@@ -12,20 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(LIB_NAME expr)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
-set(SRCS
-    calc/arithmetic.cc
-    calc/casting.cc
-    calc/mathematic.cc
-    calc/relational.cc
-    calc/special.cc
-    calc/string_fun.cc
-    codec.cc
-    operator.cc
-    operator_vector.cc
-    operators.cc
-    types.cc
-)
-
-add_library(${LIB_NAME} STATIC ${SRCS})
+add_subdirectory(expr)
+add_subdirectory(rel)

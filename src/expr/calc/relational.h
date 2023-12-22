@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CALC_RELATIONAL_H_
-#define _CALC_RELATIONAL_H_
+#ifndef _EXPR_CALC_RELATIONAL_H_
+#define _EXPR_CALC_RELATIONAL_H_
 
 #include "../types.h"
 
@@ -69,4 +69,4 @@ bool Ne(String v0, String v1);
 
 }  // namespace dingodb::expr::calc
 
-#endif /* _CALC_RELATIONAL_H_ */
+#endif /* _EXPR_CALC_RELATIONAL_H_ */

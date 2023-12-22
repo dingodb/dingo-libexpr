@@ -36,6 +36,9 @@ cmake_policy(SET CMP0135 NEW)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_PREFIX_PATH ${OUTPUT_PATH})
 
+set(EXPR_LIB_NAME expr)
+set(REL_LIB_NAME expr_rel)
+
 add_subdirectory(src)
 if(BUILD_TESTS)
     add_subdirectory(test)
