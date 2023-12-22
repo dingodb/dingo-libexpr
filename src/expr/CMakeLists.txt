@@ -12,10 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-enable_testing()
+set(SRCS
+    calc/arithmetic.cc
+    calc/casting.cc
+    calc/mathematic.cc
+    calc/relational.cc
+    calc/special.cc
+    calc/string_fun.cc
+    codec.cc
+    operator.cc
+    operator_vector.cc
+    operators.cc
+    types.cc
+)
 
-find_package(GTest REQUIRED)
-
-include_directories(${CMAKE_SOURCE_DIR}/test)
-
-add_subdirectory(expr)
+add_library(${EXPR_LIB_NAME} STATIC ${SRCS})

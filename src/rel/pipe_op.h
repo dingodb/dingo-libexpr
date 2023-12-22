@@ -12,37 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CALC_SPECIAL_H_
-#define _CALC_SPECIAL_H_
+#ifndef _REL_PIPE_OP_H_
+#define _REL_PIPE_OP_H_
 
-#include <cstdint>
+#include "expr/operand.h"
 
-#include "../operand.h"
-#include "../types.h"
+namespace dingodb::rel {
 
-namespace dingodb::expr::calc {
+class PipeOp {
+ public:
+  PipeOp() = default;
+  virtual ~PipeOp() = default;
 
-template <typename T>
-bool IsNull(const Wrap<T> &v) {
-  return !v.has_value();
-}
+  virtual expr::Tuple *Put(expr::Tuple *tuple) = 0;
+};
 
-template <typename T>
-bool IsTrue(const Wrap<T> &v) {
-  return v.has_value() && *v;
-}
+}  // namespace dingodb::rel
 
-template <>
-bool IsTrue(const Wrap<String> &v);
-
-template <typename T>
-bool IsFalse(const Wrap<T> &v) {
-  return v.has_value() && !*v;
-}
-
-template <>
-bool IsFalse(const Wrap<String> &v);
-
-}  // namespace dingodb::expr::calc
-
-#endif /* _CALC_SPECIAL_H_ */
+#endif /* _REL_PIPE_OP_H_ */

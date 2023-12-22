@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef DINGODB_EXPR_CODEC_H_
-#define DINGODB_EXPR_CODEC_H_
+#ifndef _EXPR_CODEC_H_
+#define _EXPR_CODEC_H_
 
 #include <cstddef>
 
@@ -51,4 +51,4 @@ void BytesToHex(char *hex, const Byte *buf, size_t len);
 
 }  // namespace dingodb::expr
 
-#endif  // DINGODB_EXPR_CODEC_H_
+#endif /* _EXPR_CODEC_H_ */

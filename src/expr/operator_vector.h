@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _OPERATOR_VECTOR_H_
-#define _OPERATOR_VECTOR_H_
+#ifndef _EXPR_OPERATOR_VECTOR_H_
+#define _EXPR_OPERATOR_VECTOR_H_
 
 #include <vector>
 
@@ -93,4 +93,4 @@ class OperatorVector {
 
 }  // namespace dingodb::expr
 
-#endif /* _OPERATOR_VECTOR_H_ */
+#endif /* _EXPR_OPERATOR_VECTOR_H_ */

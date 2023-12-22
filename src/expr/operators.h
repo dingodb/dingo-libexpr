@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _OPERATORS_H_
-#define _OPERATORS_H_
+#ifndef _EXPR_OPERATORS_H_
+#define _EXPR_OPERATORS_H_
 
 #include "operator.h"
 
@@ -57,4 +57,4 @@ extern const Operator *const OP_FUN[];
 
 }  // namespace dingodb::expr
 
-#endif /* _OPERATORS_H_ */
+#endif /* _EXPR_OPERATORS_H_ */

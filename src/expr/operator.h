@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _OPERATOR_H_
-#define _OPERATOR_H_
+#ifndef _EXPR_OPERATOR_H_
+#define _EXPR_OPERATOR_H_
 
 #include <functional>
 
@@ -184,4 +184,4 @@ class OrOperator : public OperatorBase<TYPE_BOOL> {
 
 }  // namespace dingodb::expr
 
-#endif /* _OPERATOR_H_ */
+#endif /* _EXPR_OPERATOR_H_ */
