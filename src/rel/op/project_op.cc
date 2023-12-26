@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_PIPE_OP_H_
-#define _REL_PIPE_OP_H_
+#include "project_op.h"
 
-#include "expr/operand.h"
+#include "expr/runner.h"
 
-namespace dingodb::rel {
+namespace dingodb::rel::op {
 
-class PipeOp {
- public:
-  PipeOp() = default;
-  virtual ~PipeOp() = default;
+ProjectOp::ProjectOp(const expr::Runner *projects) : m_projects(projects) {
+}
 
-  virtual expr::Tuple *Put(expr::Tuple *tuple) = 0;
-};
+ProjectOp::~ProjectOp() {
+  delete m_projects;
+}
 
-}  // namespace dingodb::rel
+expr::Tuple *ProjectOp::Put(expr::Tuple *tuple) const {
+  m_projects->BindTuple(tuple);
+  m_projects->Run();
+  delete tuple;
+  return m_projects->GetTuple();
+}
 
-#endif /* _REL_PIPE_OP_H_ */
+}  // namespace dingodb::rel::op

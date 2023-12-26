@@ -29,28 +29,25 @@ class OperatorVector {
     Release();
   }
 
-  void Decode(const Byte code[], size_t len);
+  const Byte *Decode(const Byte code[], size_t len);
 
   Byte GetType() const {
     return m_vector.back()->GetType();
   }
 
-  auto begin()  // NOLINT(readability-identifier-naming)
+  auto begin() const  // NOLINT(readability-identifier-naming)
   {
-    return m_vector.begin();
+    return m_vector.cbegin();
   }
 
-  auto end()  // NOLINT(readability-identifier-naming)
+  auto end() const  // NOLINT(readability-identifier-naming)
   {
-    return m_vector.end();
+    return m_vector.cend();
   }
-  /* clang-tidy on */
 
  private:
   std::vector<const Operator *> m_vector;
   std::vector<const Operator *> m_to_release;
-
-  static std::string ConvertBytesToHex(const Byte *data, size_t len);
 
   void Add(const Operator *op) {
     m_vector.push_back(op);

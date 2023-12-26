@@ -12,28 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#ifndef _EXPR_UTILS_H_
+#define _EXPR_UTILS_H_
 
-#include "expr/runner.h"
+#include "operand.h"
+#include "types.h"
 
-namespace dingodb::rel::op {
+namespace dingodb::expr {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
+template <typename... T>
+expr::Tuple *MakeTuple(T... v) {
+  return new expr::Tuple{std::make_any<expr::Wrap<T>>(v)...};
 }
 
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
+std::string HexOfBytes(const Byte *data, size_t len);
 
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
-  }
-  delete tuple;
-  return nullptr;
-}
+}  // namespace dingodb::expr
 
-}  // namespace dingodb::rel::op
+#endif /* _EXPR_UTILS_H_ */

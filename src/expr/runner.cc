@@ -12,28 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#include "runner.h"
 
-#include "expr/runner.h"
+#include <algorithm>
 
-namespace dingodb::rel::op {
+namespace dingodb::expr {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
-}
-
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
-
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
+void Runner::Run() const {
+  m_operand_stack.Clear();
+  for (const auto *op : m_operator_vector) {
+    (*op)(m_operand_stack);
   }
-  delete tuple;
-  return nullptr;
 }
 
-}  // namespace dingodb::rel::op
+Tuple *Runner::GetTuple() const {
+  auto *tuple = new Tuple();
+  std::copy(m_operand_stack.begin(), m_operand_stack.end(), std::back_inserter(*tuple));
+  return tuple;
+}
+
+}  // namespace dingodb::expr

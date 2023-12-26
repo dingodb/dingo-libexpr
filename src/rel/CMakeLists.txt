@@ -14,6 +14,9 @@
 
 set(SRCS
     op/filter_op.cc
+    op/project_op.cc
+    op/tandem_op.cc
+    rel_runner.cc
 )
 
 add_library(${REL_LIB_NAME} STATIC ${SRCS})

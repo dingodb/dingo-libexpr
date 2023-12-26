@@ -12,28 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#ifndef _REL_OP_PROJECT_OP_H_
+#define _REL_OP_PROJECT_OP_H_
 
-#include "expr/runner.h"
+#include "../rel_op.h"
+
+namespace dingodb::expr {
+class Runner;
+}
 
 namespace dingodb::rel::op {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
-}
+class ProjectOp : public RelOp {
+ public:
+  ProjectOp(const expr::Runner *projects);
 
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
+  ~ProjectOp() override;
 
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
-  }
-  delete tuple;
-  return nullptr;
-}
+  expr::Tuple *Put(expr::Tuple *tuple) const override;
+
+ private:
+  const expr::Runner *m_projects;
+};
 
 }  // namespace dingodb::rel::op
+
+#endif /* _REL_OP_PROJECT_OP_H_ */

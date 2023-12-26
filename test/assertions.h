@@ -17,8 +17,8 @@
 
 #include <gtest/gtest.h>
 
-#include "operand_stack.h"
-#include "types.h"
+#include "expr/operand_stack.h"
+#include "expr/types.h"
 
 namespace dingodb::expr {
 
@@ -44,6 +44,8 @@ template <>
 testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected);
 
 testing::AssertionResult EqualsByType(int type, const Operand &actual, const Operand &expected);
+
+testing::AssertionResult TupleEquals(int type[], const Tuple *a, const Tuple *b);
 
 }  // namespace dingodb::expr
 

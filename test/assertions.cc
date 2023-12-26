@@ -62,4 +62,18 @@ testing::AssertionResult EqualsByType(int type, const Operand &actual, const Ope
   }
 }
 
+testing::AssertionResult TupleEquals(int type[], const Tuple *a, const Tuple *b) {
+  if (a->size() != b->size()) {
+    return testing::AssertionFailure() << "The two tuples have diffent size " << a->size() << " and " << b->size()
+                                       << ".";
+  }
+  for (auto i = 0; i < a->size(); ++i) {
+    testing::AssertionResult result = EqualsByType(type[i], (*a)[i], (*b)[i]);
+    if (!result) {
+      return result;
+    }
+  }
+  return testing::AssertionSuccess();
+}
+
 }  // namespace dingodb::expr

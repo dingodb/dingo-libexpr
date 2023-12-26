@@ -16,6 +16,8 @@ enable_testing()
 
 find_package(GTest REQUIRED)
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/test)
 
 add_subdirectory(expr)
+add_subdirectory(rel)

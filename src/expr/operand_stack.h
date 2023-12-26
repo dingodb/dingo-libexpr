@@ -15,7 +15,7 @@
 #ifndef _OPERAND_STACK_H_
 #define _OPERAND_STACK_H_
 
-#include <stack>
+#include <deque>
 #include <stdexcept>
 
 #include "operand.h"
@@ -32,45 +32,45 @@ class OperandStack {
   }
 
   void Pop() {
-    m_stack.pop();
+    m_stack.pop_back();
   }
 
   Operand GetRaw() const {
-    return m_stack.top();
+    return m_stack.back();
   }
 
   template <typename T>
   Wrap<T> Get() const {
-    return std::any_cast<Wrap<T>>(m_stack.top());
+    return std::any_cast<Wrap<T>>(m_stack.back());
   }
 
   void PushRaw(const Operand &v) {
-    m_stack.push(v);
+    m_stack.push_back(v);
   }
 
   template <typename T>
   void Push(T v) {
-    m_stack.push(Operand(Wrap<T>(v)));
+    m_stack.push_back(Operand(Wrap<T>(v)));
   }
 
   template <typename T>
   void Push() {
-    m_stack.push(Operand(Wrap<T>()));
+    m_stack.push_back(Operand(Wrap<T>()));
   }
 
   template <typename T>
   void SetWrapped(const Wrap<T> &v) {
-    m_stack.top().emplace<Wrap<T>>(v);
+    m_stack.back().emplace<Wrap<T>>(v);
   }
 
   template <typename T>
   void Set(T v) {
-    m_stack.top().emplace<Wrap<T>>(Wrap<T>(v));
+    m_stack.back().emplace<Wrap<T>>(Wrap<T>(v));
   }
 
   template <typename T>
   void Set() {
-    m_stack.top().emplace<Wrap<T>>(Wrap<T>());
+    m_stack.back().emplace<Wrap<T>>(Wrap<T>());
   }
 
   void BindTuple(const Tuple *tuple, bool own_tuple) {
@@ -81,7 +81,7 @@ class OperandStack {
 
   void PushVar(uint32_t index) {
     if (m_tuple != nullptr) {
-      m_stack.push((*m_tuple)[index]);
+      m_stack.push_back((*m_tuple)[index]);
     } else {
       throw std::runtime_error("No tuple provided.");
     }
@@ -89,12 +89,26 @@ class OperandStack {
 
   void Clear() {
     while (!m_stack.empty()) {
-      m_stack.pop();
+      m_stack.pop_back();
     }
   }
 
+  size_t Size() const {
+    return m_stack.size();
+  }
+
+  auto begin() const  // NOLINT(readability-identifier-naming)
+  {
+    return m_stack.cbegin();
+  }
+
+  auto end() const  // NOLINT(readability-identifier-naming)
+  {
+    return m_stack.cend();
+  }
+
  private:
-  std::stack<Operand> m_stack;
+  std::deque<Operand> m_stack;
   const Tuple *m_tuple;
   bool m_own_tuple;
 
