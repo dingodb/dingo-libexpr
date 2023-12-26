@@ -12,28 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#ifndef _REL_OP_TANDEM_OP_H_
+#define _REL_OP_TANDEM_OP_H_
 
-#include "expr/runner.h"
+#include "../rel_op.h"
 
 namespace dingodb::rel::op {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
-}
+class TandemOp : public RelOp {
+ public:
+  TandemOp(const RelOp *in, const RelOp *out);
 
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
+  ~TandemOp() override;
 
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
-  }
-  delete tuple;
-  return nullptr;
-}
+  expr::Tuple *Put(expr::Tuple *tuple) const override;
+
+ private:
+  const RelOp *m_in;
+  const RelOp *m_out;
+};
 
 }  // namespace dingodb::rel::op
+
+#endif /* _REL_OP_TANDEM_OP_H_ */

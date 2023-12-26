@@ -12,28 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#include "utils.h"
 
-#include "expr/runner.h"
+#include "codec.h"
 
-namespace dingodb::rel::op {
+namespace dingodb::expr {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
+std::string HexOfBytes(const Byte *data, size_t len) {
+  char *buf = new char[len * 2 + 1];
+  BytesToHex(buf, data, len);
+  buf[len * 2] = '\0';
+  std::string result(buf);
+  delete[] buf;
+  return result;
 }
 
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
-
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
-  }
-  delete tuple;
-  return nullptr;
-}
-
-}  // namespace dingodb::rel::op
+}  // namespace dingodb::expr

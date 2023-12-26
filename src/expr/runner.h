@@ -27,20 +27,15 @@ class Runner {
 
   virtual ~Runner() = default;
 
-  void Decode(const Byte *code, size_t len) {
-    m_operator_vector.Decode(code, len);
+  const Byte *Decode(const Byte *code, size_t len) {
+    return m_operator_vector.Decode(code, len);
   }
 
-  void BindTuple(const Tuple *tuple, bool own_tuple = false) {
+  void BindTuple(const Tuple *tuple, bool own_tuple = false) const {
     m_operand_stack.BindTuple(tuple, own_tuple);
   }
 
-  void Run() {
-    m_operand_stack.Clear();
-    for (const auto *op : m_operator_vector) {
-      (*op)(m_operand_stack);
-    }
-  }
+  void Run() const;
 
   Operand GetRawResult() const {
     return m_operand_stack.GetRaw();
@@ -51,12 +46,15 @@ class Runner {
     return m_operand_stack.Get<T>();
   }
 
-  Byte GetType() {
+  Byte GetType() const {
     return m_operator_vector.GetType();
   }
 
+  Tuple *GetTuple() const;
+
  private:
-  OperandStack m_operand_stack;
+  mutable OperandStack m_operand_stack;
+
   OperatorVector m_operator_vector;
 };
 

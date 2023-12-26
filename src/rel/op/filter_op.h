@@ -15,26 +15,26 @@
 #ifndef _REL_OP_FILTER_OP_H_
 #define _REL_OP_FILTER_OP_H_
 
-#include "../pipe_op.h"
+#include "../rel_op.h"
 
 namespace dingodb::expr {
 class Runner;
 }
 
-namespace dingodb::rel {
+namespace dingodb::rel::op {
 
-class FilterOp : public PipeOp {
+class FilterOp : public RelOp {
  public:
-  FilterOp();
+  FilterOp(const expr::Runner *filter);
 
   ~FilterOp() override;
 
-  expr::Tuple *Put(expr::Tuple *tuple) override;
+  expr::Tuple *Put(expr::Tuple *tuple) const override;
 
  private:
-  expr::Runner *m_filter;
+  const expr::Runner *m_filter;
 };
 
-}  // namespace dingodb::rel
+}  // namespace dingodb::rel::op
 
 #endif /* _REL_OP_FILTER_OP_H_ */

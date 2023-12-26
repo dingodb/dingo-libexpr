@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(SRCS
-    calc/arithmetic.cc
-    calc/casting.cc
-    calc/mathematic.cc
-    calc/relational.cc
-    calc/special.cc
-    calc/string_fun.cc
-    codec.cc
-    operator.cc
-    operator_vector.cc
-    operators.cc
-    runner.cc
-    types.cc
-    utils.cc
+include_directories(${CMAKE_SOURCE_DIR}/src/rel)
+
+add_executable(test_rel
+    ../assertions.cc
+    test_rel.cc
+)
+target_link_libraries(test_rel
+    GTest::gtest_main
+    ${REL_LIB_NAME}
 )
 
-add_library(${EXPR_LIB_NAME} STATIC ${SRCS})
+gtest_discover_tests(test_rel)

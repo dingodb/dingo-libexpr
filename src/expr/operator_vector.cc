@@ -17,6 +17,7 @@
 #include "codec.h"
 #include "operators.h"
 #include "types.h"
+#include "utils.h"
 
 #define NULL_PREFIX  0x00
 #define NULL_INT32   (NULL_PREFIX | TYPE_INT32)
@@ -80,13 +81,16 @@
 #define CAST 0xF0
 #define FUN  0xF1
 
+#define EOE 0x00
+
 using namespace dingodb::expr;
 
-void OperatorVector::Decode(const Byte code[], size_t len) {
+const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
   Release();
   bool successful = true;
+  const Byte *p = code;
   const Byte *b;
-  for (const Byte *p = code; successful && p < code + len;) {
+  while (successful && p < code + len) {
     b = p;
     switch (*p) {
     case NULL_INT32:
@@ -341,23 +345,19 @@ void OperatorVector::Decode(const Byte code[], size_t len) {
       successful = AddFunOperator(*p);
       ++p;
       break;
+    case EOE:
+      ++p;
+      goto eoe;
     default:
       successful = false;
       break;
     }
   }
-  if (!successful) {
-    throw std::runtime_error("Unknown instruction, bytes = " + ConvertBytesToHex(b, len - (b - code)));
+eoe:
+  if (successful) {
+    return p;
   }
-}
-
-std::string OperatorVector::ConvertBytesToHex(const Byte *data, size_t len) {
-  char *buf = new char[len * 2 + 1];
-  BytesToHex(buf, data, len);
-  buf[len * 2] = '\0';
-  std::string result(buf);
-  delete[] buf;
-  return result;
+  throw std::runtime_error("Unknown instruction, bytes = " + HexOfBytes(b, len - (b - code)));
 }
 
 bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {

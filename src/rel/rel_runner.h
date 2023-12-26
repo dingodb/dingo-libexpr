@@ -12,28 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "filter_op.h"
+#ifndef _REL_REL_RUNNER_H_
+#define _REL_REL_RUNNER_H_
 
-#include "expr/runner.h"
+#include "expr/types.h"
+#include "rel_op.h"
 
-namespace dingodb::rel::op {
+namespace dingodb::rel {
 
-FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
-}
+class RelRunner {
+ public:
+  RelRunner();
+  virtual ~RelRunner();
 
-FilterOp::~FilterOp() {
-  delete m_filter;
-}
+  const expr::Byte *Decode(const expr::Byte *code, size_t len);
 
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
-  m_filter->BindTuple(tuple);
-  m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
-    return tuple;
+  expr::Tuple *Put(expr::Tuple *tuple);
+
+ private:
+  RelOp *m_op;
+
+  void Release() {
+    delete m_op;
+    m_op = nullptr;
   }
-  delete tuple;
-  return nullptr;
-}
 
-}  // namespace dingodb::rel::op
+  void AppendOp(RelOp *op);
+};
+
+}  // namespace dingodb::rel
+
+#endif /* _REL_REL_RUNNER_H_ */
