@@ -14,6 +14,7 @@
 
 #include "filter_op.h"
 
+#include "expr/calc/special.h"
 #include "expr/runner.h"
 
 namespace dingodb::rel::op {
@@ -28,8 +29,8 @@ FilterOp::~FilterOp() {
 expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
   m_filter->BindTuple(tuple);
   m_filter->Run();
-  auto v = m_filter->GetResult<bool>();
-  if (v.has_value() && *v) {
+  auto v = m_filter->Get();
+  if (expr::calc::IsTrue<bool>(v)) {
     return tuple;
   }
   delete tuple;

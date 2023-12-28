@@ -60,31 +60,31 @@ double Cast(String v) {
 
 template <>
 String Cast(int32_t v) {
-  return std::make_shared<std::string>(std::to_string(v));
+  return MakeString(std::to_string(v));
 }
 
 template <>
 String Cast(int64_t v) {
-  return std::make_shared<std::string>(std::to_string(v));
+  return MakeString(std::to_string(v));
 }
 
 template <>
 String Cast(bool v) {
-  return std::make_shared<std::string>(v ? "true" : "false");
+  return MakeString(v ? "true" : "false");
 }
 
 template <>
 String Cast(float v) {
   auto s = std::to_string(v);
   s.erase(s.find_last_not_of('0') + 1);
-  return std::make_shared<std::string>(s);
+  return MakeString(s);
 }
 
 template <>
 String Cast(double v) {
   auto s = std::to_string(v);
   s.erase(s.find_last_not_of('0') + 1);
-  return std::make_shared<std::string>(s);
+  return MakeString(s);
 }
 
 }  // namespace dingodb::expr::calc

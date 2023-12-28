@@ -18,23 +18,21 @@ namespace dingodb::expr {
 
 template <>
 testing::AssertionResult Equals<TYPE_STRING>(const Operand &actual, const Operand &expected) {
-  auto a = std::any_cast<Wrap<String>>(actual);
-  auto e = std::any_cast<Wrap<String>>(expected);
-  if (a == e) {
-    return testing::AssertionSuccess();
-  }
-  if (a.has_value()) {
-    if (e.has_value()) {
-      if (**a == **e) {
+  if (NotNull<String>(actual)) {
+    auto a = *GetValue<String>(actual);
+    if (NotNull<String>(expected)) {
+      auto e = *GetValue<String>(expected);
+      if (a == e) {
         return testing::AssertionSuccess();
       }
-      return testing::AssertionFailure() << **a << " != " << **e;
+      return testing::AssertionFailure() << a << " != " << e;
     }
-    return testing::AssertionFailure() << **a << " != null";
-  } else if (e.has_value()) {
-    return testing::AssertionFailure() << "null != " << **e;
+    return testing::AssertionFailure() << a << " != null";
+  } else if (NotNull<String>(expected)) {
+    auto e = *GetValue<String>(expected);
+    return testing::AssertionFailure() << "null != " << e;
   }
-  return testing::AssertionFailure() << "both are null";
+  return testing::AssertionSuccess();
 }
 
 testing::AssertionResult EqualsByType(int type, const Operand &actual, const Operand &expected) {

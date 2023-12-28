@@ -24,62 +24,38 @@ namespace dingodb::expr {
 
 class OperandStack {
  public:
-  OperandStack() : m_tuple(nullptr), m_own_tuple(false) {
+  OperandStack() : m_tuple(nullptr) {
   }
 
-  virtual ~OperandStack() {
-    Release();
-  }
+  virtual ~OperandStack() = default;
 
   void Pop() {
     m_stack.pop_back();
   }
 
-  Operand GetRaw() const {
+  Operand Get() const {
     return m_stack.back();
   }
 
-  template <typename T>
-  Wrap<T> Get() const {
-    return std::any_cast<Wrap<T>>(m_stack.back());
-  }
-
-  void PushRaw(const Operand &v) {
+  void Push(const Operand &v) {
     m_stack.push_back(v);
   }
 
   template <typename T>
   void Push(T v) {
-    m_stack.push_back(Operand(Wrap<T>(v)));
+    m_stack.push_back(MakeOperand(v));
   }
 
   template <typename T>
   void Push() {
-    m_stack.push_back(Operand(Wrap<T>()));
+    m_stack.push_back(MakeNull<T>());
   }
 
-  template <typename T>
-  void SetWrapped(const Wrap<T> &v) {
-    m_stack.back().emplace<Wrap<T>>(v);
-  }
-
-  template <typename T>
-  void Set(T v) {
-    m_stack.back().emplace<Wrap<T>>(Wrap<T>(v));
-  }
-
-  template <typename T>
-  void Set() {
-    m_stack.back().emplace<Wrap<T>>(Wrap<T>());
-  }
-
-  void BindTuple(const Tuple *tuple, bool own_tuple) {
-    Release();
+  void BindTuple(const Tuple *tuple) {
     m_tuple = tuple;
-    m_own_tuple = own_tuple;
   }
 
-  void PushVar(uint32_t index) {
+  void PushVar(int32_t index) {
     if (m_tuple != nullptr) {
       m_stack.push_back((*m_tuple)[index]);
     } else {
@@ -88,9 +64,7 @@ class OperandStack {
   }
 
   void Clear() {
-    while (!m_stack.empty()) {
-      m_stack.pop_back();
-    }
+    m_stack.clear();
   }
 
   size_t Size() const {
@@ -110,13 +84,6 @@ class OperandStack {
  private:
   std::deque<Operand> m_stack;
   const Tuple *m_tuple;
-  bool m_own_tuple;
-
-  void Release() {
-    if (m_own_tuple) {
-      delete m_tuple;
-    }
-  }
 };
 
 }  // namespace dingodb::expr

@@ -15,6 +15,7 @@
 #include "operator_vector.h"
 
 #include "codec.h"
+#include "exception.h"
 #include "operators.h"
 #include "types.h"
 #include "utils.h"
@@ -357,7 +358,7 @@ eoe:
   if (successful) {
     return p;
   }
-  throw std::runtime_error("Unknown instruction, bytes = " + HexOfBytes(b, len - (b - code)));
+  throw UnknownCode(b, len - (b - code));
 }
 
 bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {

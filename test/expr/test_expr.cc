@@ -17,7 +17,6 @@
 #include <tuple>
 
 #include "assertions.h"
-
 #include "codec.h"
 #include "runner.h"
 
@@ -35,7 +34,7 @@ TEST_P(ExprTest, Run) {
   runner.Decode(buf, len);
   runner.BindTuple(std::get<1>(para));
   runner.Run();
-  auto result = runner.GetRawResult();
+  auto result = runner.Get();
   EXPECT_TRUE(EqualsByType(runner.GetType(), result, std::get<2>(para)));
 }
 
@@ -44,81 +43,61 @@ INSTANTIATE_TEST_SUITE_P(
     ConstExpr,
     ExprTest,
     testing::Values(
-        std::make_tuple("1101", nullptr, Wrap<int32_t>(1)),                       // 1
-        std::make_tuple("2101", nullptr, Wrap<int32_t>(-1)),                      // -1
-        std::make_tuple("119601", nullptr, Wrap<int32_t>(150)),                   // 150
-        std::make_tuple("219601", nullptr, Wrap<int32_t>(-150)),                  // -150
-        std::make_tuple("13", nullptr, Wrap<bool>(true)),                         // true
-        std::make_tuple("23", nullptr, Wrap<bool>(false)),                        // false
-        std::make_tuple("15401F333333333333", nullptr, Wrap<double>(7.8)),        // 7.8
-        std::make_tuple("15400921FB4D12D84A", nullptr, Wrap<double>(3.1415926)),  // 3.1415926
-        std::make_tuple("1541B1E1A300000000", nullptr, Wrap<double>(3E8)),        // 3E8
-
-        std::make_tuple(
-            "1703616263",
-            nullptr,
-            Wrap<std::shared_ptr<std::string>>(std::make_shared<std::string>("abc"))
-        ),  // 'abc'
-
-        std::make_tuple("110111018301", nullptr, Wrap<int32_t>(2)),           // 1 + 1
-        std::make_tuple("110211038301", nullptr, Wrap<int32_t>(5)),           // 2 + 3
-        std::make_tuple("120112018302", nullptr, Wrap<int64_t>(2)),           // 1L + 1L
-        std::make_tuple("120212038302", nullptr, Wrap<int64_t>(5)),           // 2L + 3L
-        std::make_tuple("11031104110685018301", nullptr, Wrap<int32_t>(27)),  // 3 + 4 * 6
-        std::make_tuple("110511068301110B9101", nullptr, Wrap<bool>(true)),   // 5 + 6 = 11
-        std::make_tuple("17036162631701619307", nullptr, Wrap<bool>(true)),   // 'abc' > 'a'
+        std::make_tuple("1101", nullptr, MakeOperand(1)),                        // 1
+        std::make_tuple("2101", nullptr, MakeOperand(-1)),                       // -1
+        std::make_tuple("119601", nullptr, MakeOperand(150)),                    // 150
+        std::make_tuple("219601", nullptr, MakeOperand(-150)),                   // -150
+        std::make_tuple("13", nullptr, MakeOperand(true)),                       // true
+        std::make_tuple("23", nullptr, MakeOperand(false)),                      // false
+        std::make_tuple("15401F333333333333", nullptr, MakeOperand(7.8)),        // 7.8
+        std::make_tuple("15400921FB4D12D84A", nullptr, MakeOperand(3.1415926)),  // 3.1415926
+        std::make_tuple("1541B1E1A300000000", nullptr, MakeOperand(3E8)),        // 3E8
+        std::make_tuple("1703616263", nullptr, MakeOperand(MakeString("abc"))),  // 'abc'
+        std::make_tuple("110111018301", nullptr, MakeOperand(2)),                // 1 + 1
+        std::make_tuple("110211038301", nullptr, MakeOperand(5)),                // 2 + 3
+        std::make_tuple("120112018302", nullptr, MakeOperand(2LL)),              // 1L + 1L
+        std::make_tuple("120212038302", nullptr, MakeOperand(5LL)),              // 2L + 3L
+        std::make_tuple("11031104110685018301", nullptr, MakeOperand(27)),       // 3 + 4 * 6
+        std::make_tuple("110511068301110B9101", nullptr, MakeOperand(true)),     // 5 + 6 = 11
+        std::make_tuple("17036162631701619307", nullptr, MakeOperand(true)),     // 'abc' > 'a'
 
         std::make_tuple(
             "110711088301110E930111061105950152",
             nullptr,
-            Wrap<bool>(false)
+            MakeOperand(false)
         ),  // 7 + 8 > 14 && 6 < 5
 
-        std::make_tuple("1115F021", nullptr, Wrap<int64_t>(21)),  // int64(21)
-        std::make_tuple("230352", nullptr, Wrap<bool>(false)),    // false && null
-        std::make_tuple("130352", nullptr, Wrap<bool>()),         // true && null
-        std::make_tuple("01A101", nullptr, Wrap<bool>(true)),     // is_null(null)
-        std::make_tuple("1101A201", nullptr, Wrap<bool>(true)),   // is_true(1)
-
-        std::make_tuple("218080808008B301", nullptr, Wrap<int32_t>(INT_MIN))  // abs(-INT32_MAX)
+        std::make_tuple("1115F021", nullptr, MakeOperand(21LL)),            // int64(21)
+        std::make_tuple("230352", nullptr, MakeOperand(false)),             // false && null
+        std::make_tuple("130352", nullptr, MakeNull<bool>()),               // true && null
+        std::make_tuple("01A101", nullptr, MakeOperand(true)),              // is_null(null)
+        std::make_tuple("1101A201", nullptr, MakeOperand(true)),            // is_true(1)
+        std::make_tuple("218080808008B301", nullptr, MakeOperand(INT_MIN))  // abs(-INT32_MAX)
     )
 );
 
-static Tuple tuple1{Wrap<int32_t>(1), Wrap<int32_t>(2)};
-static Tuple tuple2{Wrap<int64_t>(35), Wrap<int64_t>(46)};
-static Tuple tuple3{Wrap<double>(3.5), Wrap<double>(4.6)};
-static Tuple tuple4{
-    Wrap<std::shared_ptr<std::string>>(std::make_shared<std::string>("abc")),
-    Wrap<std::shared_ptr<std::string>>(std::make_shared<std::string>("aBc"))
-};
+static Tuple tuple1{MakeOperand(1), MakeOperand(2)};
+static Tuple tuple2{MakeOperand(35LL), MakeOperand(46LL)};
+static Tuple tuple3{MakeOperand(3.5), MakeOperand(4.6)};
+static Tuple tuple4{MakeOperand(MakeString("abc")), MakeOperand(MakeString("aBc"))};
 
 // Test cases with vars
 INSTANTIATE_TEST_SUITE_P(
     VarExpr,
     ExprTest,
     testing::Values(
-        std::make_tuple("3100", &tuple1, Wrap<int32_t>(1)),                      // t0
-        std::make_tuple("3101", &tuple1, Wrap<int32_t>(2)),                      // t1
-        std::make_tuple("310031018301", &tuple1, Wrap<int32_t>(3)),              // t0 + t1
-        std::make_tuple("3200", &tuple2, Wrap<int64_t>(35)),                     // t0
-        std::make_tuple("3201", &tuple2, Wrap<int64_t>(46)),                     // t1
-        std::make_tuple("320032018302", &tuple2, Wrap<int64_t>(81)),             // t0 + t1
-        std::make_tuple("3500", &tuple3, Wrap<double>(3.5)),                     // t0
-        std::make_tuple("3501", &tuple3, Wrap<double>(4.6)),                     // t1
-        std::make_tuple("350035018305", &tuple3, Wrap<double>(8.1)),             // t0 + t1
-        std::make_tuple("3501128080808008f0529505", &tuple3, Wrap<bool>(true)),  // t1 < 2147483648
-
-        std::make_tuple(
-            "3700",
-            &tuple4,
-            Wrap<std::shared_ptr<std::string>>(std::make_shared<std::string>("abc"))
-        ),  // t0
-        std::make_tuple(
-            "3701",
-            &tuple4,
-            Wrap<std::shared_ptr<std::string>>(std::make_shared<std::string>("aBc"))
-        ),  // t1
-
-        std::make_tuple("370037019307", &tuple4, Wrap<bool>(true))  // t0 < t1
+        std::make_tuple("3100", &tuple1, MakeOperand(1)),                         // t0
+        std::make_tuple("3101", &tuple1, MakeOperand(2)),                         // t1
+        std::make_tuple("310031018301", &tuple1, MakeOperand(3)),                 // t0 + t1
+        std::make_tuple("3200", &tuple2, MakeOperand(35LL)),                      // t0
+        std::make_tuple("3201", &tuple2, MakeOperand(46LL)),                      // t1
+        std::make_tuple("320032018302", &tuple2, MakeOperand(81LL)),              // t0 + t1
+        std::make_tuple("3500", &tuple3, MakeOperand(3.5)),                       // t0
+        std::make_tuple("3501", &tuple3, MakeOperand(4.6)),                       // t1
+        std::make_tuple("350035018305", &tuple3, MakeOperand(8.1)),               // t0 + t1
+        std::make_tuple("3501128080808008f0529505", &tuple3, MakeOperand(true)),  // t1 < 2147483648
+        std::make_tuple("3700", &tuple4, MakeOperand(MakeString("abc"))),         // t0
+        std::make_tuple("3701", &tuple4, MakeOperand(MakeString("aBc"))),         // t1
+        std::make_tuple("370037019307", &tuple4, MakeOperand(true))               // t0 < t1
     )
 );

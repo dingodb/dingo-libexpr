@@ -20,74 +20,88 @@
 using namespace dingodb::expr;
 using namespace dingodb::rel;
 
-TEST(RelRunnerTest, Filter) {
-  // FILTER(input, $[2] > 50)
-  std::string input = "7134021442480000930400";
-  auto len = input.size() / 2;
+static const RelRunner *MakeRunner(const std::string &code) {
+  auto len = code.size() / 2;
   Byte buf[len];
-  HexToBytes(buf, input.data(), input.size());
+  HexToBytes(buf, code.data(), code.size());
   auto *rel = new RelRunner();
   rel->Decode(buf, len);
-  auto *tuple1 = MakeTuple<int32_t, String, float>(1, std::make_shared<std::string>("Alice"), 10);
+  return rel;
+}
+
+TEST(RelRunnerTest, Filter) {
+  // FILTER(input, $[2] > 50)
+  const auto *rel = MakeRunner("7134021442480000930400");
+  auto *tuple1 = MakeTuple(1, MakeString("Alice"), 10.0f);
   auto *out1 = rel->Put(tuple1);
   EXPECT_EQ(out1, nullptr);
-  auto *tuple2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 60);
+  auto *tuple2 = MakeTuple(2, MakeString("Betty"), 60.0f);
   auto *out2 = rel->Put(tuple2);
   EXPECT_EQ(out2, tuple2);
   delete out2;
+  delete rel;
 }
 
 TEST(RelRunnerTest, Project) {
   // PROJECT(input, $[0], $[1], $[2] / 10)
-  std::string input = "723100370134021441200000860400";
+  const auto *rel = MakeRunner("723100370134021441200000860400");
   int32_t types[]{TYPE_INT32, TYPE_STRING, TYPE_FLOAT};
-  auto len = input.size() / 2;
-  Byte buf[len];
-  HexToBytes(buf, input.data(), input.size());
-  auto *rel = new RelRunner();
-  rel->Decode(buf, len);
-  auto *tuple1 = MakeTuple<int32_t, String, float>(1, std::make_shared<std::string>("Alice"), 10);
+  auto *tuple1 = MakeTuple(1, MakeString("Alice"), 10.0f);
   auto *out1 = rel->Put(tuple1);
-  auto *result1 = MakeTuple<int32_t, String, float>(1, std::make_shared<std::string>("Alice"), 1);
+  auto *result1 = MakeTuple(1, MakeString("Alice"), 1.0f);
   EXPECT_TRUE(TupleEquals(types, out1, result1));
-  auto *tuple2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 60);
+  delete out1;
+  delete result1;
+  auto *tuple2 = MakeTuple(2, MakeString("Betty"), 60.0f);
   auto *out2 = rel->Put(tuple2);
-  auto *result2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 6);
+  auto *result2 = MakeTuple(2, MakeString("Betty"), 6.0f);
   EXPECT_TRUE(TupleEquals(types, out2, result2));
+  delete out2;
+  delete result2;
+  delete rel;
 }
 
 TEST(RelRunnerTest, Filter_Project) {
   // PROJECT(FILTER(input, $[2] > 50), $[0], $[1], $[2] / 10)
-  std::string input = "7134021442480000930400723100370134021441200000860400";
+  const auto *rel = MakeRunner("7134021442480000930400723100370134021441200000860400");
   int32_t types[]{TYPE_INT32, TYPE_STRING, TYPE_FLOAT};
-  auto len = input.size() / 2;
-  Byte buf[len];
-  HexToBytes(buf, input.data(), input.size());
-  auto *rel = new RelRunner();
-  rel->Decode(buf, len);
-  auto *tuple1 = MakeTuple<int32_t, String, float>(1, std::make_shared<std::string>("Alice"), 10);
+  auto *tuple1 = MakeTuple(1, MakeString("Alice"), 10.0f);
   auto *out1 = rel->Put(tuple1);
   EXPECT_EQ(out1, nullptr);
-  auto *tuple2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 60);
+  auto *tuple2 = MakeTuple(2, MakeString("Betty"), 60.0f);
   auto *out2 = rel->Put(tuple2);
-  auto *result2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 6);
+  auto *result2 = MakeTuple(2, MakeString("Betty"), 6.0f);
   EXPECT_TRUE(TupleEquals(types, out2, result2));
+  delete out2;
+  delete result2;
+  delete rel;
 }
 
 TEST(RelRunnerTest, Project_Filter) {
   // FILTER(PROJECT(input, $[0], $[1], $[2] / 10), $[2] > 50)
-  std::string input = "7231003701340214412000008604007134021442480000930400";
+  const auto *rel = MakeRunner("7231003701340214412000008604007134021442480000930400");
   int32_t types[]{TYPE_INT32, TYPE_STRING, TYPE_FLOAT};
-  auto len = input.size() / 2;
-  Byte buf[len];
-  HexToBytes(buf, input.data(), input.size());
-  auto *rel = new RelRunner();
-  rel->Decode(buf, len);
-  auto *tuple1 = MakeTuple<int32_t, String, float>(1, std::make_shared<std::string>("Alice"), 100);
+  auto *tuple1 = MakeTuple(1, MakeString("Alice"), 100.0f);
   auto *out1 = rel->Put(tuple1);
   EXPECT_EQ(out1, nullptr);
-  auto *tuple2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 600);
+  auto *tuple2 = MakeTuple(2, MakeString("Betty"), 600.0f);
   auto *out2 = rel->Put(tuple2);
-  auto *result2 = MakeTuple<int32_t, String, float>(2, std::make_shared<std::string>("Betty"), 60);
+  auto *result2 = MakeTuple(2, MakeString("Betty"), 60.0f);
   EXPECT_TRUE(TupleEquals(types, out2, result2));
+  delete out2;
+  delete result2;
+  delete rel;
+}
+
+TEST(RelRunnerTest, Agg) {
+  // AGG(input, COUNT(), COUNT($[1]), SUM($[2]))
+  const auto *rel = MakeRunner("74031017012402");
+  int32_t types[]{TYPE_INT32, TYPE_STRING, TYPE_FLOAT};
+  auto *tuple1 = MakeTuple(1, MakeString("Alice"), 100.0f);
+  auto *out1 = rel->Put(tuple1);
+  EXPECT_EQ(out1, nullptr);
+  auto *tuple2 = MakeTuple(2, MakeString("Betty"), 600.0f);
+  auto *out2 = rel->Put(tuple2);
+  EXPECT_EQ(out2, nullptr);
+  delete rel;
 }

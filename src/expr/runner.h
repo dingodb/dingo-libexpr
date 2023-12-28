@@ -31,26 +31,21 @@ class Runner {
     return m_operator_vector.Decode(code, len);
   }
 
-  void BindTuple(const Tuple *tuple, bool own_tuple = false) const {
-    m_operand_stack.BindTuple(tuple, own_tuple);
+  void BindTuple(const Tuple *tuple) const {
+    m_operand_stack.BindTuple(tuple);
   }
 
   void Run() const;
 
-  Operand GetRawResult() const {
-    return m_operand_stack.GetRaw();
-  }
-
-  template <typename T>
-  Wrap<T> GetResult() const {
-    return m_operand_stack.Get<T>();
+  Operand Get() const {
+    return m_operand_stack.Get();
   }
 
   Byte GetType() const {
     return m_operator_vector.GetType();
   }
 
-  Tuple *GetTuple() const;
+  Tuple *GetAll() const;
 
  private:
   mutable OperandStack m_operand_stack;

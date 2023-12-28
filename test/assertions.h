@@ -24,20 +24,21 @@ namespace dingodb::expr {
 
 template <int T>
 testing::AssertionResult Equals(const Operand &actual, const Operand &expected) {
-  auto a = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(actual);
-  auto e = std::any_cast<Wrap<typename CxxTraits<T>::Type>>(expected);
-  if (a == e) {
-    return testing::AssertionSuccess();
-  }
-  if (a.has_value()) {
-    if (e.has_value()) {
-      return testing::AssertionFailure() << *a << " != " << *e;
+  if (NotNull<TypeOf<T>>(actual)) {
+    auto a = GetValue<TypeOf<T>>(actual);
+    if (NotNull<TypeOf<T>>(expected)) {
+      auto e = GetValue<TypeOf<T>>(expected);
+      if (a == e) {
+        return testing::AssertionSuccess();
+      }
+      return testing::AssertionFailure() << a << " != " << e;
     }
-    return testing::AssertionFailure() << *a << " != null";
-  } else if (e.has_value()) {
-    return testing::AssertionFailure() << "null != " << *e;
+    return testing::AssertionFailure() << a << " != null";
+  } else if (NotNull<TypeOf<T>>(expected)) {
+    auto e = GetValue<TypeOf<T>>(expected);
+    return testing::AssertionFailure() << "null != " << e;
   }
-  return testing::AssertionFailure() << "both are null";
+  return testing::AssertionSuccess();
 }
 
 template <>

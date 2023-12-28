@@ -21,7 +21,7 @@ namespace dingodb::expr::calc {
 String Concat(String v0, String v1) {
   if (!v0->empty()) {
     if (!v1->empty()) {
-      return std::make_shared<std::string>(*v0 + *v1);
+      return MakeString(*v0 + *v1);
     }
     return v0;
   }
@@ -31,13 +31,13 @@ String Concat(String v0, String v1) {
 String Lower(String v) {
   std::string str(v->length(), '\0');
   std::transform(v->cbegin(), v->cend(), str.begin(), [](unsigned char ch) { return std::tolower(ch); });
-  return std::make_shared<std::string>(str);
+  return MakeString(str);
 }
 
 String Upper(String v) {
   std::string str(v->length(), '\0');
   std::transform(v->cbegin(), v->cend(), str.begin(), [](unsigned char ch) { return std::toupper(ch); });
-  return std::make_shared<std::string>(str);
+  return MakeString(str);
 }
 
 String Left(String v0, int32_t v1) {
@@ -45,11 +45,11 @@ String Left(String v0, int32_t v1) {
     if (v1 > 0) {
       auto len = v0->length();
       if (v1 < len) {
-        return std::make_shared<std::string>(v0->substr(0, v1));
+        return MakeString(v0->substr(0, v1));
       }
       return v0;
     }
-    return std::make_shared<std::string>();
+    return MakeString();
   }
   return v0;
 }
@@ -59,11 +59,11 @@ String Right(String v0, int32_t v1) {
     if (v1 > 0) {
       auto len = v0->length();
       if (v1 < len) {
-        return std::make_shared<std::string>(v0->substr(len - v1));
+        return MakeString(v0->substr(len - v1));
       }
       return v0;
     }
-    return std::make_shared<std::string>();
+    return MakeString();
   }
   return v0;
 }
@@ -75,17 +75,17 @@ static bool IsSpace(unsigned char ch) {
 String Trim(String v) {
   auto s = std::find_if_not(v->cbegin(), v->cend(), IsSpace);
   auto e = std::find_if_not(v->crbegin(), v->crend(), IsSpace);
-  return std::make_shared<std::string>(v->substr(s - v->cbegin(), (v->crend() - e) - (s - v->cbegin())));
+  return MakeString(v->substr(s - v->cbegin(), (v->crend() - e) - (s - v->cbegin())));
 }
 
 String LTrim(String v) {
   auto s = std::find_if_not(v->cbegin(), v->cend(), IsSpace);
-  return std::make_shared<std::string>(v->substr(s - v->cbegin()));
+  return MakeString(v->substr(s - v->cbegin()));
 }
 
 String RTrim(String v) {
   auto e = std::find_if_not(v->crbegin(), v->crend(), IsSpace);
-  return std::make_shared<std::string>(v->substr(0, v->crend() - e));
+  return MakeString(v->substr(0, v->crend() - e));
 }
 
 String Substr(String v0, int32_t v1, int32_t v2) {
@@ -97,13 +97,13 @@ String Substr(String v0, int32_t v1, int32_t v2) {
     if (v2 >= len) {
       return v0;
     } else {
-      return std::make_shared<std::string>(v0->substr(v1, v2 - v1));
+      return MakeString(v0->substr(v1, v2 - v1));
     }
   } else {
     if (v2 >= len) {
-      return std::make_shared<std::string>(v0->substr(v1));
+      return MakeString(v0->substr(v1));
     } else {
-      return std::make_shared<std::string>(v0->substr(v1, v2 - v1));
+      return MakeString(v0->substr(v1, v2 - v1));
     }
   }
 }
@@ -116,7 +116,7 @@ String Substr(String v0, int32_t v1) {
   if (v1 == 0) {
     return v0;
   } else {
-    return std::make_shared<std::string>(v0->substr(v1));
+    return MakeString(v0->substr(v1));
   }
 }
 
@@ -128,15 +128,15 @@ String Mid(String v0, int32_t v1, int32_t v2) {
     } else if (-len <= v1 && v1 < 0) {
       v1 += len;
     } else {
-      return std::make_shared<std::string>();
+      return MakeString();
     }
     if (v1 + v2 >= len) {
-      return std::make_shared<std::string>(v0->substr(v1));
+      return MakeString(v0->substr(v1));
     } else {
-      return std::make_shared<std::string>(v0->substr(v1, v2));
+      return MakeString(v0->substr(v1, v2));
     }
   }
-  return std::make_shared<std::string>();
+  return MakeString();
 }
 
 String Mid(String v0, int32_t v1) {
@@ -146,9 +146,9 @@ String Mid(String v0, int32_t v1) {
   } else if (-len <= v1 && v1 < 0) {
     v1 += len;
   } else {
-    return std::make_shared<std::string>();
+    return MakeString();
   }
-  return std::make_shared<std::string>(v0->substr(v1));
+  return MakeString(v0->substr(v1));
 }
 
 }  // namespace dingodb::expr::calc

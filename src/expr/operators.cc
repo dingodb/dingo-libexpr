@@ -250,35 +250,35 @@ const Operator *const OP_LE[] = {
 
 const Operator *const OP_IS_NULL[] = {
     [TYPE_NULL] = nullptr,
-    [TYPE_INT32] = new UnarySpecialOperator<TYPE_INT32, calc::IsNull>,
-    [TYPE_INT64] = new UnarySpecialOperator<TYPE_INT64, calc::IsNull>,
-    [TYPE_BOOL] = new UnarySpecialOperator<TYPE_BOOL, calc::IsNull>,
-    [TYPE_FLOAT] = new UnarySpecialOperator<TYPE_FLOAT, calc::IsNull>,
-    [TYPE_DOUBLE] = new UnarySpecialOperator<TYPE_DOUBLE, calc::IsNull>,
+    [TYPE_INT32] = new UnarySpecialOperator<calc::IsNull<int32_t>>,
+    [TYPE_INT64] = new UnarySpecialOperator<calc::IsNull<int64_t>>,
+    [TYPE_BOOL] = new UnarySpecialOperator<calc::IsNull<bool>>,
+    [TYPE_FLOAT] = new UnarySpecialOperator<calc::IsNull<float>>,
+    [TYPE_DOUBLE] = new UnarySpecialOperator<calc::IsNull<double>>,
     [TYPE_DECIMAL] = nullptr,
-    [TYPE_STRING] = new UnarySpecialOperator<TYPE_STRING, calc::IsNull>,
+    [TYPE_STRING] = new UnarySpecialOperator<calc::IsNull<String>>,
 };
 
 const Operator *const OP_IS_TRUE[] = {
     [TYPE_NULL] = nullptr,
-    [TYPE_INT32] = new UnarySpecialOperator<TYPE_INT32, calc::IsTrue>,
-    [TYPE_INT64] = new UnarySpecialOperator<TYPE_INT64, calc::IsTrue>,
-    [TYPE_BOOL] = new UnarySpecialOperator<TYPE_BOOL, calc::IsTrue>,
-    [TYPE_FLOAT] = new UnarySpecialOperator<TYPE_FLOAT, calc::IsTrue>,
-    [TYPE_DOUBLE] = new UnarySpecialOperator<TYPE_DOUBLE, calc::IsTrue>,
+    [TYPE_INT32] = new UnarySpecialOperator<calc::IsTrue<int32_t>>,
+    [TYPE_INT64] = new UnarySpecialOperator<calc::IsTrue<int64_t>>,
+    [TYPE_BOOL] = new UnarySpecialOperator<calc::IsTrue<bool>>,
+    [TYPE_FLOAT] = new UnarySpecialOperator<calc::IsTrue<float>>,
+    [TYPE_DOUBLE] = new UnarySpecialOperator<calc::IsTrue<double>>,
     [TYPE_DECIMAL] = nullptr,
-    [TYPE_STRING] = new UnarySpecialOperator<TYPE_STRING, calc::IsTrue>,
+    [TYPE_STRING] = new UnarySpecialOperator<calc::IsTrue<String>>,
 };
 
 const Operator *const OP_IS_FALSE[] = {
     [TYPE_NULL] = nullptr,
-    [TYPE_INT32] = new UnarySpecialOperator<TYPE_INT32, calc::IsFalse>,
-    [TYPE_INT64] = new UnarySpecialOperator<TYPE_INT64, calc::IsFalse>,
-    [TYPE_BOOL] = new UnarySpecialOperator<TYPE_BOOL, calc::IsFalse>,
-    [TYPE_FLOAT] = new UnarySpecialOperator<TYPE_FLOAT, calc::IsFalse>,
-    [TYPE_DOUBLE] = new UnarySpecialOperator<TYPE_DOUBLE, calc::IsFalse>,
+    [TYPE_INT32] = new UnarySpecialOperator<calc::IsFalse<int32_t>>,
+    [TYPE_INT64] = new UnarySpecialOperator<calc::IsFalse<int64_t>>,
+    [TYPE_BOOL] = new UnarySpecialOperator<calc::IsFalse<bool>>,
+    [TYPE_FLOAT] = new UnarySpecialOperator<calc::IsFalse<float>>,
+    [TYPE_DOUBLE] = new UnarySpecialOperator<calc::IsFalse<double>>,
     [TYPE_DECIMAL] = nullptr,
-    [TYPE_STRING] = new UnarySpecialOperator<TYPE_STRING, calc::IsFalse>,
+    [TYPE_STRING] = new UnarySpecialOperator<calc::IsFalse<String>>,
 };
 
 const Operator *const OP_MIN[] = {

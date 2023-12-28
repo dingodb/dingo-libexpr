@@ -20,7 +20,7 @@ namespace dingodb::expr::calc {
 
 template <>
 String Add(String v0, String v1) {
-  return std::make_shared<std::string>(*v0 + *v1);
+  return MakeString(*v0 + *v1);
 }
 
 }  // namespace dingodb::expr::calc

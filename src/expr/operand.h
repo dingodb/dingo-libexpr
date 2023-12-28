@@ -21,10 +21,61 @@
 
 namespace dingodb::expr {
 
-template <typename T>
-using Wrap = std::optional<T>;
+namespace operand_is_any_optional {
 
 using Operand = std::any;
+
+template <typename T>
+inline Operand MakeOperand(T v) {
+  return std::make_any<std::optional<T>>(std::optional<T>(v));
+}
+
+template <typename T>
+inline Operand MakeNull() {
+  return std::make_any<std::optional<T>>(std::optional<T>());
+}
+
+template <typename T>
+inline bool NotNull(const Operand &v) {
+  const std::optional<T> vv = std::any_cast<const std::optional<T>>(v);
+  return vv.has_value();
+}
+
+template <typename T>
+inline T GetValue(const Operand &v) {
+  const std::optional<T> vv = std::any_cast<const std::optional<T>>(v);
+  return *vv;
+}
+
+}  // namespace operand_is_any_optional
+
+namespace operand_is_any {
+
+using Operand = std::any;
+
+template <typename T>
+inline Operand MakeOperand(T v) {
+  return std::make_any<T>(v);
+}
+
+template <typename T>
+inline Operand MakeNull() {
+  return std::any();
+}
+
+template <typename T>
+inline bool NotNull(const Operand &v) {
+  return v.has_value();
+}
+
+template <typename T>
+inline T GetValue(const Operand &v) {
+  return std::any_cast<T>(v);
+}
+
+}  // namespace operand_is_any
+
+using namespace operand_is_any;
 
 using Tuple = std::vector<Operand>;
 

@@ -49,13 +49,13 @@ T Mul(T v0, T v1) {
 }
 
 template <typename T>
-Wrap<T> Div(T v0, T v1) {
-  return (v1 != 0) ? Wrap<T>(v0 / v1) : Wrap<T>();
+Operand Div(T v0, T v1) {
+  return (v1 != 0) ? MakeOperand(v0 / v1) : MakeNull<T>();
 }
 
 template <typename T>
-Wrap<T> Mod(T v0, T v1) {
-  return v1 != 0 ? Wrap<T>(v0 % v1) : Wrap<T>();
+Operand Mod(T v0, T v1) {
+  return v1 != 0 ? MakeOperand(v0 % v1) : MakeNull<T>();
 }
 
 }  // namespace dingodb::expr::calc
