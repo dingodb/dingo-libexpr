@@ -12,29 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_FILTER_OP_H_
-#define _REL_OP_FILTER_OP_H_
+#ifndef _REL_OP_UNGROUPED_AGG_OP_H_
+#define _REL_OP_UNGROUPED_AGG_OP_H_
 
+#include "agg.h"
 #include "rel_op.h"
-
-namespace dingodb::expr {
-class Runner;
-}
 
 namespace dingodb::rel::op {
 
-class FilterOp : public RelOp {
+class UngroupedAggOp : public RelOp {
  public:
-  FilterOp(const expr::Runner *filter);
+  UngroupedAggOp(const std::vector<const Agg *> *aggs);
 
-  ~FilterOp() override;
+  ~UngroupedAggOp() override;
 
   expr::Tuple *Put(expr::Tuple *tuple) const override;
 
  private:
-  const expr::Runner *m_filter;
+  const std::vector<const Agg *> *m_aggs;
+
+  mutable expr::Tuple *m_cache;
 };
 
 }  // namespace dingodb::rel::op
 
-#endif /* _REL_OP_FILTER_OP_H_ */
+#endif /* _REL_OP_UNGROUPED_AGG_OP_H_ */

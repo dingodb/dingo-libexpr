@@ -25,7 +25,7 @@ void Runner::Run() const {
   }
 }
 
-Tuple *Runner::GetTuple() const {
+Tuple *Runner::GetAll() const {
   auto *tuple = new Tuple();
   std::copy(m_operand_stack.begin(), m_operand_stack.end(), std::back_inserter(*tuple));
   return tuple;

@@ -12,29 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_FILTER_OP_H_
-#define _REL_OP_FILTER_OP_H_
-
-#include "rel_op.h"
-
-namespace dingodb::expr {
-class Runner;
-}
+#include "agg.h"
 
 namespace dingodb::rel::op {
 
-class FilterOp : public RelOp {
- public:
-  FilterOp(const expr::Runner *filter);
-
-  ~FilterOp() override;
-
-  expr::Tuple *Put(expr::Tuple *tuple) const override;
-
- private:
-  const expr::Runner *m_filter;
-};
+expr::Operand CountAllAgg::Add(const expr::Operand &var, [[maybe_unused]] const expr::Tuple *tuple) const {
+  if (expr::NotNull<int64_t>(var)) {
+    return expr::MakeOperand(expr::GetValue<int64_t>(var) + 1LL);
+  }
+  return expr::MakeOperand(1LL);
+}
 
 }  // namespace dingodb::rel::op
-
-#endif /* _REL_OP_FILTER_OP_H_ */

@@ -21,8 +21,8 @@
 namespace dingodb::expr {
 
 template <typename... T>
-expr::Tuple *MakeTuple(T... v) {
-  return new expr::Tuple{std::make_any<expr::Wrap<T>>(v)...};
+Tuple *MakeTuple(T... v) {
+  return new Tuple{MakeOperand(v)...};
 }
 
 std::string HexOfBytes(const Byte *data, size_t len);

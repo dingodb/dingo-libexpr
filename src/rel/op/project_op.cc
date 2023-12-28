@@ -29,7 +29,7 @@ expr::Tuple *ProjectOp::Put(expr::Tuple *tuple) const {
   m_projects->BindTuple(tuple);
   m_projects->Run();
   delete tuple;
-  return m_projects->GetTuple();
+  return m_projects->GetAll();
 }
 
 }  // namespace dingodb::rel::op

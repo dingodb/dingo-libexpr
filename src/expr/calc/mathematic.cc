@@ -20,12 +20,12 @@ namespace dingodb::expr::calc {
 
 template <>
 String Min(String v0, String v1) {
-  return std::make_shared<std::string>(std::min(*v0, *v1));
+  return MakeString(std::min(*v0, *v1));
 }
 
 template <>
 String Max(String v0, String v1) {
-  return std::make_shared<std::string>(std::max(*v0, *v1));
+  return MakeString(std::max(*v0, *v1));
 }
 
 }  // namespace dingodb::expr::calc

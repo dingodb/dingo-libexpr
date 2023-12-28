@@ -15,8 +15,10 @@
 #ifndef _REL_REL_RUNNER_H_
 #define _REL_REL_RUNNER_H_
 
+#include "expr/codec.h"
 #include "expr/types.h"
-#include "rel_op.h"
+#include "op/agg.h"
+#include "op/rel_op.h"
 
 namespace dingodb::rel {
 
@@ -27,10 +29,26 @@ class RelRunner {
 
   const expr::Byte *Decode(const expr::Byte *code, size_t len);
 
-  expr::Tuple *Put(expr::Tuple *tuple);
+  expr::Tuple *Put(expr::Tuple *tuple) const;
 
  private:
   RelOp *m_op;
+
+  template <class AGG>
+  static const expr::Byte *DecodeAgg(std::vector<const op::Agg *> &aggs, const expr::Byte *code) {
+    const expr::Byte *p = code;
+    ++p;
+    int32_t index;
+    p = expr::DecodeVarint(index, p);
+    auto *agg = new AGG(index);
+    aggs.push_back(agg);
+    return p;
+  }
+
+  template <>
+  const expr::Byte *DecodeAgg<op::CountAllAgg>(std::vector<const op::Agg *> &aggs, const expr::Byte *code);
+
+  static const expr::Byte *DecodeAggList(std::vector<const op::Agg *> &aggs, const expr::Byte *code, size_t len);
 
   void Release() {
     delete m_op;

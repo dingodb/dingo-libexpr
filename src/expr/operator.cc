@@ -14,52 +14,57 @@
 
 #include "operator.h"
 
+#include "calc/special.h"
+
 namespace dingodb::expr {
 
 void NotOperator::operator()(OperandStack &stack) const {
-  auto v = stack.Get<bool>();
-  if (v.has_value()) {
-    stack.Set<bool>(!*v);
+  auto v = stack.Get();
+  stack.Pop();
+  if (NotNull<bool>(v)) {
+    stack.Push(!GetValue<bool>(v));
   } else {
-    stack.Set<bool>();
+    stack.Push<bool>();
   }
 }
 
 void AndOperator::operator()(OperandStack &stack) const {
-  auto v1 = stack.Get<bool>();
+  auto v1 = stack.Get();
   stack.Pop();
-  auto v0 = stack.Get<bool>();
-  if (v0.has_value()) {
-    if (!*v0) {
-      stack.Set<bool>(false);
-    } else if (v1.has_value()) {
-      stack.Set<bool>(*v1);
+  auto v0 = stack.Get();
+  stack.Pop();
+  if (NotNull<bool>(v0)) {
+    if (!GetValue<bool>(v0)) {
+      stack.Push(false);
+    } else if (NotNull<bool>(v1)) {
+      stack.Push(GetValue<bool>(v1));
     } else {
-      stack.Set<bool>();
+      stack.Push<bool>();
     }
-  } else if (v1.has_value() && !*v1) {
-    stack.Set<bool>(false);
+  } else if (calc::IsFalse<bool>(v1)) {
+    stack.Push(false);
   } else {
-    stack.Set<bool>();
+    stack.Push<bool>();
   }
 }
 
 void OrOperator::operator()(OperandStack &stack) const {
-  auto v1 = stack.Get<bool>();
+  auto v1 = stack.Get();
   stack.Pop();
-  auto v0 = stack.Get<bool>();
-  if (v0.has_value()) {
-    if (*v0) {
-      stack.Set<bool>(true);
-    } else if (v1.has_value()) {
-      stack.Set<bool>(*v1);
+  auto v0 = stack.Get();
+  stack.Pop();
+  if (NotNull<bool>(v0)) {
+    if (GetValue<bool>(v0)) {
+      stack.Push(true);
+    } else if (NotNull<bool>(v1)) {
+      stack.Push(GetValue<bool>(v1));
     } else {
-      stack.Set<bool>();
+      stack.Push<bool>();
     }
-  } else if (v1.has_value() && *v1) {
-    stack.Set<bool>(true);
+  } else if (calc::IsTrue<bool>(v1)) {
+    stack.Push(true);
   } else {
-    stack.Set<bool>();
+    stack.Push<bool>();
   }
 }
 

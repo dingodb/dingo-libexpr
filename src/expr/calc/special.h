@@ -23,25 +23,25 @@
 namespace dingodb::expr::calc {
 
 template <typename T>
-bool IsNull(const Wrap<T> &v) {
-  return !v.has_value();
+bool IsNull(const Operand &v) {
+  return !expr::NotNull<T>(v);
 }
 
 template <typename T>
-bool IsTrue(const Wrap<T> &v) {
-  return v.has_value() && *v;
+bool IsTrue(const Operand &v) {
+  return expr::NotNull<T>(v) && expr::GetValue<T>(v);
 }
 
 template <>
-bool IsTrue(const Wrap<String> &v);
+bool IsTrue<String>(const Operand &v);
 
 template <typename T>
-bool IsFalse(const Wrap<T> &v) {
-  return v.has_value() && !*v;
+bool IsFalse(const Operand &v) {
+  return expr::NotNull<T>(v) && !expr::GetValue<T>(v);
 }
 
 template <>
-bool IsFalse(const Wrap<String> &v);
+bool IsFalse<String>(const Operand &v);
 
 }  // namespace dingodb::expr::calc
 

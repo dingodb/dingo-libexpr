@@ -15,7 +15,7 @@
 #ifndef _REL_OP_PROJECT_OP_H_
 #define _REL_OP_PROJECT_OP_H_
 
-#include "../rel_op.h"
+#include "rel_op.h"
 
 namespace dingodb::expr {
 class Runner;

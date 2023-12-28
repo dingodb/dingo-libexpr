@@ -12,29 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_FILTER_OP_H_
-#define _REL_OP_FILTER_OP_H_
+#ifndef _EXPR_EXCEPTION_H_
+#define _EXPR_EXCEPTION_H_
 
-#include "rel_op.h"
+#include <stdexcept>
+
+#include "types.h"
+#include "utils.h"
 
 namespace dingodb::expr {
-class Runner;
-}
 
-namespace dingodb::rel::op {
-
-class FilterOp : public RelOp {
+class UnknownCode : public std::runtime_error {
  public:
-  FilterOp(const expr::Runner *filter);
-
-  ~FilterOp() override;
-
-  expr::Tuple *Put(expr::Tuple *tuple) const override;
-
- private:
-  const expr::Runner *m_filter;
+  UnknownCode(const Byte *code, size_t len)
+      : std::runtime_error("Unknown code in expression, bytes: " + HexOfBytes(code, len)) {
+  }
 };
 
-}  // namespace dingodb::rel::op
+}  // namespace dingodb::expr
 
-#endif /* _REL_OP_FILTER_OP_H_ */
+#endif /* _EXPR_EXCEPTION_H_ */

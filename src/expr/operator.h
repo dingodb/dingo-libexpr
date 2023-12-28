@@ -75,7 +75,7 @@ class ConstBoolOperator : public OperatorBase<TYPE_BOOL> {
 template <Byte R>
 class IndexedVarOperator : public OperatorBase<R> {
  public:
-  IndexedVarOperator(uint32_t index) : m_index(index) {
+  IndexedVarOperator(int32_t index) : m_index(index) {
   }
 
   void operator()(OperandStack &stack) const override {
@@ -83,18 +83,19 @@ class IndexedVarOperator : public OperatorBase<R> {
   }
 
  private:
-  uint32_t m_index;
+  int32_t m_index;
 };
 
 template <Byte R, Byte T, TypeOf<R> (*Calc)(TypeOf<T>)>
 class UnaryOperator : public OperatorBase<R> {
  public:
   void operator()(OperandStack &stack) const override {
-    auto v = stack.Get<TypeOf<T>>();
-    if (v.has_value()) {
-      stack.Set<TypeOf<R>>(Calc(*v));
+    auto v = stack.Get();
+    stack.Pop();
+    if (NotNull<TypeOf<T>>(v)) {
+      stack.Push<TypeOf<R>>(Calc(GetValue<TypeOf<T>>(v)));
     } else {
-      stack.Set<TypeOf<R>>();
+      stack.Push<TypeOf<R>>();
     }
   }
 };
@@ -105,12 +106,13 @@ using CastOperator = UnaryOperator<R, T, calc::Cast>;
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)>
 using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;
 
-template <Byte T, bool (*Calc)(const Wrap<TypeOf<T>> &)>
+template <bool (*Calc)(const Operand &)>
 class UnarySpecialOperator : public OperatorBase<TYPE_BOOL> {
  public:
   void operator()(OperandStack &stack) const override {
-    auto v = stack.Get<TypeOf<T>>();
-    stack.Set<bool>(Calc(v));
+    auto v = stack.Get();
+    stack.Pop();
+    stack.Push<bool>(Calc(v));
   }
 };
 
@@ -118,28 +120,30 @@ template <Byte R, Byte T0, Byte T1, TypeOf<R> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
 class BinaryOperator : public OperatorBase<R> {
  public:
   void operator()(OperandStack &stack) const override {
-    auto v1 = stack.Get<TypeOf<T1>>();
+    auto v1 = stack.Get();
     stack.Pop();
-    auto v0 = stack.Get<TypeOf<T0>>();
-    if (v0.has_value() && v1.has_value()) {
-      stack.Set<TypeOf<R>>(Calc(*v0, *v1));
+    auto v0 = stack.Get();
+    stack.Pop();
+    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1)) {
+      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1)));
     } else {
-      stack.Set<TypeOf<R>>();
+      stack.Push<TypeOf<R>>();
     }
   }
 };
 
-template <Byte R, Byte T0, Byte T1, Wrap<TypeOf<R>> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
+template <Byte R, Byte T0, Byte T1, Operand (*Calc)(TypeOf<T0>, TypeOf<T1>)>
 class BinaryOperatorV2 : public OperatorBase<R> {
  public:
   void operator()(OperandStack &stack) const override {
-    auto v1 = stack.Get<TypeOf<T1>>();
+    auto v1 = stack.Get();
     stack.Pop();
-    auto v0 = stack.Get<TypeOf<T0>>();
-    if (v0.has_value() && v1.has_value()) {
-      stack.SetWrapped(Calc(*v0, *v1));
+    auto v0 = stack.Get();
+    stack.Pop();
+    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1)) {
+      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1)));
     } else {
-      stack.Set<TypeOf<R>>();
+      stack.Push<TypeOf<R>>();
     }
   }
 };
@@ -154,15 +158,16 @@ template <Byte R, Byte T0, Byte T1, Byte T2, TypeOf<R> (*Calc)(TypeOf<T0>, TypeO
 class TertiaryOperator : public OperatorBase<R> {
  public:
   void operator()(OperandStack &stack) const override {
-    auto v2 = stack.Get<TypeOf<T2>>();
+    auto v2 = stack.Get();
     stack.Pop();
-    auto v1 = stack.Get<TypeOf<T1>>();
+    auto v1 = stack.Get();
     stack.Pop();
-    auto v0 = stack.Get<TypeOf<T0>>();
-    if (v0.has_value() && v1.has_value() && v2.has_value()) {
-      stack.Set<TypeOf<R>>(Calc(*v0, *v1, *v2));
+    auto v0 = stack.Get();
+    stack.Pop();
+    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1) && NotNull<TypeOf<T2>>(v2)) {
+      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1), GetValue<TypeOf<T2>>(v2)));
     } else {
-      stack.Set<TypeOf<R>>();
+      stack.Push<TypeOf<R>>();
     }
   }
 };

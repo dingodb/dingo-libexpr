@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_REL_OP_H_
-#define _REL_REL_OP_H_
+#include "ungrouped_agg_op.h"
 
-#include "expr/operand.h"
+namespace dingodb::rel::op {
 
-namespace dingodb::rel {
+UngroupedAggOp::UngroupedAggOp(const std::vector<const Agg *> *aggs) : m_aggs(aggs), m_cache(nullptr) {
+}
 
-class RelOp {
- public:
-  RelOp() = default;
-  virtual ~RelOp() = default;
+UngroupedAggOp::~UngroupedAggOp() {
+  for (const auto *agg : *m_aggs) {
+    delete agg;
+  }
+  delete m_aggs;
+  delete m_cache;
+}
 
-  virtual expr::Tuple *Put(expr::Tuple *tuple) const = 0;
-};
+expr::Tuple *UngroupedAggOp::Put(expr::Tuple *tuple) const {
+  if (m_cache == nullptr) {
+    m_cache = new expr::Tuple(m_aggs->size());
+  }
+  for (int i = 0; i < m_aggs->size(); ++i) {
+    (*m_cache)[i] = (*m_aggs)[i]->Add((*m_cache)[i], tuple);
+  }
+  delete tuple;
+  return nullptr;
+}
 
-}  // namespace dingodb::rel
-
-#endif /* _REL_REL_OP_H_ */
+}  // namespace dingodb::rel::op
