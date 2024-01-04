@@ -12,29 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_PROJECT_OP_H_
-#define _REL_OP_PROJECT_OP_H_
-
-#include "rel_op.h"
+#include "expr_string.h"
 
 namespace dingodb::expr {
-class Runner;
+
+std::ostream &operator<<(std::ostream &os, const String &v) {
+  os << *(v.m_ptr);
+  return os;
 }
 
-namespace dingodb::rel::op {
-
-class ProjectOp : public RelOp {
- public:
-  ProjectOp(const expr::Runner *projects);
-
-  ~ProjectOp() override;
-
-  const expr::Tuple *Put(const expr::Tuple *tuple) const override;
-
- private:
-  const expr::Runner *m_projects;
-};
-
-}  // namespace dingodb::rel::op
-
-#endif /* _REL_OP_PROJECT_OP_H_ */
+}  // namespace dingodb::expr

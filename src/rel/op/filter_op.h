@@ -29,7 +29,7 @@ class FilterOp : public RelOp {
 
   ~FilterOp() override;
 
-  expr::Tuple *Put(expr::Tuple *tuple) const override;
+  const expr::Tuple *Put(const expr::Tuple *tuple) const override;
 
  private:
   const expr::Runner *m_filter;

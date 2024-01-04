@@ -12,29 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_PROJECT_OP_H_
-#define _REL_OP_PROJECT_OP_H_
+#include <gtest/gtest.h>
 
-#include "rel_op.h"
+#include <functional>
 
-namespace dingodb::expr {
-class Runner;
+#include "expr/types.h"
+
+using namespace dingodb::expr;
+
+TEST(TestTypes, StringEquals) {
+  String s0{"Alice"};
+  String s1{"Alice"};
+  ASSERT_EQ(std::hash<std::string>()(*s0), std::hash<std::string>()(*s1));
+  ASSERT_TRUE(std::equal_to()(*s0, *s1));
+  ASSERT_EQ(*s0, *s1);
+  ASSERT_EQ(std::hash<String>()(s0), std::hash<String>()(s1));
+  ASSERT_TRUE(std::equal_to()(s0, s1));
+  ASSERT_EQ(s0, s1);
 }
-
-namespace dingodb::rel::op {
-
-class ProjectOp : public RelOp {
- public:
-  ProjectOp(const expr::Runner *projects);
-
-  ~ProjectOp() override;
-
-  const expr::Tuple *Put(const expr::Tuple *tuple) const override;
-
- private:
-  const expr::Runner *m_projects;
-};
-
-}  // namespace dingodb::rel::op
-
-#endif /* _REL_OP_PROJECT_OP_H_ */

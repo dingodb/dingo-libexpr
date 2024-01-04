@@ -13,15 +13,15 @@
 # limitations under the License.
 
 set(SRCS
-    calc/arithmetic.cc
     calc/casting.cc
     calc/mathematic.cc
-    calc/relational.cc
     calc/special.cc
     calc/string_fun.cc
     codec.cc
-    operator.cc
+    expr_string.cc
+    operand.cc
     operator_vector.cc
+    operator.cc
     operators.cc
     runner.cc
     types.cc

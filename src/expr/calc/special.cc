@@ -23,7 +23,7 @@ bool IsTrue<String>([[maybe_unused]] const Operand &v) {
 
 template <>
 bool IsFalse<String>(const Operand &v) {
-  return expr::NotNull<String>(v);
+  return v != nullptr;
 }
 
 }  // namespace dingodb::expr::calc

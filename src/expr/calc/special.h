@@ -15,21 +15,18 @@
 #ifndef _EXPR_CALC_SPECIAL_H_
 #define _EXPR_CALC_SPECIAL_H_
 
-#include <cstdint>
-
 #include "../operand.h"
-#include "../types.h"
 
 namespace dingodb::expr::calc {
 
 template <typename T>
 bool IsNull(const Operand &v) {
-  return !expr::NotNull<T>(v);
+  return v == nullptr;
 }
 
 template <typename T>
 bool IsTrue(const Operand &v) {
-  return expr::NotNull<T>(v) && expr::GetValue<T>(v);
+  return v != nullptr && v.GetValue<T>();
 }
 
 template <>
@@ -37,7 +34,7 @@ bool IsTrue<String>(const Operand &v);
 
 template <typename T>
 bool IsFalse(const Operand &v) {
-  return expr::NotNull<T>(v) && !expr::GetValue<T>(v);
+  return v != nullptr && !v.GetValue<T>();
 }
 
 template <>

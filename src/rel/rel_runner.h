@@ -29,26 +29,12 @@ class RelRunner {
 
   const expr::Byte *Decode(const expr::Byte *code, size_t len);
 
-  expr::Tuple *Put(expr::Tuple *tuple) const;
+  const expr::Tuple *Put(const expr::Tuple *tuple) const;
+
+  const expr::Tuple *Get() const;
 
  private:
   RelOp *m_op;
-
-  template <class AGG>
-  static const expr::Byte *DecodeAgg(std::vector<const op::Agg *> &aggs, const expr::Byte *code) {
-    const expr::Byte *p = code;
-    ++p;
-    int32_t index;
-    p = expr::DecodeVarint(index, p);
-    auto *agg = new AGG(index);
-    aggs.push_back(agg);
-    return p;
-  }
-
-  template <>
-  const expr::Byte *DecodeAgg<op::CountAllAgg>(std::vector<const op::Agg *> &aggs, const expr::Byte *code);
-
-  static const expr::Byte *DecodeAggList(std::vector<const op::Agg *> &aggs, const expr::Byte *code, size_t len);
 
   void Release() {
     delete m_op;
@@ -59,5 +45,25 @@ class RelRunner {
 };
 
 }  // namespace dingodb::rel
+
+namespace dingodb::expr {
+
+template <class AGG>
+const Byte *DecodeAgg(const rel::op::Agg *&agg, const Byte *data) {
+  const Byte *p = data;
+  ++p;
+  int32_t index;
+  p = DecodeValue(index, p);
+  agg = new AGG(index);
+  return p;
+}
+
+template <>
+const Byte *DecodeAgg<rel::op::CountAllAgg>(const rel::op::Agg *&agg, const Byte *data);
+
+template <>
+const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const Byte *data);
+
+}  // namespace dingodb::expr
 
 #endif /* _REL_REL_RUNNER_H_ */

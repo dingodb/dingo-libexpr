@@ -16,16 +16,22 @@
 #define _EXPR_UTILS_H_
 
 #include "operand.h"
-#include "types.h"
 
 namespace dingodb::expr {
 
-template <typename... T>
-Tuple *MakeTuple(T... v) {
-  return new Tuple{MakeOperand(v)...};
-}
+int HexToNibble(char hex);
+
+char NibbleToHex(int nibble);
+
+void HexToBytes(Byte *buf, const char *hex, size_t len);
+
+void BytesToHex(char *hex, const Byte *buf, size_t len);
 
 std::string HexOfBytes(const Byte *data, size_t len);
+
+Tuple *ConcatTuple(const Tuple &t1, const Tuple &t2);
+
+Tuple *MapTuple(const Tuple &src, const int *index, size_t index_size);
 
 }  // namespace dingodb::expr
 

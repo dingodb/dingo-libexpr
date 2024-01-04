@@ -60,31 +60,31 @@ double Cast(String v) {
 
 template <>
 String Cast(int32_t v) {
-  return MakeString(std::to_string(v));
+  return std::to_string(v);
 }
 
 template <>
 String Cast(int64_t v) {
-  return MakeString(std::to_string(v));
+  return std::to_string(v);
 }
 
 template <>
 String Cast(bool v) {
-  return MakeString(v ? "true" : "false");
+  return v ? "true" : "false";
 }
 
 template <>
 String Cast(float v) {
   auto s = std::to_string(v);
   s.erase(s.find_last_not_of('0') + 1);
-  return MakeString(s);
+  return s;
 }
 
 template <>
 String Cast(double v) {
   auto s = std::to_string(v);
   s.erase(s.find_last_not_of('0') + 1);
-  return MakeString(s);
+  return s;
 }
 
 }  // namespace dingodb::expr::calc

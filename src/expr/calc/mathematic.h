@@ -15,8 +15,6 @@
 #ifndef _EXPR_CALC_MATHEMATIC_H_
 #define _EXPR_CALC_MATHEMATIC_H_
 
-#include <algorithm>
-
 #include "../types.h"
 
 namespace dingodb::expr::calc {

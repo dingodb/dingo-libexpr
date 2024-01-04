@@ -12,29 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _REL_OP_PROJECT_OP_H_
-#define _REL_OP_PROJECT_OP_H_
+#ifndef _REL_OP_GROUPED_AGG_OP_H_
+#define _REL_OP_GROUPED_AGG_OP_H_
 
-#include "rel_op.h"
+#include <unordered_map>
 
-namespace dingodb::expr {
-class Runner;
-}
+#include "agg.h"
+#include "agg_op.h"
 
 namespace dingodb::rel::op {
 
-class ProjectOp : public RelOp {
+class GroupedAggOp : public AggOp {
  public:
-  ProjectOp(const expr::Runner *projects);
+  GroupedAggOp(const int *group_indices, size_t group_indices_size, const std::vector<const Agg *> *aggs);
 
-  ~ProjectOp() override;
+  ~GroupedAggOp() override;
 
   const expr::Tuple *Put(const expr::Tuple *tuple) const override;
 
+  const expr::Tuple *Get() const override;
+
  private:
-  const expr::Runner *m_projects;
+  const int *m_group_indices;
+  size_t m_groupe_indices_size;
+
+  mutable std::unordered_map<expr::Tuple, expr::Tuple *, std::hash<expr::Tuple>> m_caches;
 };
 
 }  // namespace dingodb::rel::op
 
-#endif /* _REL_OP_PROJECT_OP_H_ */
+#endif /* _REL_OP_GROUPED_AGG_OP_H_ */

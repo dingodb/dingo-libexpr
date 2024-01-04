@@ -15,7 +15,6 @@
 #ifndef _EXPR_CALC_STRING_FUN_H_
 #define _EXPR_CALC_STRING_FUN_H_
 
-#include "../operand.h"
 #include "../types.h"
 
 namespace dingodb::expr::calc {

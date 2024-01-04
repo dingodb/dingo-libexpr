@@ -26,7 +26,7 @@ FilterOp::~FilterOp() {
   delete m_filter;
 }
 
-expr::Tuple *FilterOp::Put(expr::Tuple *tuple) const {
+const expr::Tuple *FilterOp::Put(const expr::Tuple *tuple) const {
   m_filter->BindTuple(tuple);
   m_filter->Run();
   auto v = m_filter->Get();

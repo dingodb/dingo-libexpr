@@ -17,10 +17,10 @@
 namespace dingodb::rel::op {
 
 expr::Operand CountAllAgg::Add(const expr::Operand &var, [[maybe_unused]] const expr::Tuple *tuple) const {
-  if (expr::NotNull<int64_t>(var)) {
-    return expr::MakeOperand(expr::GetValue<int64_t>(var) + 1LL);
+  if (var != nullptr) {
+    return var.GetValue<int64_t>() + 1LL;
   }
-  return expr::MakeOperand(1LL);
+  return 1LL;
 }
 
 }  // namespace dingodb::rel::op

@@ -16,8 +16,8 @@
 #define _EXPR_TYPES_H_
 
 #include <cstdint>
-#include <memory>
-#include <string>
+
+#include "expr_string.h"
 
 #define TYPE_NULL    0x00
 #define TYPE_INT32   0x01
@@ -34,16 +34,6 @@ namespace dingodb::expr {
 using Byte = unsigned char;
 
 using Decimal = long double;  // TODO: what's the real type?
-
-using String = std::shared_ptr<std::string>;
-
-inline String MakeString(const std::string &str) {
-  return std::make_shared<std::string>(str);
-}
-
-inline String MakeString() {
-  return std::make_shared<std::string>();
-}
 
 template <int T>
 class CxxTraits {};

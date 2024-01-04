@@ -57,11 +57,11 @@ class CountAgg : public UnityAgg {
   ~CountAgg() override = default;
 
   expr::Operand Add(const expr::Operand &var, const expr::Tuple *tuple) const override {
-    if (expr::NotNull<T>((*tuple)[m_index])) {
-      if (expr::NotNull<int64_t>(var)) {
-        return expr::MakeOperand(expr::GetValue<int64_t>(var) + 1LL);
+    if ((*tuple)[m_index] != nullptr) {
+      if (var != nullptr) {
+        return var.GetValue<int64_t>() + 1LL;
       }
-      return expr::MakeOperand(1LL);
+      return 1LL;
     }
     return var;
   }
@@ -76,12 +76,12 @@ class CalcAgg : public UnityAgg {
   ~CalcAgg() override = default;
 
   expr::Operand Add(const expr::Operand &var, const expr::Tuple *tuple) const override {
-    if (expr::NotNull<T>((*tuple)[m_index])) {
-      T v = expr::GetValue<T>((*tuple)[m_index]);
-      if (expr::NotNull<T>(var)) {
-        return expr::MakeOperand(Calc(expr::GetValue<T>(var), v));
+    if ((*tuple)[m_index] != nullptr) {
+      auto v = ((*tuple)[m_index]).template GetValue<T>();
+      if (var != nullptr) {
+        return Calc(var.GetValue<T>(), v);
       }
-      return expr::MakeOperand(v);
+      return v;
     }
     return var;
   }
@@ -89,9 +89,6 @@ class CalcAgg : public UnityAgg {
 
 template <typename T>
 using SumAgg = CalcAgg<T, expr::calc::Add>;
-
-template <typename T>
-using Sum0Agg = CalcAgg<T, expr::calc::Add>;
 
 template <typename T>
 using MinAgg = CalcAgg<T, expr::calc::Min>;
