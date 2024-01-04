@@ -14,9 +14,10 @@
 
 #include "rel_runner.h"
 
+#include <cassert>
+
 #include "expr/exception.h"
 #include "expr/runner.h"
-#include "expr/utils.h"
 #include "op/filter_op.h"
 #include "op/grouped_agg_op.h"
 #include "op/project_op.h"
