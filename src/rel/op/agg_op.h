@@ -12,38 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "relational.h"
+#ifndef _REL_OP_AGG_OP_H_
+#define _REL_OP_AGG_OP_H_
 
-namespace dingodb::expr::calc {
+#include "agg.h"
+#include "rel_op.h"
 
-template <>
-bool Eq(String v0, String v1) {
-  return *v0 == *v1;
-}
+namespace dingodb::rel::op {
 
-template <>
-bool Ge(String v0, String v1) {
-  return *v0 >= *v1;
-}
+class AggOp : public RelOp {
+ protected:
+  AggOp(const std::vector<const Agg *> *aggs);
 
-template <>
-bool Gt(String v0, String v1) {
-  return *v0 > *v1;
-}
+ public:
+  ~AggOp() override;
 
-template <>
-bool Le(String v0, String v1) {
-  return *v0 <= *v1;
-}
+ protected:
+  const std::vector<const Agg *> *m_aggs;
 
-template <>
-bool Lt(String v0, String v1) {
-  return *v0 < *v1;
-}
+  void AddToCache(expr::Tuple *&cache, const expr::Tuple *tuple) const;
+};
 
-template <>
-bool Ne(String v0, String v1) {
-  return *v0 != *v1;
-}
+}  // namespace dingodb::rel::op
 
-}  // namespace dingodb::expr::calc
+#endif /* _REL_OP_AGG_OP_H_ */

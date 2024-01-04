@@ -12,15 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "arithmetic.h"
+#include "ungrouped_agg_op.h"
 
-#include <memory>
+namespace dingodb::rel::op {
 
-namespace dingodb::expr::calc {
-
-template <>
-String Add(String v0, String v1) {
-  return MakeString(*v0 + *v1);
+AggOp::AggOp(const std::vector<const Agg *> *aggs) : m_aggs(aggs) {
 }
 
-}  // namespace dingodb::expr::calc
+AggOp::~AggOp() {
+  for (const auto *agg : *m_aggs) {
+    delete agg;
+  }
+  delete m_aggs;
+}
+
+void AggOp::AddToCache(expr::Tuple *&cache, const expr::Tuple *tuple) const {
+  if (cache == nullptr) {
+    cache = new expr::Tuple(m_aggs->size());
+  }
+  for (int i = 0; i < m_aggs->size(); ++i) {
+    (*cache)[i] = (*m_aggs)[i]->Add((*cache)[i], tuple);
+  }
+  delete tuple;
+}
+
+}  // namespace dingodb::rel::op

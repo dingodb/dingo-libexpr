@@ -17,68 +17,101 @@
 
 #include <any>
 #include <optional>
+#include <unordered_map>
+#include <variant>
 #include <vector>
+
+#include "types.h"
 
 namespace dingodb::expr {
 
-namespace operand_is_any_optional {
+class Operand {
+ public:
+  template <typename T>
+  Operand(T v) : m_data(v) {
+  }
 
-using Operand = std::any;
+  template <>
+  Operand([[maybe_unused]] nullptr_t v) {
+  }
 
-template <typename T>
-inline Operand MakeOperand(T v) {
-  return std::make_any<std::optional<T>>(std::optional<T>(v));
-}
+  Operand() = default;
 
-template <typename T>
-inline Operand MakeNull() {
-  return std::make_any<std::optional<T>>(std::optional<T>());
-}
+  constexpr bool operator==(const Operand &v) const {
+    return m_data == v.m_data;
+  }
 
-template <typename T>
-inline bool NotNull(const Operand &v) {
-  const std::optional<T> vv = std::any_cast<const std::optional<T>>(v);
-  return vv.has_value();
-}
+  constexpr bool operator==([[maybe_unused]] nullptr_t v) const {
+    return std::holds_alternative<std::monostate>(m_data);
+  }
 
-template <typename T>
-inline T GetValue(const Operand &v) {
-  const std::optional<T> vv = std::any_cast<const std::optional<T>>(v);
-  return *vv;
-}
+  constexpr bool operator!=(const Operand &v) const {
+    return m_data != v.m_data;
+  }
 
-}  // namespace operand_is_any_optional
+  constexpr bool operator!=([[maybe_unused]] nullptr_t v) const {
+    return !std::holds_alternative<std::monostate>(m_data);
+  }
 
-namespace operand_is_any {
+  template <typename T>
+  inline T GetValue() const {
+    return std::get<T>(m_data);
+  }
 
-using Operand = std::any;
+ private:
+  std::variant<std::monostate, int32_t, int64_t, bool, float, double, String> m_data;
 
-template <typename T>
-inline Operand MakeOperand(T v) {
-  return std::make_any<T>(v);
-}
+  friend class std::hash<::dingodb::expr::Operand>;
 
-template <typename T>
-inline Operand MakeNull() {
-  return std::any();
-}
-
-template <typename T>
-inline bool NotNull(const Operand &v) {
-  return v.has_value();
-}
-
-template <typename T>
-inline T GetValue(const Operand &v) {
-  return std::any_cast<T>(v);
-}
-
-}  // namespace operand_is_any
-
-using namespace operand_is_any;
+  friend std::ostream &operator<<(std::ostream &os, const Operand &v);
+};
 
 using Tuple = std::vector<Operand>;
 
+using Dict = std::unordered_map<std::string, Operand>;
+
+namespace any_optional_data_adaptor {
+
+template <typename T>
+Operand ToOperand(const std::any &v) {
+  const std::optional<T> opt = std::any_cast<const std::optional<T>>(v);
+  if (opt.has_value()) {
+    return *opt;
+  }
+  return nullptr;
+}
+
+template <typename T>
+std::any FromOperand(const Operand &v) {
+  auto opt = (v != nullptr ? std::optional<T>(v.GetValue<T>()) : std::optional<T>());
+  return std::make_any<std::optional<T>>(opt);
+}
+
+}  // namespace any_optional_data_adaptor
+
 }  // namespace dingodb::expr
+
+namespace std {
+
+template <>
+struct hash<::dingodb::expr::Operand> {
+  size_t operator()(const ::dingodb::expr::Operand &val) const noexcept {
+    return hash<decltype(val.m_data)>()(val.m_data);
+  }
+};
+
+template <>
+struct hash<::dingodb::expr::Tuple> {
+  size_t operator()(const ::dingodb::expr::Tuple &val) const noexcept {
+    size_t h = 0LL;
+    for (const auto &v : val) {
+      h *= 31LL;
+      h += hash<::dingodb::expr::Operand>()(v);
+    }
+    return h;
+  }
+};
+
+}  // namespace std
 
 #endif /* _EXPR_OPERAND_H_ */

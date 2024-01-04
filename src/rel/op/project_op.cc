@@ -25,7 +25,7 @@ ProjectOp::~ProjectOp() {
   delete m_projects;
 }
 
-expr::Tuple *ProjectOp::Put(expr::Tuple *tuple) const {
+const expr::Tuple *ProjectOp::Put(const expr::Tuple *tuple) const {
   m_projects->BindTuple(tuple);
   m_projects->Run();
   delete tuple;

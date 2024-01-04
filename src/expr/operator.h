@@ -19,7 +19,6 @@
 
 #include "calc/casting.h"
 #include "operand_stack.h"
-#include "types.h"
 
 namespace dingodb::expr {
 
@@ -92,8 +91,8 @@ class UnaryOperator : public OperatorBase<R> {
   void operator()(OperandStack &stack) const override {
     auto v = stack.Get();
     stack.Pop();
-    if (NotNull<TypeOf<T>>(v)) {
-      stack.Push<TypeOf<R>>(Calc(GetValue<TypeOf<T>>(v)));
+    if (v != nullptr) {
+      stack.Push<TypeOf<R>>(Calc(v.GetValue<TypeOf<T>>()));
     } else {
       stack.Push<TypeOf<R>>();
     }
@@ -124,8 +123,8 @@ class BinaryOperator : public OperatorBase<R> {
     stack.Pop();
     auto v0 = stack.Get();
     stack.Pop();
-    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1)) {
-      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1)));
+    if (v0 != nullptr && v1 != nullptr) {
+      stack.Push(Calc(v0.GetValue<TypeOf<T0>>(), v1.GetValue<TypeOf<T1>>()));
     } else {
       stack.Push<TypeOf<R>>();
     }
@@ -140,8 +139,8 @@ class BinaryOperatorV2 : public OperatorBase<R> {
     stack.Pop();
     auto v0 = stack.Get();
     stack.Pop();
-    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1)) {
-      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1)));
+    if (v0 != nullptr && v1 != nullptr) {
+      stack.Push(Calc(v0.GetValue<TypeOf<T0>>(), v1.GetValue<TypeOf<T1>>()));
     } else {
       stack.Push<TypeOf<R>>();
     }
@@ -164,8 +163,8 @@ class TertiaryOperator : public OperatorBase<R> {
     stack.Pop();
     auto v0 = stack.Get();
     stack.Pop();
-    if (NotNull<TypeOf<T0>>(v0) && NotNull<TypeOf<T1>>(v1) && NotNull<TypeOf<T2>>(v2)) {
-      stack.Push(Calc(GetValue<TypeOf<T0>>(v0), GetValue<TypeOf<T1>>(v1), GetValue<TypeOf<T2>>(v2)));
+    if (v0 != nullptr && v1 != nullptr && v2 != nullptr) {
+      stack.Push(Calc(v0.GetValue<TypeOf<T0>>(), v1.GetValue<TypeOf<T1>>(), v2.GetValue<TypeOf<T2>>()));
     } else {
       stack.Push<TypeOf<R>>();
     }

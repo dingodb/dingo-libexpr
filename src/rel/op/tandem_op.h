@@ -25,7 +25,7 @@ class TandemOp : public RelOp {
 
   ~TandemOp() override;
 
-  expr::Tuple *Put(expr::Tuple *tuple) const override;
+  const expr::Tuple *Put(const expr::Tuple *tuple) const override;
 
  private:
   const RelOp *m_in;

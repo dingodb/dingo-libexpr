@@ -121,14 +121,14 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     case CONST_INT32: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT32>(v));
       break;
     }
     case CONST_INT64: {
       ++p;
       int64_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT64>(v));
       break;
     }
@@ -139,14 +139,14 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     case CONST_FLOAT: {
       ++p;
       float v;
-      p = DecodeFloat(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_FLOAT>(v));
       break;
     }
     case CONST_DOUBLE: {
       ++p;
       double v;
-      p = DecodeDouble(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_DOUBLE>(v));
       break;
     }
@@ -158,21 +158,21 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     case CONST_STRING: {
       ++p;
       String v;
-      p = DecodeString(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_STRING>(v));
       break;
     }
     case CONST_N_INT32: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT32>(-v));
       break;
     }
     case CONST_N_INT64: {
       ++p;
       int64_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT64>(-v));
       break;
     }
@@ -183,49 +183,49 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     case VAR_I_INT32: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_INT32>(v));
       break;
     }
     case VAR_I_INT64: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_INT64>(v));
       break;
     }
     case VAR_I_BOOL: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_BOOL>(v));
       break;
     }
     case VAR_I_FLOAT: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_FLOAT>(v));
       break;
     }
     case VAR_I_DOUBLE: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_DOUBLE>(v));
       break;
     }
     case VAR_I_DECIMAL: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_DECIMAL>(v));
       break;
     }
     case VAR_I_STRING: {
       ++p;
       int32_t v;
-      p = DecodeVarint(v, p);
+      p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_STRING>(v));
       break;
     }

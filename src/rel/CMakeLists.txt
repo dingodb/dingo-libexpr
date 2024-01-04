@@ -13,8 +13,10 @@
 # limitations under the License.
 
 set(SRCS
+    op/agg_op.cc
     op/agg.cc
     op/filter_op.cc
+    op/grouped_agg_op.cc
     op/project_op.cc
     op/tandem_op.cc
     op/ungrouped_agg_op.cc

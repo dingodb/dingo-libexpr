@@ -21,8 +21,8 @@ namespace dingodb::expr {
 void NotOperator::operator()(OperandStack &stack) const {
   auto v = stack.Get();
   stack.Pop();
-  if (NotNull<bool>(v)) {
-    stack.Push(!GetValue<bool>(v));
+  if (v != nullptr) {
+    stack.Push(!v.GetValue<bool>());
   } else {
     stack.Push<bool>();
   }
@@ -33,11 +33,11 @@ void AndOperator::operator()(OperandStack &stack) const {
   stack.Pop();
   auto v0 = stack.Get();
   stack.Pop();
-  if (NotNull<bool>(v0)) {
-    if (!GetValue<bool>(v0)) {
+  if (v0 != nullptr) {
+    if (!v0.GetValue<bool>()) {
       stack.Push(false);
-    } else if (NotNull<bool>(v1)) {
-      stack.Push(GetValue<bool>(v1));
+    } else if (v1 != nullptr) {
+      stack.Push(v1.GetValue<bool>());
     } else {
       stack.Push<bool>();
     }
@@ -53,11 +53,11 @@ void OrOperator::operator()(OperandStack &stack) const {
   stack.Pop();
   auto v0 = stack.Get();
   stack.Pop();
-  if (NotNull<bool>(v0)) {
-    if (GetValue<bool>(v0)) {
+  if (v0 != nullptr) {
+    if (v0.GetValue<bool>()) {
       stack.Push(true);
-    } else if (NotNull<bool>(v1)) {
-      stack.Push(GetValue<bool>(v1));
+    } else if (v1 != nullptr) {
+      stack.Push(v1.GetValue<bool>());
     } else {
       stack.Push<bool>();
     }

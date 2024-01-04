@@ -43,12 +43,12 @@ class OperandStack {
 
   template <typename T>
   void Push(T v) {
-    m_stack.push_back(MakeOperand(v));
+    m_stack.push_back(v);
   }
 
   template <typename T>
   void Push() {
-    m_stack.push_back(MakeNull<T>());
+    m_stack.push_back(nullptr);
   }
 
   void BindTuple(const Tuple *tuple) {

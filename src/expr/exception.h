@@ -22,10 +22,25 @@
 
 namespace dingodb::expr {
 
-class UnknownCode : public std::runtime_error {
+class ExprError : public std::runtime_error {
  public:
-  UnknownCode(const Byte *code, size_t len)
-      : std::runtime_error("Unknown code in expression, bytes: " + HexOfBytes(code, len)) {
+  ExprError(const std::string &msg) : std::runtime_error("EXPR ERROR: " + msg) {
+  }
+};
+
+class UnknownCode : public ExprError {
+ public:
+  UnknownCode(const Byte *code, size_t len) : ExprError("Unknown code in expression, bytes: " + HexOfBytes(code, len)) {
+  }
+};
+
+class MoreElementsRequired : public ExprError {
+ public:
+  MoreElementsRequired(int required, int actual)
+      : ExprError(
+            "Array decoding requires " + std::to_string(required) + " elements, but " + std::to_string(actual) +
+            " provided."
+        ) {
   }
 };
 

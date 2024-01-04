@@ -24,8 +24,8 @@ TandemOp::~TandemOp() {
   delete m_out;
 }
 
-expr::Tuple *TandemOp::Put(expr::Tuple *tuple) const {
-  auto *t = m_in->Put(tuple);
+const expr::Tuple *TandemOp::Put(const expr::Tuple *tuple) const {
+  const auto *t = m_in->Put(tuple);
   if (t != nullptr) {
     return m_out->Put(t);
   }

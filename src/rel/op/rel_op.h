@@ -24,7 +24,11 @@ class RelOp {
   RelOp() = default;
   virtual ~RelOp() = default;
 
-  virtual expr::Tuple *Put(expr::Tuple *tuple) const = 0;
+  virtual const expr::Tuple *Put(const expr::Tuple *tuple) const = 0;
+
+  virtual const expr::Tuple *Get() const {
+    return nullptr;
+  }
 };
 
 }  // namespace dingodb::rel

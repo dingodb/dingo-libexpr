@@ -16,25 +16,24 @@
 
 namespace dingodb::rel::op {
 
-UngroupedAggOp::UngroupedAggOp(const std::vector<const Agg *> *aggs) : m_aggs(aggs), m_cache(nullptr) {
+UngroupedAggOp::UngroupedAggOp(const std::vector<const Agg *> *aggs) : AggOp(aggs), m_cache(nullptr) {
 }
 
 UngroupedAggOp::~UngroupedAggOp() {
-  for (const auto *agg : *m_aggs) {
-    delete agg;
-  }
-  delete m_aggs;
   delete m_cache;
 }
 
-expr::Tuple *UngroupedAggOp::Put(expr::Tuple *tuple) const {
-  if (m_cache == nullptr) {
-    m_cache = new expr::Tuple(m_aggs->size());
+const expr::Tuple *UngroupedAggOp::Put(const expr::Tuple *tuple) const {
+  AddToCache(m_cache, tuple);
+  return nullptr;
+}
+
+const expr::Tuple *UngroupedAggOp::Get() const {
+  if (m_cache != nullptr) {
+    auto *p = m_cache;
+    m_cache = nullptr;
+    return p;
   }
-  for (int i = 0; i < m_aggs->size(); ++i) {
-    (*m_cache)[i] = (*m_aggs)[i]->Add((*m_cache)[i], tuple);
-  }
-  delete tuple;
   return nullptr;
 }
 

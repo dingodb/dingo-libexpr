@@ -16,21 +16,21 @@
 #define _REL_OP_UNGROUPED_AGG_OP_H_
 
 #include "agg.h"
-#include "rel_op.h"
+#include "agg_op.h"
 
 namespace dingodb::rel::op {
 
-class UngroupedAggOp : public RelOp {
+class UngroupedAggOp : public AggOp {
  public:
   UngroupedAggOp(const std::vector<const Agg *> *aggs);
 
   ~UngroupedAggOp() override;
 
-  expr::Tuple *Put(expr::Tuple *tuple) const override;
+  const expr::Tuple *Put(const expr::Tuple *tuple) const override;
+
+  const expr::Tuple *Get() const override;
 
  private:
-  const std::vector<const Agg *> *m_aggs;
-
   mutable expr::Tuple *m_cache;
 };
 

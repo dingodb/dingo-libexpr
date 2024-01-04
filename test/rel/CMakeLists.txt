@@ -14,13 +14,6 @@
 
 include_directories(${CMAKE_SOURCE_DIR}/src/rel)
 
-add_executable(test_rel
-    ../assertions.cc
-    test_rel.cc
-)
-target_link_libraries(test_rel
-    GTest::gtest_main
-    ${REL_LIB_NAME}
-)
-
+add_executable(test_rel test_rel.cc)
+target_link_libraries(test_rel GTest::gtest_main ${REL_LIB_NAME})
 gtest_discover_tests(test_rel)

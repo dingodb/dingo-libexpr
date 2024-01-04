@@ -16,7 +16,6 @@
 #define _EXPR_CALC_ARITHMETIC_H_
 
 #include "../operand.h"
-#include "../types.h"
 
 namespace dingodb::expr::calc {
 
@@ -35,9 +34,6 @@ T Add(T v0, T v1) {
   return v0 + v1;
 }
 
-template <>
-String Add(String v0, String v1);
-
 template <typename T>
 T Sub(T v0, T v1) {
   return v0 - v1;
@@ -50,12 +46,18 @@ T Mul(T v0, T v1) {
 
 template <typename T>
 Operand Div(T v0, T v1) {
-  return (v1 != 0) ? MakeOperand(v0 / v1) : MakeNull<T>();
+  if (v1 != 0) {
+    return v0 / v1;
+  }
+  return nullptr;
 }
 
 template <typename T>
 Operand Mod(T v0, T v1) {
-  return v1 != 0 ? MakeOperand(v0 % v1) : MakeNull<T>();
+  if (v1 != 0) {
+    return v0 % v1;
+  }
+  return nullptr;
 }
 
 }  // namespace dingodb::expr::calc
