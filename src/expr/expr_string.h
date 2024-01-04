@@ -51,27 +51,27 @@ class String {
     return *m_ptr + *v.m_ptr;
   }
 
-  constexpr bool operator==(const String &v) const {
+  bool operator==(const String &v) const {
     return *m_ptr == *v.m_ptr;
   }
 
-  constexpr bool operator!=(const String &v) const {
+  bool operator!=(const String &v) const {
     return *m_ptr != *v.m_ptr;
   }
 
-  constexpr bool operator<(const String &v) const {
+  bool operator<(const String &v) const {
     return *m_ptr < *v.m_ptr;
   }
 
-  constexpr bool operator<=(const String &v) const {
+  bool operator<=(const String &v) const {
     return *m_ptr <= *v.m_ptr;
   }
 
-  constexpr bool operator>(const String &v) const {
+  bool operator>(const String &v) const {
     return *m_ptr > *v.m_ptr;
   }
 
-  constexpr bool operator>=(const String &v) const {
+  bool operator>=(const String &v) const {
     return *m_ptr >= *v.m_ptr;
   }
 

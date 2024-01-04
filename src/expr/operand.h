@@ -37,19 +37,19 @@ class Operand {
 
   Operand() = default;
 
-  constexpr bool operator==(const Operand &v) const {
+  bool operator==(const Operand &v) const {
     return m_data == v.m_data;
   }
 
-  constexpr bool operator==([[maybe_unused]] nullptr_t v) const {
+  bool operator==([[maybe_unused]] nullptr_t v) const {
     return std::holds_alternative<std::monostate>(m_data);
   }
 
-  constexpr bool operator!=(const Operand &v) const {
+  bool operator!=(const Operand &v) const {
     return m_data != v.m_data;
   }
 
-  constexpr bool operator!=([[maybe_unused]] nullptr_t v) const {
+  bool operator!=([[maybe_unused]] nullptr_t v) const {
     return !std::holds_alternative<std::monostate>(m_data);
   }
 
