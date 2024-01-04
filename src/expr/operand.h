@@ -31,7 +31,6 @@ class Operand {
   Operand(T v) : m_data(v) {
   }
 
-  template <>
   Operand([[maybe_unused]] nullptr_t v) {
   }
 
