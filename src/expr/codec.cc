@@ -38,27 +38,32 @@ static const Byte *DecodeVarint(T &value, const Byte *data) {
 }
 
 template <>
-const Byte *DecodeValue(int32_t &value, const Byte *data) {
+const Byte *DecodeValue(int &value, const Byte *data) {
   return DecodeVarint(value, data);
 }
 
 template <>
-const Byte *DecodeValue(int64_t &value, const Byte *data) {
+const Byte *DecodeValue(long &value, const Byte *data) {
   return DecodeVarint(value, data);
 }
 
 template <>
-const Byte *DecodeValue(uint32_t &value, const Byte *data) {
+const Byte *DecodeValue(long long &value, const Byte *data) {
   return DecodeVarint(value, data);
 }
 
 template <>
-const Byte *DecodeValue(uint64_t &value, const Byte *data) {
+const Byte *DecodeValue(unsigned int &value, const Byte *data) {
   return DecodeVarint(value, data);
 }
 
 template <>
-const Byte *DecodeValue(size_t &value, const Byte *data) {
+const Byte *DecodeValue(unsigned long &value, const Byte *data) {
+  return DecodeVarint(value, data);
+}
+
+template <>
+const Byte *DecodeValue(unsigned long long &value, const Byte *data) {
   return DecodeVarint(value, data);
 }
 
