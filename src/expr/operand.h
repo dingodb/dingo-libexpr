@@ -57,6 +57,10 @@ class Operand {
     return std::get<T>(m_data);
   }
 
+  inline String::ValueType GetValue() const {
+    return std::get<String>(m_data).m_ptr;
+  }
+
  private:
   std::variant<std::monostate, int32_t, int64_t, bool, float, double, String> m_data;
 
@@ -66,8 +70,6 @@ class Operand {
 };
 
 using Tuple = std::vector<Operand>;
-
-using Dict = std::unordered_map<std::string, Operand>;
 
 namespace any_optional_data_adaptor {
 

@@ -27,6 +27,8 @@ namespace dingodb::expr {
  */
 class String {
  public:
+  using ValueType = std::shared_ptr<std::string>;
+
   String(const std::string &str) : m_ptr(std::make_shared<std::string>(str)) {
   }
 
@@ -76,7 +78,9 @@ class String {
   }
 
  private:
-  std::shared_ptr<std::string> m_ptr;
+  ValueType m_ptr;
+
+  friend class Operand;
 
   friend std::ostream &operator<<(std::ostream &os, const String &v);
 };
