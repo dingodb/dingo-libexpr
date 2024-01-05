@@ -41,6 +41,15 @@ class Runner {
     return m_operand_stack.Get();
   }
 
+  template <typename T>
+  std::optional<T> GetOptional() const {
+    auto operand = Get();
+    if (operand != nullptr) {
+      return std::optional<T>(operand.GetValue<T>());
+    }
+    return std::optional<T>();
+  }
+
   Byte GetType() const {
     return m_operator_vector.GetType();
   }

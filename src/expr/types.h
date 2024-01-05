@@ -19,23 +19,24 @@
 
 #include "expr_string.h"
 
-#define TYPE_NULL    0x00
-#define TYPE_INT32   0x01
-#define TYPE_INT64   0x02
-#define TYPE_BOOL    0x03
-#define TYPE_FLOAT   0x04
-#define TYPE_DOUBLE  0x05
-#define TYPE_DECIMAL 0x06
-#define TYPE_STRING  0x07
-#define TYPE_NUM     0x08
-
 namespace dingodb::expr {
 
 using Byte = unsigned char;
 
+const Byte TYPE_NULL = 0x00;
+const Byte TYPE_INT32 = 0x01;
+const Byte TYPE_INT64 = 0x02;
+const Byte TYPE_BOOL = 0x03;
+const Byte TYPE_FLOAT = 0x04;
+const Byte TYPE_DOUBLE = 0x05;
+const Byte TYPE_DECIMAL = 0x06;
+const Byte TYPE_STRING = 0x07;
+
+const size_t TYPE_NUM = 8;
+
 using Decimal = long double;  // TODO: what's the real type?
 
-template <int T>
+template <Byte T>
 class CxxTraits {};
 
 template <>
