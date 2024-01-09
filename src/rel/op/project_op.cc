@@ -14,7 +14,7 @@
 
 #include "project_op.h"
 
-#include "expr/runner.h"
+#include "../../expr/runner.h"
 
 namespace dingodb::rel::op {
 

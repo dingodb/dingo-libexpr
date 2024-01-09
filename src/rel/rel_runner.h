@@ -15,8 +15,8 @@
 #ifndef _REL_REL_RUNNER_H_
 #define _REL_REL_RUNNER_H_
 
-#include "expr/codec.h"
-#include "expr/types.h"
+#include "../expr/codec.h"
+#include "../expr/types.h"
 #include "op/agg.h"
 #include "op/rel_op.h"
 

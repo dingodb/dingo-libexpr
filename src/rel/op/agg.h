@@ -15,9 +15,9 @@
 #ifndef _REL_OP_AGG_H_
 #define _REL_OP_AGG_H_
 
-#include "expr/calc/arithmetic.h"
-#include "expr/calc/mathematic.h"
-#include "expr/operand.h"
+#include "../../expr/calc/arithmetic.h"
+#include "../../expr/calc/mathematic.h"
+#include "../../expr/operand.h"
 
 namespace dingodb::rel::op {
 
