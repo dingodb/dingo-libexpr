@@ -14,7 +14,7 @@
 
 #include "grouped_agg_op.h"
 
-#include "expr/utils.h"
+#include "../../expr/utils.h"
 
 namespace dingodb::rel::op {
 

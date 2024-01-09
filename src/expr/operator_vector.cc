@@ -20,71 +20,71 @@
 #include "types.h"
 #include "utils.h"
 
-#define NULL_PREFIX  0x00
-#define NULL_INT32   (NULL_PREFIX | TYPE_INT32)
-#define NULL_INT64   (NULL_PREFIX | TYPE_INT64)
-#define NULL_BOOL    (NULL_PREFIX | TYPE_BOOL)
-#define NULL_FLOAT   (NULL_PREFIX | TYPE_FLOAT)
-#define NULL_DOUBLE  (NULL_PREFIX | TYPE_DOUBLE)
-#define NULL_DECIMAL (NULL_PREFIX | TYPE_DECIMAL)
-#define NULL_STRING  (NULL_PREFIX | TYPE_STRING)
+namespace dingodb::expr {
 
-#define CONST_PREFIX  0x10
-#define CONST_INT32   (CONST_PREFIX | TYPE_INT32)
-#define CONST_INT64   (CONST_PREFIX | TYPE_INT64)
-#define CONST_BOOL    (CONST_PREFIX | TYPE_BOOL)
-#define CONST_FLOAT   (CONST_PREFIX | TYPE_FLOAT)
-#define CONST_DOUBLE  (CONST_PREFIX | TYPE_DOUBLE)
-#define CONST_DECIMAL (CONST_PREFIX | TYPE_DECIMAL)
-#define CONST_STRING  (CONST_PREFIX | TYPE_STRING)
+static const Byte NULL_PREFIX = 0x00;
+static const Byte NULL_INT32 = NULL_PREFIX | TYPE_INT32;
+static const Byte NULL_INT64 = NULL_PREFIX | TYPE_INT64;
+static const Byte NULL_BOOL = NULL_PREFIX | TYPE_BOOL;
+static const Byte NULL_FLOAT = NULL_PREFIX | TYPE_FLOAT;
+static const Byte NULL_DOUBLE = NULL_PREFIX | TYPE_DOUBLE;
+static const Byte NULL_DECIMAL = NULL_PREFIX | TYPE_DECIMAL;
+static const Byte NULL_STRING = NULL_PREFIX | TYPE_STRING;
 
-#define CONST_N_PREFIX 0x20
-#define CONST_N_INT32  (CONST_N_PREFIX | TYPE_INT32)
-#define CONST_N_INT64  (CONST_N_PREFIX | TYPE_INT64)
-#define CONST_N_BOOL   (CONST_N_PREFIX | TYPE_BOOL)
+static const Byte CONST_PREFIX = 0x10;
+static const Byte CONST_INT32 = CONST_PREFIX | TYPE_INT32;
+static const Byte CONST_INT64 = CONST_PREFIX | TYPE_INT64;
+static const Byte CONST_BOOL = CONST_PREFIX | TYPE_BOOL;
+static const Byte CONST_FLOAT = CONST_PREFIX | TYPE_FLOAT;
+static const Byte CONST_DOUBLE = CONST_PREFIX | TYPE_DOUBLE;
+static const Byte CONST_DECIMAL = CONST_PREFIX | TYPE_DECIMAL;
+static const Byte CONST_STRING = CONST_PREFIX | TYPE_STRING;
 
-#define VAR_I_PREFIX  0x30
-#define VAR_I_INT32   (VAR_I_PREFIX | TYPE_INT32)
-#define VAR_I_INT64   (VAR_I_PREFIX | TYPE_INT64)
-#define VAR_I_BOOL    (VAR_I_PREFIX | TYPE_BOOL)
-#define VAR_I_FLOAT   (VAR_I_PREFIX | TYPE_FLOAT)
-#define VAR_I_DOUBLE  (VAR_I_PREFIX | TYPE_DOUBLE)
-#define VAR_I_DECIMAL (VAR_I_PREFIX | TYPE_DECIMAL)
-#define VAR_I_STRING  (VAR_I_PREFIX | TYPE_STRING)
+static const Byte CONST_N_PREFIX = 0x20;
+static const Byte CONST_N_INT32 = CONST_N_PREFIX | TYPE_INT32;
+static const Byte CONST_N_INT64 = CONST_N_PREFIX | TYPE_INT64;
+static const Byte CONST_N_BOOL = CONST_N_PREFIX | TYPE_BOOL;
 
-#define POS 0x81
-#define NEG 0x82
-#define ADD 0x83
-#define SUB 0x84
-#define MUL 0x85
-#define DIV 0x86
-#define MOD 0x87
+static const Byte VAR_I_PREFIX = 0x30;
+static const Byte VAR_I_INT32 = VAR_I_PREFIX | TYPE_INT32;
+static const Byte VAR_I_INT64 = VAR_I_PREFIX | TYPE_INT64;
+static const Byte VAR_I_BOOL = VAR_I_PREFIX | TYPE_BOOL;
+static const Byte VAR_I_FLOAT = VAR_I_PREFIX | TYPE_FLOAT;
+static const Byte VAR_I_DOUBLE = VAR_I_PREFIX | TYPE_DOUBLE;
+static const Byte VAR_I_DECIMAL = VAR_I_PREFIX | TYPE_DECIMAL;
+static const Byte VAR_I_STRING = VAR_I_PREFIX | TYPE_STRING;
 
-#define EQ 0x91
-#define GE 0x92
-#define GT 0x93
-#define LE 0x94
-#define LT 0x95
-#define NE 0x96
+static const Byte POS = 0x81;
+static const Byte NEG = 0x82;
+static const Byte ADD = 0x83;
+static const Byte SUB = 0x84;
+static const Byte MUL = 0x85;
+static const Byte DIV = 0x86;
+static const Byte MOD = 0x87;
 
-#define IS_NULL  0xA1
-#define IS_TRUE  0xA2
-#define IS_FALSE 0xA3
+static const Byte EQ = 0x91;
+static const Byte GE = 0x92;
+static const Byte GT = 0x93;
+static const Byte LE = 0x94;
+static const Byte LT = 0x95;
+static const Byte NE = 0x96;
 
-#define MIN 0xB1
-#define MAX 0xB2
-#define ABS 0xB3
+static const Byte IS_NULL = 0xA1;
+static const Byte IS_TRUE = 0xA2;
+static const Byte IS_FALSE = 0xA3;
 
-#define NOT 0x51
-#define AND 0x52
-#define OR  0x53
+static const Byte MIN = 0xB1;
+static const Byte MAX = 0xB2;
+static const Byte ABS = 0xB3;
 
-#define CAST 0xF0
-#define FUN  0xF1
+static const Byte NOT = 0x51;
+static const Byte AND = 0x52;
+static const Byte OR = 0x53;
 
-#define EOE 0x00
+static const Byte CAST = 0xF0;
+static const Byte FUN = 0xF1;
 
-using namespace dingodb::expr;
+static const Byte EOE = 0x00;
 
 const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
   Release();
@@ -392,3 +392,5 @@ bool OperatorVector::AddFunOperator(Byte b) {
   }
   return false;
 }
+
+}  // namespace dingodb::expr

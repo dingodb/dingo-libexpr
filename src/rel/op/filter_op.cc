@@ -14,8 +14,8 @@
 
 #include "filter_op.h"
 
-#include "expr/calc/special.h"
-#include "expr/runner.h"
+#include "../../expr/calc/special.h"
+#include "../../expr/runner.h"
 
 namespace dingodb::rel::op {
 

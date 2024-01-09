@@ -16,28 +16,29 @@
 
 #include <cassert>
 
-#include "expr/exception.h"
-#include "expr/runner.h"
+#include "../expr/exception.h"
+#include "../expr/runner.h"
 #include "op/filter_op.h"
 #include "op/grouped_agg_op.h"
 #include "op/project_op.h"
 #include "op/tandem_op.h"
 #include "op/ungrouped_agg_op.h"
 
-#define FILTER_OP           0x71
-#define PROJECT_OP          0x72
-#define GROUPED_AGGREGATE   0x73
-#define UNGROUPED_AGGREGATE 0x74
-
-#define ARRAY_INT32 0x61
-
-#define AGG_COUNT_ALL 0x10
-#define AGG_COUNT     0x10
-#define AGG_SUM       0x20
-#define AGG_MAX       0x30
-#define AGG_MIN       0x40
-
 namespace dingodb::rel {
+
+static const expr::Byte FILTER_OP = 0x71;
+static const expr::Byte PROJECT_OP = 0x72;
+static const expr::Byte GROUPED_AGGREGATE = 0x73;
+static const expr::Byte UNGROUPED_AGGREGATE = 0x74;
+
+static const expr::Byte ARRAY_PREFIX = 0x60;
+static const expr::Byte ARRAY_INT32 = ARRAY_PREFIX | expr::TYPE_INT32;
+
+static const expr::Byte AGG_COUNT_ALL = 0x10;
+static const expr::Byte AGG_COUNT = 0x10;
+static const expr::Byte AGG_SUM = 0x20;
+static const expr::Byte AGG_MAX = 0x30;
+static const expr::Byte AGG_MIN = 0x40;
 
 RelRunner::RelRunner() : m_op(nullptr) {
 }
@@ -130,67 +131,67 @@ template <>
 const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const Byte *data) {
   const Byte *p = data;
   switch (*p) {
-  case AGG_COUNT_ALL:
+  case rel::AGG_COUNT_ALL:
     p = DecodeAgg<rel::op::CountAllAgg>(value, p);
     break;
-  case AGG_COUNT | TYPE_INT32:
+  case rel::AGG_COUNT | TYPE_INT32:
     p = DecodeAgg<rel::op::CountAgg<int32_t>>(value, p);
     break;
-  case AGG_COUNT | TYPE_INT64:
+  case rel::AGG_COUNT | TYPE_INT64:
     p = DecodeAgg<rel::op::CountAgg<int64_t>>(value, p);
     break;
-  case AGG_COUNT | TYPE_BOOL:
+  case rel::AGG_COUNT | TYPE_BOOL:
     p = DecodeAgg<rel::op::CountAgg<bool>>(value, p);
     break;
-  case AGG_COUNT | TYPE_FLOAT:
+  case rel::AGG_COUNT | TYPE_FLOAT:
     p = DecodeAgg<rel::op::CountAgg<float>>(value, p);
     break;
-  case AGG_COUNT | TYPE_DOUBLE:
+  case rel::AGG_COUNT | TYPE_DOUBLE:
     p = DecodeAgg<rel::op::CountAgg<double>>(value, p);
     break;
-  case AGG_COUNT | TYPE_STRING:
+  case rel::AGG_COUNT | TYPE_STRING:
     p = DecodeAgg<rel::op::CountAgg<expr::String>>(value, p);
     break;
-  case AGG_SUM | TYPE_INT32:
+  case rel::AGG_SUM | TYPE_INT32:
     p = DecodeAgg<rel::op::SumAgg<int32_t>>(value, p);
     break;
-  case AGG_SUM | TYPE_INT64:
+  case rel::AGG_SUM | TYPE_INT64:
     p = DecodeAgg<rel::op::SumAgg<int64_t>>(value, p);
     break;
-  case AGG_SUM | TYPE_FLOAT:
+  case rel::AGG_SUM | TYPE_FLOAT:
     p = DecodeAgg<rel::op::SumAgg<float>>(value, p);
     break;
-  case AGG_SUM | TYPE_DOUBLE:
+  case rel::AGG_SUM | TYPE_DOUBLE:
     p = DecodeAgg<rel::op::SumAgg<double>>(value, p);
     break;
-  case AGG_MAX | TYPE_INT32:
+  case rel::AGG_MAX | TYPE_INT32:
     p = DecodeAgg<rel::op::MaxAgg<int32_t>>(value, p);
     break;
-  case AGG_MAX | TYPE_INT64:
+  case rel::AGG_MAX | TYPE_INT64:
     p = DecodeAgg<rel::op::MaxAgg<int64_t>>(value, p);
     break;
-  case AGG_MAX | TYPE_FLOAT:
+  case rel::AGG_MAX | TYPE_FLOAT:
     p = DecodeAgg<rel::op::MaxAgg<float>>(value, p);
     break;
-  case AGG_MAX | TYPE_DOUBLE:
+  case rel::AGG_MAX | TYPE_DOUBLE:
     p = DecodeAgg<rel::op::MaxAgg<double>>(value, p);
     break;
-  case AGG_MAX | TYPE_STRING:
+  case rel::AGG_MAX | TYPE_STRING:
     p = DecodeAgg<rel::op::MaxAgg<expr::String>>(value, p);
     break;
-  case AGG_MIN | TYPE_INT32:
+  case rel::AGG_MIN | TYPE_INT32:
     p = DecodeAgg<rel::op::MinAgg<int32_t>>(value, p);
     break;
-  case AGG_MIN | TYPE_INT64:
+  case rel::AGG_MIN | TYPE_INT64:
     p = DecodeAgg<rel::op::MinAgg<int64_t>>(value, p);
     break;
-  case AGG_MIN | TYPE_FLOAT:
+  case rel::AGG_MIN | TYPE_FLOAT:
     p = DecodeAgg<rel::op::MinAgg<float>>(value, p);
     break;
-  case AGG_MIN | TYPE_DOUBLE:
+  case rel::AGG_MIN | TYPE_DOUBLE:
     p = DecodeAgg<rel::op::MinAgg<double>>(value, p);
     break;
-  case AGG_MIN | TYPE_STRING:
+  case rel::AGG_MIN | TYPE_STRING:
     p = DecodeAgg<rel::op::MinAgg<expr::String>>(value, p);
     break;
   default:

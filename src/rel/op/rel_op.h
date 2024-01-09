@@ -15,7 +15,7 @@
 #ifndef _REL_OP_REL_OP_H_
 #define _REL_OP_REL_OP_H_
 
-#include "expr/operand.h"
+#include "../../expr/operand.h"
 
 namespace dingodb::rel {
 
