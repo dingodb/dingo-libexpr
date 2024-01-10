@@ -31,7 +31,10 @@ class Operand {
   Operand(T v) : m_data(v) {
   }
 
-  Operand([[maybe_unused]] nullptr_t v) {
+  Operand(String::ValueType v) : m_data(String(v)) {
+  }
+
+  Operand([[maybe_unused]] std::nullptr_t v) {
   }
 
   Operand() = default;
@@ -40,7 +43,7 @@ class Operand {
     return m_data == v.m_data;
   }
 
-  bool operator==([[maybe_unused]] nullptr_t v) const {
+  bool operator==([[maybe_unused]] std::nullptr_t v) const {
     return std::holds_alternative<std::monostate>(m_data);
   }
 
@@ -48,17 +51,13 @@ class Operand {
     return m_data != v.m_data;
   }
 
-  bool operator!=([[maybe_unused]] nullptr_t v) const {
+  bool operator!=([[maybe_unused]] std::nullptr_t v) const {
     return !std::holds_alternative<std::monostate>(m_data);
   }
 
   template <typename T>
   inline T GetValue() const {
     return std::get<T>(m_data);
-  }
-
-  inline String::ValueType GetValue() const {
-    return std::get<String>(m_data).m_ptr;
   }
 
  private:
@@ -75,7 +74,7 @@ namespace any_optional_data_adaptor {
 
 template <typename T>
 Operand ToOperand(const std::any &v) {
-  const std::optional<T> opt = std::any_cast<const std::optional<T>>(v);
+  const auto opt = std::any_cast<const std::optional<T>>(v);
   if (opt.has_value()) {
     return *opt;
   }
@@ -87,6 +86,10 @@ std::any FromOperand(const Operand &v) {
   auto opt = (v != nullptr ? std::optional<T>(v.GetValue<T>()) : std::optional<T>());
   return std::make_any<std::optional<T>>(opt);
 }
+
+// GCC does not allow template specialization in class, so we need this.
+template <>
+std::any FromOperand<String::ValueType>(const Operand &v);
 
 }  // namespace any_optional_data_adaptor
 
