@@ -29,6 +29,9 @@ class String {
  public:
   using ValueType = std::shared_ptr<std::string>;
 
+  String(const std::shared_ptr<std::string> &ptr) : m_ptr(ptr) {
+  }
+
   String(const std::string &str) : m_ptr(std::make_shared<std::string>(str)) {
   }
 
@@ -39,6 +42,10 @@ class String {
   }
 
   String() : m_ptr(std::make_shared<std::string>()) {
+  }
+
+  ValueType GetPtr() const {
+    return m_ptr;
   }
 
   const std::string &operator*() const {

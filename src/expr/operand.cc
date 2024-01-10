@@ -36,5 +36,19 @@ std::ostream &operator<<(std::ostream &os, const Operand &v) {
   }
   return os;
 }
+namespace any_optional_data_adaptor {
+
+template <>
+std::any FromOperand<String::ValueType>(const Operand &v) {
+  std::optional<String::ValueType> opt;
+  if  (v != nullptr) {
+    opt = std::optional<String::ValueType>(v.GetValue<String>().GetPtr());
+  } else {
+    opt = std::optional<String::ValueType>();
+  }
+  return std::make_any<std::optional<String::ValueType>>(opt);
+}
+
+}  // namespace any_optional_data_adaptor
 
 }  // namespace dingodb::expr
