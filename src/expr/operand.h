@@ -61,7 +61,21 @@ class Operand {
   }
 
  private:
-  std::variant<std::monostate, int32_t, int64_t, bool, float, double, String> m_data;
+  std::variant<
+      std::monostate,
+      int32_t,
+      int64_t,
+      bool,
+      float,
+      double,
+      String,
+      std::shared_ptr<std::vector<int32_t>>,
+      std::shared_ptr<std::vector<int64_t>>,
+      std::shared_ptr<std::vector<bool>>,
+      std::shared_ptr<std::vector<float>>,
+      std::shared_ptr<std::vector<double>>,
+      std::shared_ptr<std::vector<std::string>>>
+      m_data;
 
   friend class std::hash<::dingodb::expr::Operand>;
 
