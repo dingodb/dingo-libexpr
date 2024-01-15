@@ -10,8 +10,8 @@ BinPackParameters: false
 BinPackArguments: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllArgumentsOnNextLine: false
-AlignArrayOfStructures: Right
-AlignAfterOpenBracket: BlockIndent
+#AlignArrayOfStructures: Right
+AlignAfterOpenBracket: AlwaysBreak #BlockIndent
 AlignConsecutiveMacros: true
 AlignTrailingComments: true
 AlignEscapedNewlines: Left
@@ -20,7 +20,7 @@ AllowShortBlocksOnASingleLine: false
 ---
 Language: Cpp
 #AccessModifierOffset: -4
-PackConstructorInitializers: CurrentLine
+#PackConstructorInitializers: CurrentLine
 BreakConstructorInitializers: BeforeComma
 ---
 Language: Proto
