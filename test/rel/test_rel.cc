@@ -22,6 +22,28 @@
 using namespace dingodb::expr;
 using namespace dingodb::rel;
 
+using Data = std::vector<Tuple *>;
+
+static void ReleaseData(const Data &data) {
+  for (const auto *t : data) {
+    delete t;
+  }
+}
+
+static Data MakeData() {
+  return Data{
+      new Tuple{1, "Alice",   10.0f},
+      new Tuple{2, "Betty",   20.0f},
+      new Tuple{3, "Cindy",   30.0f},
+      new Tuple{4, "Doris",   40.0f},
+      new Tuple{5, "Emily",   50.0f},
+      new Tuple{6, "Alice",   60.0f},
+      new Tuple{7, "Betty",   70.0f},
+      new Tuple{8, "Alice",   80.0f},
+      new Tuple{9, "Cindy", nullptr},
+  };
+}
+
 static const RelRunner *MakeRunner(const std::string &code) {
   auto len = code.size() / 2;
   Byte buf[len];
@@ -31,122 +53,154 @@ static const RelRunner *MakeRunner(const std::string &code) {
   return rel;
 }
 
-TEST(RelRunnerTest, Filter) {
-  // FILTER(input, $[2] > 50)
-  const auto *rel = MakeRunner("7134021442480000930400");
-  auto *tuple = new Tuple{1, "Alice", 10.0f};
-  const auto *out = rel->Put(tuple);
-  EXPECT_EQ(out, nullptr);
-  tuple = new Tuple{2, "Betty", 60.0f};
-  out = rel->Put(tuple);
-  EXPECT_EQ(out, tuple);
-  delete out;
+class PipeOpTest : public testing::TestWithParam<std::tuple<std::string, Data, Data>> {};
+
+TEST_P(PipeOpTest, Put) {
+  const auto &para = GetParam();
+  const auto *rel = MakeRunner(std::get<0>(para));
+  const auto &data = std::get<1>(para);
+  const auto &result = std::get<2>(para);
+  for (int i = 0; i < data.size(); ++i) {
+    const auto *out = rel->Put(data[i]);
+    if (out == nullptr) {
+      EXPECT_EQ(out, result[i]);
+    } else {
+      EXPECT_EQ(*out, *(result[i]));
+    }
+    delete out;
+  }
   delete rel;
+  ReleaseData(result);
 }
 
-TEST(RelRunnerTest, Project) {
-  // PROJECT(input, $[0], $[1], $[2] / 10)
-  const auto *rel = MakeRunner("723100370134021441200000860400");
-  auto *tuple = new Tuple{1, "Alice", 10.0f};
-  const auto *out = rel->Put(tuple);
-  auto *result = new Tuple{1, "Alice", 1.0f};
-  EXPECT_EQ(*out, *result);
-  delete out;
-  delete result;
-  tuple = new Tuple{2, "Betty", 60.0f};
-  out = rel->Put(tuple);
-  result = new Tuple{2, "Betty", 6.0f};
-  EXPECT_EQ(*out, *result);
-  delete out;
-  delete result;
-  delete rel;
-}
+INSTANTIATE_TEST_SUITE_P(
+    PipeOp,
+    PipeOpTest,
+    testing::Values(
+        // FILTER(input, $[2] > 50)
+        std::make_tuple(
+            "7134021442480000930400",
+            MakeData(),
+            Data{
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                new Tuple{6, "Alice", 60.0f},
+                new Tuple{7, "Betty", 70.0f},
+                new Tuple{8, "Alice", 80.0f},
+                nullptr,
+}  // Why code formatted to here?
+        ),
+        // PROJECT(input, $[0], $[1], $[2] / 10)
+        std::make_tuple(
+            "723100370134021441200000860400",
+            MakeData(),
+            Data{
+                new Tuple{1, "Alice", 1.0f},
+                new Tuple{2, "Betty", 2.0f},
+                new Tuple{3, "Cindy", 3.0f},
+                new Tuple{4, "Doris", 4.0f},
+                new Tuple{5, "Emily", 5.0f},
+                new Tuple{6, "Alice", 6.0f},
+                new Tuple{7, "Betty", 7.0f},
+                new Tuple{8, "Alice", 8.0f},
+                new Tuple{9, "Cindy", nullptr},
+            }
+        ),
+        // PROJECT(FILTER(input, $[2] > 50), $[0], $[1], $[2] / 10)
+        std::make_tuple(
+            "7134021442480000930400723100370134021441200000860400",
+            MakeData(),
+            Data{
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                new Tuple{6, "Alice", 6.0f},
+                new Tuple{7, "Betty", 7.0f},
+                new Tuple{8, "Alice", 8.0f},
+                nullptr,
+            }
+        ),
+        // FILTER(PROJECT(input, $[0], $[1], $[2] / 10), $[2] > 50)
+        std::make_tuple(
+            "7231003701340214412000008604007134021442480000930400",
+            MakeData(),
+            Data{
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+            }
+        )
+    )
+);
 
-TEST(RelRunnerTest, Filter_Project) {
-  // PROJECT(FILTER(input, $[2] > 50), $[0], $[1], $[2] / 10)
-  const auto *rel = MakeRunner("7134021442480000930400723100370134021441200000860400");
-  auto *tuple = new Tuple{1, "Alice", 10.0f};
-  const auto *out = rel->Put(tuple);
-  EXPECT_EQ(out, nullptr);
-  tuple = new Tuple{2, "Betty", 60.0f};
-  out = rel->Put(tuple);
-  auto *result = new Tuple{2, "Betty", 6.0f};
-  EXPECT_EQ(*out, *result);
-  delete out;
-  delete result;
-  delete rel;
-}
+class CacheOpTest : public testing::TestWithParam<std::tuple<std::string, Data, int, Data>> {};
 
-TEST(RelRunnerTest, Project_Filter) {
-  // FILTER(PROJECT(input, $[0], $[1], $[2] / 10), $[2] > 50)
-  const auto *rel = MakeRunner("7231003701340214412000008604007134021442480000930400");
-  auto *tuple = new Tuple{1, "Alice", 100.0f};
-  const auto *out = rel->Put(tuple);
-  EXPECT_EQ(out, nullptr);
-  tuple = new Tuple{2, "Betty", 600.0f};
-  out = rel->Put(tuple);
-  auto *result = new Tuple{2, "Betty", 60.0f};
-  EXPECT_EQ(*out, *result);
-  delete out;
-  delete result;
-  delete rel;
-}
-
-TEST(RelRunnerTest, UngroupedAgg) {
-  // AGG(input, COUNT(), COUNT($[1]), SUM($[2]))
-  const auto *rel = MakeRunner("74031017012402");
-  for (int id = 1; id < 10; ++id) {
-    auto *tuple = new Tuple{1, "ID_" + std::to_string(id), id * 10.0f};
+TEST_P(CacheOpTest, PutGet) {
+  const auto &para = GetParam();
+  const auto *rel = MakeRunner(std::get<0>(para));
+  const auto &data = std::get<1>(para);
+  int num = std::get<2>(para);
+  const auto &result = std::get<3>(para);
+  for (const auto *tuple : data) {
     const auto *out = rel->Put(tuple);
     EXPECT_EQ(out, nullptr);
   }
-  auto *tuple = new Tuple{10, nullptr, 100.0f};
-  const auto *out = rel->Put(tuple);
-  EXPECT_EQ(out, nullptr);
-  tuple = new Tuple{11, "ID_11", nullptr};
-  out = rel->Put(tuple);
-  EXPECT_EQ(out, nullptr);
-  out = rel->Get();
-  auto *result = new Tuple{11LL, 10LL, 550.0f};
-  EXPECT_EQ(*out, *result);
-  delete out;
-  delete result;
-  delete rel;
-}
-
-TEST(RelRunnerTest, GroupedAgg) {
-  // AGG(input, GROUP(1), COUNT(), SUM($[2]))
-  const auto *rel = MakeRunner("7361010102102402");
-  Tuple *tuples[]{
-      new Tuple{1, "Alice", 10.0f},
-      new Tuple{2, "Betty", 20.0f},
-      new Tuple{3, "Cindy", 30.0f},
-      new Tuple{4, "Doris", 40.0f},
-      new Tuple{5, "Emily", 50.0f},
-      new Tuple{6, "Alice", 60.0f},
-      new Tuple{7, "Betty", 70.0f},
-      new Tuple{8, "Alice", 80.0f},
-      new Tuple{9, "Cindy", 90.0f},
-  };
-  for (const auto *tuple : tuples) {
-    const auto *out = rel->Put(tuple);
-    EXPECT_EQ(out, nullptr);
-  }
-  std::array<Tuple, 5> results{
-      {
-       {"Alice", 3LL, 150.0f},
-       {"Betty", 2LL, 90.0f},
-       {"Cindy", 2LL, 120.0f},
-       {"Doris", 1LL, 40.0f},
-       {"Emily", 1LL, 50.0f},
-       }
-  };
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < num; ++i) {
     const auto *out = rel->Get();
-    EXPECT_TRUE(std::any_of(results.cbegin(), results.cend(), [out](const Tuple &t) { return t == *out; }));
+    EXPECT_TRUE(std::any_of(result.cbegin(), result.cend(), [out](const Tuple *t) { return *t == *out; }));
     delete out;
   }
   const auto *out1 = rel->Get();
   EXPECT_EQ(out1, nullptr);
   delete rel;
+  ReleaseData(result);
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    CacheOp,
+    CacheOpTest,
+    testing::Values(
+        // AGG(input, COUNT(), COUNT($[2]), SUM($[2]))
+        std::make_tuple(
+            "74031014022402",
+            MakeData(),
+            1,
+            Data{
+                new Tuple{9LL, 8LL, 360.0f},
+}  // Why code formatted to here?
+        ),
+        // AGG(input, GROUP(1), COUNT(), SUM($[2]))
+        std::make_tuple(
+            "7361010102102402",
+            MakeData(),
+            5,
+            Data{
+                new Tuple{"Alice", 3LL, 150.0f},
+                new Tuple{"Betty", 2LL, 90.0f},
+                new Tuple{"Cindy", 2LL, 30.0f},
+                new Tuple{"Doris", 1LL, 40.0f},
+                new Tuple{"Emily", 1LL, 50.0f},
+            }
+        ),
+        // AGG(PROJECT($[2]), COUNT($[0]))
+        std::make_tuple(
+            "7235020074011500",
+            MakeData(),
+            1,
+            Data{
+                new Tuple{8LL},
+            }
+        )
+    )
+);

@@ -32,4 +32,15 @@ const expr::Tuple *TandemOp::Put(const expr::Tuple *tuple) const {
   return nullptr;
 }
 
+const expr::Tuple *TandemOp::Get() const {
+  const expr::Tuple *tuple;
+  while ((tuple = m_in->Get()) != nullptr) {
+    const auto *t = m_out->Put(tuple);
+    if (t != nullptr) {
+      return t;
+    }
+  }
+  return m_out->Get();
+}
+
 }  // namespace dingodb::rel::op
