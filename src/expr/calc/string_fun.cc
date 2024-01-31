@@ -123,7 +123,7 @@ String Substr(String v0, int32_t v1) {
 String Mid(String v0, int32_t v1, int32_t v2) {
   if (v2 > 0) {
     int len = v0->length();
-    if (0 < v1 && v1 < len) {
+    if (0 < v1 && v1 <= len) {
       v1 -= 1;
     } else if (-len <= v1 && v1 < 0) {
       v1 += len;
@@ -141,7 +141,7 @@ String Mid(String v0, int32_t v1, int32_t v2) {
 
 String Mid(String v0, int32_t v1) {
   int len = v0->length();
-  if (0 < v1 && v1 < len) {
+  if (0 < v1 && v1 <= len) {
     v1 -= 1;
   } else if (-len <= v1 && v1 < 0) {
     v1 += len;
