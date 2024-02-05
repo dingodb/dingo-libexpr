@@ -12,14 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_directories(${CMAKE_SOURCE_DIR}/src/expr)
+include_directories(${CMAKE_SOURCE_DIR}/src/expr/calc)
 
-add_subdirectory(calc)
-
-add_executable(test_expr test_expr.cc)
-target_link_libraries(test_expr GTest::gtest_main ${EXPR_LIB_NAME})
-gtest_discover_tests(test_expr)
-
-add_executable(test_types test_types.cc)
-target_link_libraries(test_types GTest::gtest_main ${EXPR_LIB_NAME})
-gtest_discover_tests(test_types)
+add_executable(test_to_string test_to_string.cc)
+target_link_libraries(test_to_string GTest::gtest_main ${EXPR_LIB_NAME})
+gtest_discover_tests(test_to_string)

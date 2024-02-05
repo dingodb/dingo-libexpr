@@ -73,18 +73,24 @@ String Cast(bool v) {
   return v ? "true" : "false";
 }
 
-template <>
-String Cast(float v) {
+template <typename T>
+static String CastF(T v) {
   auto s = std::to_string(v);
   s.erase(s.find_last_not_of('0') + 1);
+  if (s.back() == '.') {
+    s += '0';
+  }
   return s;
 }
 
 template <>
+String Cast(float v) {
+  return CastF(v);
+}
+
+template <>
 String Cast(double v) {
-  auto s = std::to_string(v);
-  s.erase(s.find_last_not_of('0') + 1);
-  return s;
+  return CastF(v);
 }
 
 }  // namespace dingodb::expr::calc
