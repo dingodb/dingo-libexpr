@@ -16,6 +16,8 @@
 
 #include <cmath>
 
+#include "../exception.h"
+
 namespace dingodb::expr::calc {
 
 template <>
@@ -91,6 +93,51 @@ String Cast(float v) {
 template <>
 String Cast(double v) {
   return CastF(v);
+}
+
+template <>
+int32_t CastCheck(int64_t v) {
+  auto r = Cast<int32_t>(v);
+  if (r == v) {
+    return r;
+  }
+  throw ExceedsLimits<TYPE_INT32>();
+}
+
+template <>
+int32_t CastCheck(float v) {
+  auto r = Cast<int32_t>(v);
+  if (2 * abs(r - v) <= 1.0f) {
+    return r;
+  }
+  throw ExceedsLimits<TYPE_INT32>();
+}
+
+template <>
+int32_t CastCheck(double v) {
+  auto r = Cast<int32_t>(v);
+  if (2 * abs(r - v) <= 1.0) {
+    return r;
+  }
+  throw ExceedsLimits<TYPE_INT32>();
+}
+
+template <>
+int64_t CastCheck(float v) {
+  auto r = Cast<int64_t>(v);
+  if (2 * abs(r - v) <= 1.0f) {
+    return r;
+  }
+  throw ExceedsLimits<TYPE_INT64>();
+}
+
+template <>
+int64_t CastCheck(double v) {
+  auto r = Cast<int64_t>(v);
+  if (2 * abs(r - v) <= 1.0) {
+    return r;
+  }
+  throw ExceedsLimits<TYPE_INT64>();
 }
 
 }  // namespace dingodb::expr::calc

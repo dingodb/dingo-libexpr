@@ -68,8 +68,7 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("01A101", nullptr, true),                               // is_null(null)
         std::make_tuple("1101A201", nullptr, true),                             // is_true(1)
         std::make_tuple("218080808008B301", nullptr, INT_MIN)                   // abs(-INT32_MAX)
-    )
-);
+        ));
 
 static Tuple tuple1{1, 2};
 static Tuple tuple2{35LL, 46LL};
@@ -94,5 +93,4 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("3700", &tuple4, "abc"),                     // t0
         std::make_tuple("3701", &tuple4, "aBc"),                     // t1
         std::make_tuple("370037019307", &tuple4, true)               // t0 < t1
-    )
-);
+        ));

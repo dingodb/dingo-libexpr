@@ -28,6 +28,17 @@ class ExprError : public std::runtime_error {
   }
 };
 
+template <Byte B>
+class ExceedsLimits : public ExprError {
+ public:
+  ExceedsLimits()
+      : ExprError(
+            std::string("Value exceeds limits of ") + TypeName(B) + ", which is from " +
+            std::to_string(std::numeric_limits<TypeOf<B>>::min()) + " to " +
+            std::to_string(std::numeric_limits<TypeOf<B>>::max()) + ".") {
+  }
+};
+
 class UnknownCode : public ExprError {
  public:
   UnknownCode(const Byte *code, size_t len) : ExprError("Unknown code in expression, bytes: " + HexOfBytes(code, len)) {
@@ -39,8 +50,7 @@ class MoreElementsRequired : public ExprError {
   MoreElementsRequired(int required, int actual)
       : ExprError(
             "Array decoding requires " + std::to_string(required) + " elements, but " + std::to_string(actual) +
-            " provided."
-        ) {
+            " provided.") {
   }
 };
 

@@ -103,6 +103,71 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_STRING] = nullptr,
     },
 };
+
+const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
+    [TYPE_NULL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    [TYPE_INT32] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = nullptr,
+        [TYPE_INT64] = new CastCheckOperator<TYPE_INT32, TYPE_INT64>,
+        [TYPE_BOOL] = new CastCheckOperator<TYPE_INT32, TYPE_BOOL>,
+        [TYPE_FLOAT] = new CastCheckOperator<TYPE_INT32, TYPE_FLOAT>,
+        [TYPE_DOUBLE] = new CastCheckOperator<TYPE_INT32, TYPE_DOUBLE>,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = new CastCheckOperator<TYPE_INT32, TYPE_STRING>,
+    },
+    [TYPE_INT64] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = new CastCheckOperator<TYPE_INT64, TYPE_INT32>,
+        [TYPE_INT64] = nullptr,
+        [TYPE_BOOL] = new CastCheckOperator<TYPE_INT64, TYPE_BOOL>,
+        [TYPE_FLOAT] = new CastCheckOperator<TYPE_INT64, TYPE_FLOAT>,
+        [TYPE_DOUBLE] = new CastCheckOperator<TYPE_INT64, TYPE_DOUBLE>,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = new CastCheckOperator<TYPE_INT64, TYPE_STRING>,
+    },
+    [TYPE_BOOL] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = new CastCheckOperator<TYPE_BOOL, TYPE_INT32>,
+        [TYPE_INT64] = new CastCheckOperator<TYPE_BOOL, TYPE_INT64>,
+        [TYPE_BOOL] = nullptr,
+        [TYPE_FLOAT] = new CastCheckOperator<TYPE_BOOL, TYPE_FLOAT>,
+        [TYPE_DOUBLE] = new CastCheckOperator<TYPE_BOOL, TYPE_DOUBLE>,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = nullptr,
+    },
+    [TYPE_FLOAT] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = new CastCheckOperator<TYPE_FLOAT, TYPE_INT32>,
+        [TYPE_INT64] = new CastCheckOperator<TYPE_FLOAT, TYPE_INT64>,
+        [TYPE_BOOL] = new CastCheckOperator<TYPE_FLOAT, TYPE_BOOL>,
+        [TYPE_FLOAT] = nullptr,
+        [TYPE_DOUBLE] = new CastCheckOperator<TYPE_FLOAT, TYPE_DOUBLE>,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = new CastCheckOperator<TYPE_FLOAT, TYPE_STRING>,
+    },
+    [TYPE_DOUBLE] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = new CastCheckOperator<TYPE_DOUBLE, TYPE_INT32>,
+        [TYPE_INT64] = new CastCheckOperator<TYPE_DOUBLE, TYPE_INT64>,
+        [TYPE_BOOL] = new CastCheckOperator<TYPE_DOUBLE, TYPE_BOOL>,
+        [TYPE_FLOAT] = new CastCheckOperator<TYPE_DOUBLE, TYPE_FLOAT>,
+        [TYPE_DOUBLE] = nullptr,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = new CastCheckOperator<TYPE_DOUBLE, TYPE_STRING>,
+    },
+    [TYPE_DECIMAL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    [TYPE_STRING] = {
+        [TYPE_NULL] = nullptr,
+        [TYPE_INT32] = new CastCheckOperator<TYPE_STRING, TYPE_INT32>,
+        [TYPE_INT64] = new CastCheckOperator<TYPE_STRING, TYPE_INT64>,
+        [TYPE_BOOL] = new CastCheckOperator<TYPE_STRING, TYPE_BOOL>,
+        [TYPE_FLOAT] = new CastCheckOperator<TYPE_STRING, TYPE_FLOAT>,
+        [TYPE_DOUBLE] = new CastCheckOperator<TYPE_STRING, TYPE_DOUBLE>,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING] = nullptr,
+    },
+};
 /* clang-format on */
 
 const Operator *const OP_POS[] = {
@@ -314,10 +379,22 @@ const Operator *const OP_ABS[] = {
     [TYPE_STRING] = nullptr,
 };
 
+const Operator *const OP_ABS_CHECK[] = {
+    [TYPE_NULL] = nullptr,
+    [TYPE_INT32] = new UnaryArithmeticOperator<TYPE_INT32, calc::AbsCheck>,
+    [TYPE_INT64] = new UnaryArithmeticOperator<TYPE_INT64, calc::AbsCheck>,
+    [TYPE_BOOL] = nullptr,
+    [TYPE_FLOAT] = new UnaryArithmeticOperator<TYPE_FLOAT, calc::AbsCheck>,
+    [TYPE_DOUBLE] = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::AbsCheck>,
+    [TYPE_DECIMAL] = nullptr,
+    [TYPE_STRING] = nullptr,
+};
+
 const Operator *const OP_NOT = new NotOperator();
 const Operator *const OP_AND = new AndOperator();
 const Operator *const OP_OR = new OrOperator();
 
+const size_t FUN_NUM = 0x36;
 const Operator *const OP_FUN[] = {
     [0x00] = nullptr,
     [0x01] = new UnaryArithmeticOperator<TYPE_DOUBLE, ::ceil>,
