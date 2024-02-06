@@ -15,6 +15,7 @@
 #ifndef _EXPR_EXCEPTION_H_
 #define _EXPR_EXCEPTION_H_
 
+#include <limits>
 #include <stdexcept>
 
 #include "types.h"
