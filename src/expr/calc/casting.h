@@ -55,6 +55,22 @@ String Cast(float v);
 template <>
 String Cast(double v);
 
+template <typename D, typename S>
+D CastCheck(S v) {
+  return Cast<D>(v);
+}
+
+template <>
+int32_t CastCheck(int64_t v);
+template <>
+int32_t CastCheck(float v);
+template <>
+int32_t CastCheck(double v);
+template <>
+int32_t CastCheck(float v);
+template <>
+int32_t CastCheck(double v);
+
 }  // namespace dingodb::expr::calc
 
 #endif /* _EXPR_CALC_CASTING_H_ */

@@ -25,6 +25,7 @@ extern const Operator *const OP_CONST_TRUE;
 extern const Operator *const OP_CONST_FALSE;
 
 extern const Operator *const OP_CAST[TYPE_NUM][TYPE_NUM];
+extern const Operator *const OP_CAST_CHECK[TYPE_NUM][TYPE_NUM];
 
 extern const Operator *const OP_POS[TYPE_NUM];
 extern const Operator *const OP_NEG[TYPE_NUM];
@@ -48,11 +49,13 @@ extern const Operator *const OP_IS_FALSE[TYPE_NUM];
 extern const Operator *const OP_MAX[TYPE_NUM];
 extern const Operator *const OP_MIN[TYPE_NUM];
 extern const Operator *const OP_ABS[TYPE_NUM];
+extern const Operator *const OP_ABS_CHECK[TYPE_NUM];
 
 extern const Operator *const OP_NOT;
 extern const Operator *const OP_AND;
 extern const Operator *const OP_OR;
 
+extern const size_t FUN_NUM;
 extern const Operator *const OP_FUN[];
 
 }  // namespace dingodb::expr

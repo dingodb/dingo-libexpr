@@ -16,6 +16,8 @@
 
 #include <cmath>
 
+#include "../exception.h"
+
 namespace dingodb::expr::calc {
 
 template <>
@@ -26,6 +28,22 @@ String Min(String v0, String v1) {
 template <>
 String Max(String v0, String v1) {
   return std::max(*v0, *v1);
+}
+
+template <>
+int32_t AbsCheck(int32_t v) {
+  if (v == std::numeric_limits<int32_t>::min()) {
+    throw ExceedsLimits<TYPE_INT32>();
+  }
+  return Abs(v);
+}
+
+template <>
+int64_t AbsCheck(int64_t v) {
+  if (v == std::numeric_limits<int64_t>::min()) {
+    throw ExceedsLimits<TYPE_INT64>();
+  }
+  return Abs(v);
 }
 
 }  // namespace dingodb::expr::calc

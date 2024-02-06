@@ -40,6 +40,17 @@ T Abs(T v) {
   return std::abs(v);
 }
 
+template <typename T>
+T AbsCheck(T v) {
+  return std::abs(v);
+}
+
+template <>
+int32_t AbsCheck(int32_t v);
+
+template <>
+int64_t AbsCheck(int64_t v);
+
 }  // namespace dingodb::expr::calc
 
 #endif /* _EXPR_CALC_MATHEMATIC_H_ */

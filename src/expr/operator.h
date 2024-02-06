@@ -102,6 +102,9 @@ class UnaryOperator : public OperatorBase<R> {
 template <Byte R, Byte T>
 using CastOperator = UnaryOperator<R, T, calc::Cast>;
 
+template <Byte R, Byte T>
+using CastCheckOperator = UnaryOperator<R, T, calc::CastCheck>;
+
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)>
 using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;
 

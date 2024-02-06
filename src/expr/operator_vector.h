@@ -79,11 +79,12 @@ class OperatorVector {
   /**
    * @brief  Add a cast operator of the specified type.
    *
+   * @param ops The array of the operators
    * @param b The byte indicating the source and target type
    * @return true Successful
    * @return false Failed
    */
-  [[nodiscard]] bool AddCastOperator(Byte b);
+  [[nodiscard]] bool AddCastOperator(const Operator *const ops[][TYPE_NUM], Byte b);
 
   [[nodiscard]] bool AddFunOperator(Byte b);
 };

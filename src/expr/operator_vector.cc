@@ -76,12 +76,14 @@ static const Byte IS_FALSE = 0xA3;
 static const Byte MIN = 0xB1;
 static const Byte MAX = 0xB2;
 static const Byte ABS = 0xB3;
+static const Byte ABS_C = 0xB4;
 
 static const Byte NOT = 0x51;
 static const Byte AND = 0x52;
 static const Byte OR = 0x53;
 
 static const Byte CAST = 0xF0;
+static const Byte CAST_C = 0xFC;
 static const Byte FUN = 0xF1;
 
 static const Byte EOE = 0x00;
@@ -324,6 +326,11 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       successful = AddOperatorByType(OP_ABS, *p);
       ++p;
       break;
+    case ABS_C:
+      ++p;
+      successful = AddOperatorByType(OP_ABS_CHECK, *p);
+      ++p;
+      break;
     case NOT:
       Add(OP_NOT);
       ++p;
@@ -338,7 +345,12 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       break;
     case CAST:
       ++p;
-      successful = AddCastOperator(*p);
+      successful = AddCastOperator(OP_CAST, *p);
+      ++p;
+      break;
+    case CAST_C:
+      ++p;
+      successful = AddCastOperator(OP_CAST_CHECK, *p);
       ++p;
       break;
     case FUN:
@@ -370,13 +382,13 @@ bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {
   return false;
 }
 
-bool OperatorVector::AddCastOperator(Byte b) {
+bool OperatorVector::AddCastOperator(const Operator *const op_array[][TYPE_NUM], Byte b) {
   Byte dst = (Byte)(b >> 4);
   Byte src = (Byte)(b & 0x0F);
   if (dst == src) {
     return true;
   }
-  const auto *op = OP_CAST[dst][src];
+  const auto *op = op_array[dst][src];
   if (op != nullptr) {
     Add(op);
     return true;
@@ -385,10 +397,12 @@ bool OperatorVector::AddCastOperator(Byte b) {
 }
 
 bool OperatorVector::AddFunOperator(Byte b) {
-  const auto *op = OP_FUN[b];
-  if (op != nullptr) {
-    Add(op);
-    return true;
+  if (0 <= b && b < FUN_NUM) {
+    const auto *op = OP_FUN[b];
+    if (op != nullptr) {
+      Add(op);
+      return true;
+    }
   }
   return false;
 }
