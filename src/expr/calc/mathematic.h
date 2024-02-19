@@ -36,13 +36,23 @@ template <>
 String Max(String v0, String v1);
 
 template <typename T>
-T Abs(T v) {
-  return std::abs(v);
-}
+T Abs(T v);
+
+template <>
+int32_t Abs(int32_t v);
+
+template <>
+int64_t Abs(int64_t v);
+
+template <>
+float Abs(float v);
+
+template <>
+double Abs(double v);
 
 template <typename T>
 T AbsCheck(T v) {
-  return std::abs(v);
+  return Abs(v);
 }
 
 template <>

@@ -22,37 +22,37 @@
 
 namespace dingodb::expr {
 
-static const Byte NULL_PREFIX = 0x00;
-static const Byte NULL_INT32 = NULL_PREFIX | TYPE_INT32;
-static const Byte NULL_INT64 = NULL_PREFIX | TYPE_INT64;
-static const Byte NULL_BOOL = NULL_PREFIX | TYPE_BOOL;
-static const Byte NULL_FLOAT = NULL_PREFIX | TYPE_FLOAT;
-static const Byte NULL_DOUBLE = NULL_PREFIX | TYPE_DOUBLE;
+static const Byte NULL_PREFIX  = 0x00;
+static const Byte NULL_INT32   = NULL_PREFIX | TYPE_INT32;
+static const Byte NULL_INT64   = NULL_PREFIX | TYPE_INT64;
+static const Byte NULL_BOOL    = NULL_PREFIX | TYPE_BOOL;
+static const Byte NULL_FLOAT   = NULL_PREFIX | TYPE_FLOAT;
+static const Byte NULL_DOUBLE  = NULL_PREFIX | TYPE_DOUBLE;
 static const Byte NULL_DECIMAL = NULL_PREFIX | TYPE_DECIMAL;
-static const Byte NULL_STRING = NULL_PREFIX | TYPE_STRING;
+static const Byte NULL_STRING  = NULL_PREFIX | TYPE_STRING;
 
-static const Byte CONST_PREFIX = 0x10;
-static const Byte CONST_INT32 = CONST_PREFIX | TYPE_INT32;
-static const Byte CONST_INT64 = CONST_PREFIX | TYPE_INT64;
-static const Byte CONST_BOOL = CONST_PREFIX | TYPE_BOOL;
-static const Byte CONST_FLOAT = CONST_PREFIX | TYPE_FLOAT;
-static const Byte CONST_DOUBLE = CONST_PREFIX | TYPE_DOUBLE;
+static const Byte CONST_PREFIX  = 0x10;
+static const Byte CONST_INT32   = CONST_PREFIX | TYPE_INT32;
+static const Byte CONST_INT64   = CONST_PREFIX | TYPE_INT64;
+static const Byte CONST_BOOL    = CONST_PREFIX | TYPE_BOOL;
+static const Byte CONST_FLOAT   = CONST_PREFIX | TYPE_FLOAT;
+static const Byte CONST_DOUBLE  = CONST_PREFIX | TYPE_DOUBLE;
 static const Byte CONST_DECIMAL = CONST_PREFIX | TYPE_DECIMAL;
-static const Byte CONST_STRING = CONST_PREFIX | TYPE_STRING;
+static const Byte CONST_STRING  = CONST_PREFIX | TYPE_STRING;
 
 static const Byte CONST_N_PREFIX = 0x20;
-static const Byte CONST_N_INT32 = CONST_N_PREFIX | TYPE_INT32;
-static const Byte CONST_N_INT64 = CONST_N_PREFIX | TYPE_INT64;
-static const Byte CONST_N_BOOL = CONST_N_PREFIX | TYPE_BOOL;
+static const Byte CONST_N_INT32  = CONST_N_PREFIX | TYPE_INT32;
+static const Byte CONST_N_INT64  = CONST_N_PREFIX | TYPE_INT64;
+static const Byte CONST_N_BOOL   = CONST_N_PREFIX | TYPE_BOOL;
 
-static const Byte VAR_I_PREFIX = 0x30;
-static const Byte VAR_I_INT32 = VAR_I_PREFIX | TYPE_INT32;
-static const Byte VAR_I_INT64 = VAR_I_PREFIX | TYPE_INT64;
-static const Byte VAR_I_BOOL = VAR_I_PREFIX | TYPE_BOOL;
-static const Byte VAR_I_FLOAT = VAR_I_PREFIX | TYPE_FLOAT;
-static const Byte VAR_I_DOUBLE = VAR_I_PREFIX | TYPE_DOUBLE;
+static const Byte VAR_I_PREFIX  = 0x30;
+static const Byte VAR_I_INT32   = VAR_I_PREFIX | TYPE_INT32;
+static const Byte VAR_I_INT64   = VAR_I_PREFIX | TYPE_INT64;
+static const Byte VAR_I_BOOL    = VAR_I_PREFIX | TYPE_BOOL;
+static const Byte VAR_I_FLOAT   = VAR_I_PREFIX | TYPE_FLOAT;
+static const Byte VAR_I_DOUBLE  = VAR_I_PREFIX | TYPE_DOUBLE;
 static const Byte VAR_I_DECIMAL = VAR_I_PREFIX | TYPE_DECIMAL;
-static const Byte VAR_I_STRING = VAR_I_PREFIX | TYPE_STRING;
+static const Byte VAR_I_STRING  = VAR_I_PREFIX | TYPE_STRING;
 
 static const Byte POS = 0x81;
 static const Byte NEG = 0x82;
@@ -69,29 +69,29 @@ static const Byte LE = 0x94;
 static const Byte LT = 0x95;
 static const Byte NE = 0x96;
 
-static const Byte IS_NULL = 0xA1;
-static const Byte IS_TRUE = 0xA2;
+static const Byte IS_NULL  = 0xA1;
+static const Byte IS_TRUE  = 0xA2;
 static const Byte IS_FALSE = 0xA3;
 
-static const Byte MIN = 0xB1;
-static const Byte MAX = 0xB2;
-static const Byte ABS = 0xB3;
+static const Byte MIN   = 0xB1;
+static const Byte MAX   = 0xB2;
+static const Byte ABS   = 0xB3;
 static const Byte ABS_C = 0xB4;
 
 static const Byte NOT = 0x51;
 static const Byte AND = 0x52;
-static const Byte OR = 0x53;
+static const Byte OR  = 0x53;
 
-static const Byte CAST = 0xF0;
+static const Byte CAST   = 0xF0;
 static const Byte CAST_C = 0xFC;
-static const Byte FUN = 0xF1;
+static const Byte FUN    = 0xF1;
 
 static const Byte EOE = 0x00;
 
 const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
   Release();
   bool successful = true;
-  const Byte *p = code;
+  const Byte *p   = code;
   const Byte *b;
   while (successful && p < code + len) {
     b = p;
@@ -382,13 +382,13 @@ bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {
   return false;
 }
 
-bool OperatorVector::AddCastOperator(const Operator *const op_array[][TYPE_NUM], Byte b) {
+bool OperatorVector::AddCastOperator(const Operator *const ops[][TYPE_NUM], Byte b) {
   Byte dst = (Byte)(b >> 4);
   Byte src = (Byte)(b & 0x0F);
   if (dst == src) {
     return true;
   }
-  const auto *op = op_array[dst][src];
+  const auto *op = ops[dst][src];
   if (op != nullptr) {
     Add(op);
     return true;

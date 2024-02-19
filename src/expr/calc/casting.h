@@ -67,9 +67,9 @@ int32_t CastCheck(float v);
 template <>
 int32_t CastCheck(double v);
 template <>
-int32_t CastCheck(float v);
+int64_t CastCheck(float v);
 template <>
-int32_t CastCheck(double v);
+int64_t CastCheck(double v);
 
 }  // namespace dingodb::expr::calc
 

@@ -104,10 +104,18 @@ int32_t CastCheck(int64_t v) {
   throw ExceedsLimits<TYPE_INT32>();
 }
 
+static inline bool ErrorAcceptable(float a, float b) {
+  return fabsf(a - b) <= 0.5f;
+}
+
+static inline bool ErrorAcceptable(double a, double b) {
+  return fabs(a - b) <= 0.5;
+}
+
 template <>
 int32_t CastCheck(float v) {
   auto r = Cast<int32_t>(v);
-  if (2 * abs(r - v) <= 1.0f) {
+  if (ErrorAcceptable(r, v)) {
     return r;
   }
   throw ExceedsLimits<TYPE_INT32>();
@@ -116,7 +124,7 @@ int32_t CastCheck(float v) {
 template <>
 int32_t CastCheck(double v) {
   auto r = Cast<int32_t>(v);
-  if (2 * abs(r - v) <= 1.0) {
+  if (ErrorAcceptable(r, v)) {
     return r;
   }
   throw ExceedsLimits<TYPE_INT32>();
@@ -125,7 +133,7 @@ int32_t CastCheck(double v) {
 template <>
 int64_t CastCheck(float v) {
   auto r = Cast<int64_t>(v);
-  if (2 * abs(r - v) <= 1.0f) {
+  if (ErrorAcceptable(r, v)) {
     return r;
   }
   throw ExceedsLimits<TYPE_INT64>();
@@ -134,7 +142,7 @@ int64_t CastCheck(float v) {
 template <>
 int64_t CastCheck(double v) {
   auto r = Cast<int64_t>(v);
-  if (2 * abs(r - v) <= 1.0) {
+  if (ErrorAcceptable(r, v)) {
     return r;
   }
   throw ExceedsLimits<TYPE_INT64>();
