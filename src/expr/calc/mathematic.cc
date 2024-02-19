@@ -31,11 +31,38 @@ String Max(String v0, String v1) {
 }
 
 template <>
+int32_t Abs(int32_t v) {
+  static_assert(std::is_same_v<int32_t, int>, "`int32_t` must be an alias of `int`.");
+  return abs(v);
+}
+
+template <>
+int64_t Abs(int64_t v) {
+  static_assert(
+      std::is_same_v<int64_t, long> || std::is_same_v<int64_t, long long>,
+      "`int64_t` must be an alias of `long` or `long long`.");
+  if (std::is_same_v<int64_t, long>) {
+    return labs(v);
+  }
+  return llabs(v);
+}
+
+template <>
+float Abs(float v) {
+  return fabsf(v);
+}
+
+template <>
+double Abs(double v) {
+  return fabs(v);
+}
+
+template <>
 int32_t AbsCheck(int32_t v) {
   if (v == std::numeric_limits<int32_t>::min()) {
     throw ExceedsLimits<TYPE_INT32>();
   }
-  return Abs(v);
+  return abs(v);
 }
 
 template <>
@@ -43,7 +70,7 @@ int64_t AbsCheck(int64_t v) {
   if (v == std::numeric_limits<int64_t>::min()) {
     throw ExceedsLimits<TYPE_INT64>();
   }
-  return Abs(v);
+  return llabs(v);
 }
 
 }  // namespace dingodb::expr::calc
