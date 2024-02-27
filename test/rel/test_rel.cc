@@ -56,9 +56,9 @@ static const RelRunner *MakeRunner(const std::string &code) {
 class PipeOpTest : public testing::TestWithParam<std::tuple<std::string, Data, Data>> {};
 
 TEST_P(PipeOpTest, Put) {
-  const auto &para = GetParam();
-  const auto *rel = MakeRunner(std::get<0>(para));
-  const auto &data = std::get<1>(para);
+  const auto &para   = GetParam();
+  const auto *rel    = MakeRunner(std::get<0>(para));
+  const auto &data   = std::get<1>(para);
   const auto &result = std::get<2>(para);
   for (int i = 0; i < data.size(); ++i) {
     const auto *out = rel->Put(data[i]);
@@ -140,6 +140,16 @@ INSTANTIATE_TEST_SUITE_P(
                 nullptr,
                 nullptr,
             }
+        ),
+        // FILTER(input, $[0] >= 2001 AND $[0] <= 2001)
+        std::make_tuple(
+            "71310011d10f9201310011d10f94015200",
+            Data{
+                new Tuple{2001, "Alice", 2001.0f},
+            },
+            Data{
+                new Tuple{2001, "Alice", 2001.0f},
+            }
         )
     )
 );
@@ -147,10 +157,10 @@ INSTANTIATE_TEST_SUITE_P(
 class CacheOpTest : public testing::TestWithParam<std::tuple<std::string, Data, int, Data>> {};
 
 TEST_P(CacheOpTest, PutGet) {
-  const auto &para = GetParam();
-  const auto *rel = MakeRunner(std::get<0>(para));
-  const auto &data = std::get<1>(para);
-  int num = std::get<2>(para);
+  const auto &para   = GetParam();
+  const auto *rel    = MakeRunner(std::get<0>(para));
+  const auto &data   = std::get<1>(para);
+  int num            = std::get<2>(para);
   const auto &result = std::get<3>(para);
   for (const auto *tuple : data) {
     const auto *out = rel->Put(tuple);
