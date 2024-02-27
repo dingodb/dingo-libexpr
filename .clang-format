@@ -6,7 +6,7 @@ UseTab: Never
 #BreakBeforeBraces: Linux
 MaxEmptyLinesToKeep: 1
 
-AlignAfterOpenBracket: AlwaysBreak #BlockIndent
+AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: Right
 AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true
