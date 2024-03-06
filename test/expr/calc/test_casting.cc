@@ -29,23 +29,15 @@ using namespace dingodb::expr;
 TEST(TestToString, Cast) {
   ASSERT_EQ(*((calc::Cast<String>(1.0f))), "1.0");
   ASSERT_EQ(*((calc::Cast<String>(2.0))), "2.0");
-  ASSERT_EQ(*((calc::Cast<String>(2.30f))), "2.3");
+  ASSERT_EQ(*((calc::Cast<String>(2.30f))), "2.299999952316284");
   ASSERT_EQ(*((calc::Cast<String>(2.30))), "2.3");
 }
 
 TEST(TestToInt32, Cast) {
   ASSERT_THROW(calc::CastCheck<int32_t>((int64_t)std::numeric_limits<int32_t>::max() + 1), ExceedsLimits<TYPE_INT32>);
   ASSERT_THROW(calc::CastCheck<int32_t>((int64_t)std::numeric_limits<int32_t>::min() - 1), ExceedsLimits<TYPE_INT32>);
-  ASSERT_THROW(
-      calc::CastCheck<int32_t>((float)std::numeric_limits<int32_t>::max() + 1000.0f),
-      ExceedsLimits<TYPE_INT32>);
-  ASSERT_THROW(
-      calc::CastCheck<int32_t>((float)std::numeric_limits<int32_t>::min() - 1000.0f),
-      ExceedsLimits<TYPE_INT32>);
-  ASSERT_THROW(
-      calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::max() + 10000.0),
-      ExceedsLimits<TYPE_INT64>);
-  ASSERT_THROW(
-      calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::min() - 10000.0),
-      ExceedsLimits<TYPE_INT64>);
+  ASSERT_THROW(calc::CastCheck<int32_t>((float)std::numeric_limits<int32_t>::max() + 1000.0f), ExceedsLimits<TYPE_INT32>);
+  ASSERT_THROW(calc::CastCheck<int32_t>((float)std::numeric_limits<int32_t>::min() - 1000.0f), ExceedsLimits<TYPE_INT32>);
+  ASSERT_THROW(calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::max() + 10000.0), ExceedsLimits<TYPE_INT64>);
+  ASSERT_THROW(calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::min() - 10000.0), ExceedsLimits<TYPE_INT64>);
 }

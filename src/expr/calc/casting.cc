@@ -15,6 +15,8 @@
 #include "casting.h"
 
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 
 #include "../exception.h"
 
@@ -77,7 +79,11 @@ String Cast(bool v) {
 
 template <typename T>
 static String CastF(T v) {
-  auto s = std::to_string(v);
+  // precision is 6 by default
+  // auto s = std::to_string(v);
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(15) << v;
+  auto s = ss.str();
   s.erase(s.find_last_not_of('0') + 1);
   if (s.back() == '.') {
     s += '0';
