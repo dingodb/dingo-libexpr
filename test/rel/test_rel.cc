@@ -150,6 +150,16 @@ INSTANTIATE_TEST_SUITE_P(
             Data{
                 new Tuple{2001, "Alice", 2001.0f},
             }
+        ),
+        // PROJECT(input, STRING($[2]))
+        std::make_tuple(
+            "723402F07400",
+            Data{
+                new Tuple{1, "Alice", 1.2345678f},
+            },
+            Data{
+                new Tuple{"1.234567761421204"},
+            }
         )
     )
 );

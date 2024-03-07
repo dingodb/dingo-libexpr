@@ -31,6 +31,7 @@ TEST(TestToString, Cast) {
   ASSERT_EQ(*((calc::Cast<String>(2.0))), "2.0");
   ASSERT_EQ(*((calc::Cast<String>(2.30f))), "2.299999952316284");
   ASSERT_EQ(*((calc::Cast<String>(2.30))), "2.3");
+  ASSERT_EQ(*((calc::Cast<String>(2.299999952316284))), "2.299999952316284");
 }
 
 TEST(TestToInt32, Cast) {
