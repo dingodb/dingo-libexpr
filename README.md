@@ -87,6 +87,16 @@ Note:
 - If the `output` returned either by `Put` or `Get` is not `nullptr`, it must be released by the caller
 - The implementation of `RelRunner` is not thread-safe
 
+## Implementations
+
+### Expression Evaluating
+
+The `Runner` class is for expression evaluating. The following figure illustrate the evaluating process, in which the expression is like `2 + T[0] * 3`
+
+![Implementation of runner](docs/images/runner.drawio.svg)
+
+The `Runner` contains an operand stack and an operator verctor. The operator vector is constructed by `Decode` method from the encoded bytes of an expression. Each operator can manipulate (push/pop) operands in the operand stack following pre-defined process. When `Run` method is called, operators in the vector are carried out one by one. By calling `Get` method, the top elemement in the stack is poped out as the returned result. Mostly, there is only one oprand left in the stack after `Run` for a valid expression.
+
 ## Encodings
 
 ### Data Types
@@ -126,9 +136,13 @@ If the expressions are used in relational algebra, a special byte may be needed 
 
 The expressions Dingo Expression Coprocessor processed are represented in suffix style, i.e. the operator is put after its operands. Consts and variables are also treated as operator in this representation. All the operators are encoded into unique bytes representation. Operators may have one or more immediate numbers followed. Generally
 
-- For 1-byte representation, the lower 4 bits can be used to indicate a data type if needed
-- For 2-bytes representation, the higher 4 bits and the lower 4 bits of the 2nd byte can be used to indicate two data types individually if needed
+- For 1-byte representation, the HSB is set to `0`, and the lower 4 bits can be used to indicate a data type if needed
+- For 2-bytes representation, the HSB is set to `1`, and the higher 4 bits and the lower 4 bits of the 2nd byte can be used to indicate two data types individually if needed
 - No byte `0x00` or `0xFF` is allowed in the representation except for immediate numbers
+
+The encoding of operators is illustrated in the following figure
+
+![Encoding of operators](docs/images/encoding.drawio.svg)
 
 #### One-byte Operators
 
@@ -284,6 +298,8 @@ The encoding of each algebra operators contains an unique "leading byte", a "pay
 | Project | `0x72` | Encode the project expression one by one | `EOE` |
 | Grouped Aggregation | `0x73` | Encode group indices as `ARRAY<INT32>` type, then the list of aggregation functions as `ARRAY<AGG>` type | `EOE` |
 | Ungrouped Aggregation | `0x74` | Encode the list of aggregation functions as `ARRAY<AGG>` type | `EOE` |
+
+A "Project" operator may contains several expressions but they can be concatenated into one "huge" expression without any separator simplify the evaluating process. The "huge" expression is decoded by one `Runner`, and after evaluating there will be several results left in the operand stack just as needed. These results can be taken out by multiple calls to `Get` method.
 
 ## Used by
 
