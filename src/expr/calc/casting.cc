@@ -34,7 +34,11 @@ int32_t Cast(double v) {
 
 template <>
 int32_t Cast(String v) {
-  return std::stoi(*v);
+  try {
+    return std::stoi(*v);
+  } catch (const std::invalid_argument& e) {
+    return 0;
+  }
 }
 
 template <>
@@ -49,17 +53,29 @@ int64_t Cast(double v) {
 
 template <>
 int64_t Cast(String v) {
-  return std::stoll(*v);
+  try {
+    return std::stoll(*v);
+  } catch (const std::invalid_argument& e) {
+    return 0;
+  }
 }
 
 template <>
 float Cast(String v) {
-  return std::stof(*v);
+  try {
+    return std::stof(*v);
+  } catch (const std::invalid_argument& e) {
+    return 0;
+  }
 }
 
 template <>
 double Cast(String v) {
-  return std::stod(*v);
+  try {
+    return std::stod(*v);
+  } catch (const std::invalid_argument& e) {
+    return 0;
+  }
 }
 
 template <>

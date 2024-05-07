@@ -34,6 +34,17 @@ TEST(TestToString, Cast) {
   ASSERT_EQ(*((calc::Cast<String>(2.299999952316284))), "2.299999952316284");
 }
 
+TEST(TestStringTonumber, Cast) {
+  ASSERT_EQ((calc::Cast<int32_t>(String("9a"))), 9);
+  ASSERT_EQ((calc::Cast<int64_t>(String("9bb"))), 9);
+  ASSERT_EQ((calc::Cast<float>(String("9ccc"))), 9);
+  ASSERT_EQ((calc::Cast<double>(String("99ddd"))), 99);
+  ASSERT_EQ((calc::Cast<int32_t>(String("aa"))), 0);
+  ASSERT_EQ((calc::Cast<int64_t>(String("bb"))), 0);
+  ASSERT_EQ((calc::Cast<float>(String("ccc"))), 0);
+  ASSERT_EQ((calc::Cast<double>(String("ddd"))), 0.0);
+}
+
 TEST(TestToInt32, Cast) {
   ASSERT_THROW(calc::CastCheck<int32_t>((int64_t)std::numeric_limits<int32_t>::max() + 1), ExceedsLimits<TYPE_INT32>);
   ASSERT_THROW(calc::CastCheck<int32_t>((int64_t)std::numeric_limits<int32_t>::min() - 1), ExceedsLimits<TYPE_INT32>);
