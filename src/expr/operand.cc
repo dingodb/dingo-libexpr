@@ -49,6 +49,22 @@ std::any FromOperand<String::ValueType>(const Operand &v) {
   return std::make_any<std::optional<String::ValueType>>(opt);
 }
 
+template <>
+String::ValueType FromOperandV2<String::ValueType>(const Operand &v) {
+  if(v != nullptr) {
+    return v.GetValue<String>().GetPtr();
+  } else {
+    return nullptr;
+  }
+  //std::optional<String::ValueType> opt;
+  //if  (v != nullptr) {
+  //  opt = std::optional<String::ValueType>(v.GetValue<String>().GetPtr());
+  //} else {
+  //  opt = std::optional<String::ValueType>();
+  //}
+  //return std::make_any<std::optional<String::ValueType>>(opt);
+}
+
 }  // namespace any_optional_data_adaptor
 
 }  // namespace dingodb::expr

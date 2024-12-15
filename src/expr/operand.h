@@ -60,6 +60,11 @@ class Operand {
     return std::get<T>(m_data);
   }
 
+  template <typename T>
+  T GetInteriorValue() const {
+    return std::get<T>(m_data);
+  }
+
  private:
   std::variant<
       std::monostate,
@@ -104,6 +109,24 @@ std::any FromOperand(const Operand &v) {
 // GCC does not allow template specialization in class, so we need this.
 template <>
 std::any FromOperand<String::ValueType>(const Operand &v);
+
+template <typename T>
+T FromOperandV2(const Operand &v) {
+  //auto opt = (v != nullptr ? std::optional<T>(v.GetValue<T>()) : std::optional<T>());
+  //return std::make_any<std::optional<T>>(opt);
+  /*
+  if(v != nullptr) {
+    return v.GetValue<T>();
+  } else {
+    return nullptr;
+  }
+   */
+  return (v != nullptr) ? v.GetValue<T>() : nullptr;
+}
+
+// GCC does not allow template specialization in class, so we need this.
+template <>
+String::ValueType FromOperandV2<String::ValueType>(const Operand &v);
 
 }  // namespace any_optional_data_adaptor
 
