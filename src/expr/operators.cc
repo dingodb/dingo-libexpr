@@ -33,6 +33,7 @@ const Operator *const OP_NULL[] = {
     [TYPE_DOUBLE]  = new NullOperator<TYPE_DOUBLE>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new NullOperator<TYPE_STRING>,
+    [TYPE_DATE]  = new NullOperator<TYPE_DATE>,
 };
 
 const Operator *const OP_CONST_TRUE  = new ConstBoolOperator<true>;
@@ -256,6 +257,7 @@ const Operator *const OP_EQ[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Eq>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Eq>,
+    [TYPE_DATE]    = new BinaryRelationOperator<TYPE_DATE, calc::Eq>
 };
 
 const Operator *const OP_NE[] = {
@@ -267,6 +269,7 @@ const Operator *const OP_NE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Ne>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Ne>,
+    [TYPE_DATE]   = new BinaryRelationOperator<TYPE_DATE, calc::Ne>
 };
 
 const Operator *const OP_GT[] = {
@@ -278,6 +281,7 @@ const Operator *const OP_GT[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Gt>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Gt>,
+    [TYPE_DATE]   = new BinaryRelationOperator<TYPE_DATE, calc::Gt>
 };
 
 const Operator *const OP_GE[] = {
@@ -289,6 +293,7 @@ const Operator *const OP_GE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Ge>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Ge>,
+    [TYPE_DATE]   = new BinaryRelationOperator<TYPE_DATE, calc::Ge>
 };
 
 const Operator *const OP_LT[] = {
@@ -300,6 +305,7 @@ const Operator *const OP_LT[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Lt>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Lt>,
+    [TYPE_DATE]   = new BinaryRelationOperator<TYPE_DATE, calc::Lt>
 };
 
 const Operator *const OP_LE[] = {
@@ -311,6 +317,7 @@ const Operator *const OP_LE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Le>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Le>,
+    [TYPE_DATE]   = new BinaryRelationOperator<TYPE_DATE, calc::Le>
 };
 
 const Operator *const OP_IS_NULL[] = {
@@ -322,6 +329,7 @@ const Operator *const OP_IS_NULL[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsNull<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsNull<String>>,
+    [TYPE_DATE]   = new UnarySpecialOperator<calc::IsNull<expr::Date>>,
 };
 
 const Operator *const OP_IS_TRUE[] = {
@@ -333,6 +341,7 @@ const Operator *const OP_IS_TRUE[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsTrue<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsTrue<String>>,
+    [TYPE_DATE]    = new UnarySpecialOperator<calc::IsTrue<expr::Date>>,
 };
 
 const Operator *const OP_IS_FALSE[] = {
@@ -344,6 +353,7 @@ const Operator *const OP_IS_FALSE[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsFalse<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsFalse<String>>,
+    [TYPE_DATE]    = new UnarySpecialOperator<calc::IsFalse<expr::Date>>,
 };
 
 const Operator *const OP_MIN[] = {
