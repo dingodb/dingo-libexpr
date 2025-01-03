@@ -30,6 +30,7 @@ static const Byte NULL_FLOAT   = NULL_PREFIX | TYPE_FLOAT;
 static const Byte NULL_DOUBLE  = NULL_PREFIX | TYPE_DOUBLE;
 static const Byte NULL_DECIMAL = NULL_PREFIX | TYPE_DECIMAL;
 static const Byte NULL_STRING  = NULL_PREFIX | TYPE_STRING;
+static const Byte NULL_DATE    = NULL_PREFIX | TYPE_DATE;
 
 static const Byte CONST_PREFIX  = 0x10;
 static const Byte CONST_INT32   = CONST_PREFIX | TYPE_INT32;
@@ -39,6 +40,7 @@ static const Byte CONST_FLOAT   = CONST_PREFIX | TYPE_FLOAT;
 static const Byte CONST_DOUBLE  = CONST_PREFIX | TYPE_DOUBLE;
 static const Byte CONST_DECIMAL = CONST_PREFIX | TYPE_DECIMAL;
 static const Byte CONST_STRING  = CONST_PREFIX | TYPE_STRING;
+static const Byte CONST_DATE  = CONST_PREFIX | TYPE_DATE;
 
 static const Byte CONST_N_PREFIX = 0x20;
 static const Byte CONST_N_INT32  = CONST_N_PREFIX | TYPE_INT32;
@@ -53,6 +55,7 @@ static const Byte VAR_I_FLOAT   = VAR_I_PREFIX | TYPE_FLOAT;
 static const Byte VAR_I_DOUBLE  = VAR_I_PREFIX | TYPE_DOUBLE;
 static const Byte VAR_I_DECIMAL = VAR_I_PREFIX | TYPE_DECIMAL;
 static const Byte VAR_I_STRING  = VAR_I_PREFIX | TYPE_STRING;
+static const Byte VAR_I_DATE    = VAR_I_PREFIX | TYPE_DATE;
 
 static const Byte POS = 0x81;
 static const Byte NEG = 0x82;
@@ -120,6 +123,10 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       ++p;
       Add(OP_NULL[TYPE_STRING]);
       break;
+    case NULL_DATE:
+      ++p;
+      Add(OP_NULL[TYPE_DATE]);
+      break;
     case CONST_INT32: {
       ++p;
       int32_t v;
@@ -162,6 +169,13 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       String v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_STRING>(v));
+      break;
+    }
+    case CONST_DATE: {
+      ++p;
+      Date v;
+      p = DecodeValue(v, p);
+      AddRelease(new ConstOperator<TYPE_DATE>(v));
       break;
     }
     case CONST_N_INT32: {
@@ -229,6 +243,13 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       int32_t v;
       p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_STRING>(v));
+      break;
+    }
+    case VAR_I_DATE: {
+      ++p;
+      Date v;
+      p = DecodeValue(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_DATE>(v));
       break;
     }
     case POS:

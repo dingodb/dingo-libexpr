@@ -74,6 +74,8 @@ static Tuple tuple1{1, 2};
 static Tuple tuple2{35LL, 46LL};
 static Tuple tuple3{3.5, 4.6};
 static Tuple tuple4{"abc", "aBc"};
+static Tuple tuple5{1, 1, 1704067200000};
+static Tuple tuple6{1, 1, nullptr};
 
 // Test cases with vars
 INSTANTIATE_TEST_SUITE_P(
@@ -92,5 +94,33 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("3501128080808008f0529505", &tuple3, true),  // t1 < 2147483648
         std::make_tuple("3700", &tuple4, "abc"),                     // t0
         std::make_tuple("3701", &tuple4, "aBc"),                     // t1
-        std::make_tuple("370037019307", &tuple4, true)               // t0 < t1
+        std::make_tuple("370037019307", &tuple4, true),               // t0 < t1
+
+        //date = != > >= < <=
+        std::make_tuple("38021880E8C792CC319108", &tuple5, true),   // c = '2024-01-01'
+        std::make_tuple("38021880E8C792CC319608", &tuple5, false),  // c != '2024-01-01'
+        std::make_tuple("38021880B0AEE9CB319308", &tuple5, true),   // c > '2023-12-31'
+        std::make_tuple("38021880B0AEE9CB319208", &tuple5, true),   // c >= '2023-12-31'
+        std::make_tuple("38021880F8A5F9C1329508", &tuple5, true),   // c < '2025-01-01'
+        std::make_tuple("38021880F8A5F9C1329408", &tuple5, true),    // c <= '2025-01-01'
+
+        //date = null
+        std::make_tuple("3802089108", &tuple5, nullptr),    // date = null
+        std::make_tuple("3802089108", &tuple6, nullptr),    // date = null
+
+        //date is null
+        std::make_tuple("3802A108", &tuple5, false),    // is null
+        std::make_tuple("3802A108", &tuple6, true),    // is null
+
+        //date is true
+        std::make_tuple("3802A208", &tuple5, true),    // is_true(DATE(v))
+        std::make_tuple("3802A208", &tuple6, false),    // is_true(DATE(null))
+
+        //date is false
+        std::make_tuple("3802A308", &tuple5, false),    // is_false(DATE(v))
+        std::make_tuple("3802A308", &tuple6, false),    // is_false(DATE(null))
+
+        //date is not null
+        std::make_tuple("3802A10851", &tuple5, true),    // is not null
+        std::make_tuple("3802A10851", &tuple6, false)    // is not null
         ));

@@ -152,6 +152,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
   case rel::AGG_COUNT | TYPE_STRING:
     p = DecodeAgg<rel::op::CountAgg<expr::String>>(value, p);
     break;
+  case rel::AGG_COUNT | TYPE_DATE:
+    p = DecodeAgg<rel::op::CountAgg<expr::Date>>(value, p);
+    break;
   case rel::AGG_SUM | TYPE_INT32:
     p = DecodeAgg<rel::op::SumAgg<int32_t>>(value, p);
     break;
@@ -179,6 +182,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
   case rel::AGG_MAX | TYPE_STRING:
     p = DecodeAgg<rel::op::MaxAgg<expr::String>>(value, p);
     break;
+  case rel::AGG_MAX | TYPE_DATE:
+    p = DecodeAgg<rel::op::MaxAgg<expr::Date>>(value, p);
+    break;
   case rel::AGG_MIN | TYPE_INT32:
     p = DecodeAgg<rel::op::MinAgg<int32_t>>(value, p);
     break;
@@ -193,6 +199,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
     break;
   case rel::AGG_MIN | TYPE_STRING:
     p = DecodeAgg<rel::op::MinAgg<expr::String>>(value, p);
+    break;
+  case rel::AGG_MIN | TYPE_DATE:
+    p = DecodeAgg<rel::op::MinAgg<expr::Date>>(value, p);
     break;
   default:
     throw ExprError("Unknown aggregation type: " + HexOfBytes(data, 1));
