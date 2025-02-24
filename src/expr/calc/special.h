@@ -16,6 +16,7 @@
 #define _EXPR_CALC_SPECIAL_H_
 
 #include "../operand.h"
+#include "decimal_p.h"
 
 namespace dingodb::expr::calc {
 
@@ -32,6 +33,9 @@ bool IsTrue(const Operand &v) {
 template <>
 bool IsTrue<String>(const Operand &v);
 
+template <>
+bool IsTrue<DecimalP>(const Operand &v);
+
 template <typename T>
 bool IsFalse(const Operand &v) {
   return v != nullptr && !v.GetValue<T>();
@@ -39,6 +43,9 @@ bool IsFalse(const Operand &v) {
 
 template <>
 bool IsFalse<String>(const Operand &v);
+
+template <>
+bool IsFalse<DecimalP>(const Operand &v);
 
 }  // namespace dingodb::expr::calc
 

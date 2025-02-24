@@ -61,6 +61,9 @@ const Byte *DecodeValue(double &value, const Byte *data);
 template <>
 const Byte *DecodeValue(String &value, const Byte *data);
 
+template <>
+const Byte *DecodeValue(DecimalP &value, const Byte *data);
+
 template <typename T>
 const Byte *DecodeElements(T &container, size_t count, const Byte *code, size_t len) {
   const Byte *p = code;

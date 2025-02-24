@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <cstdint>
+
 #include "arithmetic.h"
 
 namespace dingodb::expr::calc {
@@ -33,6 +34,14 @@ Operand Div<long>(long v0, long v1) {
   return nullptr;
 }
 
+template <>
+Operand Div<::dingodb::types::DecimalP>(
+    ::dingodb::types::DecimalP v0,
+    ::dingodb::types::DecimalP v1) {
+  if (v1 != DecimalP(std::string("0"))) {
+    return v0 / v1;
+  }
+  return nullptr;
+}
+
 }  // namespace dingodb::expr::calc
-
-

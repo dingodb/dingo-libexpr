@@ -13,12 +13,18 @@
 # limitations under the License.
 
 include_directories(${CMAKE_SOURCE_DIR}/src/expr)
+include_directories(${DECIMAL_TYPE_SOURCE_PATH})
+include_directories(${GMP_BINARY_PATH}/install/include)
 
 add_subdirectory(calc)
 
 add_executable(test_expr test_expr.cc)
 target_link_libraries(test_expr GTest::gtest_main ${EXPR_LIB_NAME})
 gtest_discover_tests(test_expr)
+
+add_executable(test_expr_decimal test_expr_decimal.cc)
+target_link_libraries(test_expr_decimal GTest::gtest_main ${EXPR_LIB_NAME})
+gtest_discover_tests(test_expr_decimal)
 
 add_executable(test_types test_types.cc)
 target_link_libraries(test_types GTest::gtest_main ${EXPR_LIB_NAME})

@@ -28,7 +28,9 @@ jobs:
         run: sudo apt satisfy libgtest-dev
       - name: Configure CMake
         working-directory: ${{github.workspace}}
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: |
+          git submodule sync --recursive && git submodule update --init --recursive --progress
+          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build
         working-directory: ${{github.workspace}}
         run: cmake --build build --config ${{env.BUILD_TYPE}}

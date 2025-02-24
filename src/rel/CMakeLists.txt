@@ -23,5 +23,8 @@ set(SRCS
     rel_runner.cc
 )
 
+include_directories(${GMP_BINARY_PATH}/install/include)
+include_directories(${DECIMAL_TYPE_SOURCE_PATH})
 add_library(${REL_LIB_NAME} STATIC ${SRCS})
-target_link_libraries(${REL_LIB_NAME} ${EXPR_LIB_NAME})
+target_link_libraries(${REL_LIB_NAME} ${EXPR_LIB_NAME} ${GMP_LIB_NAME} ${GMPXX_LIB_NAME})
+add_dependencies(${REL_LIB_NAME} gmp)

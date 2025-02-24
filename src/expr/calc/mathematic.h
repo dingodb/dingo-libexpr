@@ -27,6 +27,9 @@ T Min(T v0, T v1) {
 template <>
 String Min(String v0, String v1);
 
+template <>
+types::DecimalP Min(types::DecimalP v0, types::DecimalP v1);
+
 template <typename T>
 T Max(T v0, T v1) {
   return std::max(v0, v1);
@@ -34,6 +37,9 @@ T Max(T v0, T v1) {
 
 template <>
 String Max(String v0, String v1);
+
+template <>
+types::DecimalP Max(types::DecimalP v0, types::DecimalP v1);
 
 template <typename T>
 T Abs(T v);

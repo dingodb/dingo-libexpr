@@ -58,6 +58,11 @@ Operand Div<int>(int v0, int v1);
 template <>
 Operand Div<long>(long v0, long v1);
 
+template <>
+Operand Div<::dingodb::types::DecimalP>(
+    ::dingodb::types::DecimalP v0,
+    ::dingodb::types::DecimalP v1);
+
 template <typename T>
 Operand Mod(T v0, T v1) {
   if (v1 != 0) {
