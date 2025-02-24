@@ -22,6 +22,9 @@
 #include <vector>
 
 #include "types.h"
+#include "decimal_p.h"
+
+using namespace dingodb::types;
 
 namespace dingodb::expr {
 
@@ -32,6 +35,15 @@ class Operand {
   }
 
   Operand(String::ValueType v) : m_data(String(v)) {
+  }
+
+  Operand(DecimalP v) : m_data(v) {
+  }
+
+  Operand(std::shared_ptr<DecimalP> v) : m_data(*v) {
+  }
+
+  Operand(DecimalP::ValueType v) : m_data(DecimalP(v)) {
   }
 
   Operand([[maybe_unused]] std::nullptr_t v) {
@@ -68,6 +80,10 @@ class Operand {
     return std::holds_alternative<int64_t>(m_data);
   }
 
+  inline bool isBool() const {
+    return std::holds_alternative<bool>(m_data);
+  }
+
   template <typename T>
   T GetInteriorValue() const {
     return std::get<T>(m_data);
@@ -82,12 +98,14 @@ class Operand {
       float,
       double,
       String,
+      DecimalP,
       std::shared_ptr<std::vector<int32_t>>,
       std::shared_ptr<std::vector<int64_t>>,
       std::shared_ptr<std::vector<bool>>,
       std::shared_ptr<std::vector<float>>,
       std::shared_ptr<std::vector<double>>,
-      std::shared_ptr<std::vector<std::string>>>
+      std::shared_ptr<std::vector<std::string>>,
+      std::shared_ptr<std::vector<DecimalP>>>
       m_data;
 
   friend class std::hash<::dingodb::expr::Operand>;
@@ -118,6 +136,9 @@ std::any FromOperand(const Operand &v) {
 template <>
 std::any FromOperand<String::ValueType>(const Operand &v);
 
+template <>
+std::any FromOperand<DecimalP::ValueType>(const Operand &v);
+
 template <typename T>
 T FromOperandV2(const Operand &v) {
   //auto opt = (v != nullptr ? std::optional<T>(v.GetValue<T>()) : std::optional<T>());
@@ -135,6 +156,10 @@ T FromOperandV2(const Operand &v) {
 // GCC does not allow template specialization in class, so we need this.
 template <>
 String::ValueType FromOperandV2<String::ValueType>(const Operand &v);
+
+// GCC does not allow template specialization in class, so we need this.
+template <>
+DecimalP::ValueType FromOperandV2<DecimalP::ValueType>(const Operand &v);
 
 }  // namespace any_optional_data_adaptor
 

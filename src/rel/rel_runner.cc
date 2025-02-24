@@ -185,6 +185,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
   case rel::AGG_MAX | TYPE_STRING:
     p = DecodeAgg<rel::op::MaxAgg<expr::String>>(value, p);
     break;
+  case rel::AGG_MAX | TYPE_DECIMAL:
+    p = DecodeAgg<rel::op::MaxAgg<DecimalP>>(value, p);
+    break;
   case rel::AGG_MAX | TYPE_DATE:
     p = DecodeAgg<rel::op::MaxAgg<expr::Date>>(value, p);
     break;
@@ -205,6 +208,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
     break;
   case rel::AGG_MIN | TYPE_STRING:
     p = DecodeAgg<rel::op::MinAgg<expr::String>>(value, p);
+    break;
+  case rel::AGG_MIN | TYPE_DECIMAL:
+    p = DecodeAgg<rel::op::MinAgg<DecimalP>>(value, p);
     break;
   case rel::AGG_MIN | TYPE_DATE:
     p = DecodeAgg<rel::op::MinAgg<expr::Date>>(value, p);

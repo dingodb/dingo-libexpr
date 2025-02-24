@@ -126,6 +126,10 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       ++p;
       Add(OP_NULL[TYPE_STRING]);
       break;
+    case NULL_DECIMAL:
+      ++p;
+      Add(OP_NULL[TYPE_DECIMAL]);
+      break;
     case NULL_DATE:
       ++p;
       Add(OP_NULL[TYPE_DATE]);
@@ -168,7 +172,9 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     }
     case CONST_DECIMAL: {
       ++p;
-      // TODO
+      DecimalP v;
+      p = DecodeValue(v, p);
+      AddRelease(new ConstOperator<TYPE_DECIMAL>(v));
       break;
     }
     case CONST_STRING: {

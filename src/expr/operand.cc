@@ -29,6 +29,8 @@ std::ostream &operator<<(std::ostream &os, const Operand &v) {
     os << std::get<double>(v.m_data);
   } else if (std::holds_alternative<String>(v.m_data)) {
     os << std::get<String>(v.m_data);
+  } else if (std::holds_alternative<DecimalP>(v.m_data)) {
+      os << std::get<DecimalP>(v.m_data);
   } else if (std::holds_alternative<std::monostate>(v.m_data)) {
     os << "(null)";
   } else {
@@ -50,6 +52,17 @@ std::any FromOperand<String::ValueType>(const Operand &v) {
 }
 
 template <>
+std::any FromOperand<DecimalP>(const Operand &v) {
+  std::optional<DecimalP> opt;
+  if  (v != nullptr) {
+    opt = std::optional<DecimalP>(v.GetValue<DecimalP>());
+  } else {
+    opt = std::optional<DecimalP>();
+  }
+  return std::make_any<std::optional<DecimalP>>(opt);
+}
+
+template <>
 String::ValueType FromOperandV2<String::ValueType>(const Operand &v) {
   if(v != nullptr) {
     return v.GetValue<String>().GetPtr();
@@ -63,6 +76,15 @@ String::ValueType FromOperandV2<String::ValueType>(const Operand &v) {
   //  opt = std::optional<String::ValueType>();
   //}
   //return std::make_any<std::optional<String::ValueType>>(opt);
+}
+
+template <>
+DecimalP::ValueType FromOperandV2<DecimalP::ValueType>(const Operand &v) {
+  if(v != nullptr) {
+    return v.GetValue<DecimalP>().GetPtr();
+  } else {
+    return nullptr;
+  }
 }
 
 }  // namespace any_optional_data_adaptor

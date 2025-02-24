@@ -1,7 +1,3 @@
-# Copyright (c) 2023 dingodb.com, Inc. All Rights Reserved
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -12,13 +8,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-enable_testing()
+set(SRCS
+    decimal/decimal.cc
+        decimal/decimal_p.cc
+)
 
-find_package(GTest REQUIRED)
+include_directories(${GMP_BINARY_PATH}/install/include)
+include_directories(${CMAKE_SOURCE_DIR}/src/expr)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/test)
-
-add_subdirectory(expr)
-add_subdirectory(rel)
-add_subdirectory(types)
+add_library(${TYPES_LIB_NAME} STATIC ${SRCS})
+target_link_libraries(${TYPES_LIB_NAME} ${GMP_LIB_NAME} ${GMPXX_LIB_NAME})
+add_dependencies(${TYPES_LIB_NAME} gmp)

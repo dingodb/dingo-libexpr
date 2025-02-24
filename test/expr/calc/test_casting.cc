@@ -16,6 +16,7 @@
 
 #include "../exception.h"
 #include "casting.h"
+#include "decimal_p.h"
 
 TEST(TestToString, std) {
   ASSERT_EQ(std::to_string(1), "1");
@@ -25,6 +26,7 @@ TEST(TestToString, std) {
 }
 
 using namespace dingodb::expr;
+using namespace dingodb::types;
 
 TEST(TestToString, Cast) {
   ASSERT_EQ(*((calc::Cast<String>(1.0f))), "1.0");
@@ -53,3 +55,28 @@ TEST(TestToInt32, Cast) {
   ASSERT_THROW(calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::max() + 10000.0), ExceedsLimits<TYPE_INT64>);
   ASSERT_THROW(calc::CastCheck<int64_t>((double)std::numeric_limits<int64_t>::min() - 10000.0), ExceedsLimits<TYPE_INT64>);
 }
+
+TEST(TestOtherToDecimalP, Cast) {
+  ASSERT_EQ((calc::Cast<int32_t>(DecimalP(std::string("123456.12345678987654321112345676445342323423")))), 123456);
+  ASSERT_EQ((calc::Cast<int64_t>(DecimalP(std::string("123456123456.12345678987654321112345676445342323423")))), 123456123456);
+
+  //"+1" for mpf is not allow.
+  ASSERT_EQ((calc::Cast<int32_t>(DecimalP(std::string("1")))), 1);
+  ASSERT_EQ((calc::Cast<int32_t>(DecimalP(std::string("0")))), 0);
+  ASSERT_EQ((calc::Cast<int32_t>(DecimalP(std::string("-123456.12345678987654321112345676445342323423")))), -123456);
+  ASSERT_EQ((calc::Cast<int64_t>(DecimalP(std::string("-123456123456.12345678987654321112345676445342323423")))), -123456123456);
+
+  //float and double should not be compared by operator =.
+  ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("123456.123456789")))), 123456.125);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("123456.123456789")))), 123456.12345678899);
+  ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("-123456.123456789")))), -123456.125);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("-123456.123456789")))), -123456.12345678899);
+  ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("0")))), 0);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("0")))), 0);
+
+  ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("0")))), "0");
+  ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("-123456.123456789")))), "-123456.123456789");
+  ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("123456.123456789")))), "123456.123456789");
+}
+
+

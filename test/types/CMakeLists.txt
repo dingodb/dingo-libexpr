@@ -12,26 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(SRCS
-    calc/casting.cc
-    calc/arithmetic.cc
-    calc/mathematic.cc
-    calc/special.cc
-    calc/string_fun.cc
-    calc/arithmetic.cc
-    codec.cc
-    expr_string.cc
-    operand.cc
-    operator_vector.cc
-    operator.cc
-    operators.cc
-    runner.cc
-    types.cc
-    utils.cc
-)
-
-add_library(${EXPR_LIB_NAME} STATIC ${SRCS})
+include_directories(${CMAKE_SOURCE_DIR}/src/types/decimal)
 include_directories(${GMP_BINARY_PATH}/install/include)
-include_directories(${DECIMAL_TYPE_SOURCE_PATH})
-target_link_libraries(${EXPR_LIB_NAME} ${TYPES_LIB_NAME} ${GMPXX_LIB_NAME} ${GMP_LIB_NAME})
-add_dependencies(${EXPR_LIB_NAME} gmp)
+
+add_executable(test_type_decimal test_type_decimal.cc)
+target_link_libraries(test_type_decimal GTest::gtest_main ${TYPES_LIB_NAME} ${GMPXX_LIB_NAME} ${GMP_LIB_NAME})
+add_dependencies(test_type_decimal gmp)
+
+gtest_discover_tests(test_type_decimal)

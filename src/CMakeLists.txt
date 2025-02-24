@@ -16,3 +16,4 @@
 
 add_subdirectory(expr)
 add_subdirectory(rel)
+add_subdirectory(types)
