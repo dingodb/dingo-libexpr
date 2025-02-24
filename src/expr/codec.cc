@@ -89,4 +89,13 @@ const Byte *DecodeValue(String &value, const Byte *data) {
   return p + len;
 }
 
+template <>
+const Byte *DecodeValue(DecimalP &value, const Byte *data) {
+  uint32_t len;
+  const Byte *p = DecodeValue(len, data);
+  auto v = std::string(reinterpret_cast<const char *>(p), len);
+  value = DecimalP(v);
+  return p + len;
+}
+
 }  // namespace dingodb::expr

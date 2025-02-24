@@ -15,8 +15,17 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 project(dingo-libexpr C CXX)
 
+set(CMAKE_BUILD_TYPE "Release")
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "-O0")
+endif ()
+
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
+
+#Compile contrib gmp.
+add_subdirectory(contrib/gmp)
 
 option(BUILD_TESTS "Build tests." ON)
 
@@ -38,6 +47,13 @@ set(CMAKE_PREFIX_PATH ${OUTPUT_PATH})
 
 set(EXPR_LIB_NAME expr)
 set(REL_LIB_NAME expr_rel)
+set(TYPES_LIB_NAME types)
+
+set(GMP_LIB_NAME libgmp.a)
+set(GMPXX_LIB_NAME libgmpxx.a)
+set(GMP_BINARY_PATH ${CMAKE_CURRENT_BINARY_DIR}/contrib/gmp)
+set(DECIMAL_TYPE_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/types/decimal)
+link_directories(${GMP_BINARY_PATH}/install/lib)
 
 add_subdirectory(src)
 if(BUILD_TESTS)

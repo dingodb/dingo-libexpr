@@ -12,28 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "special.h"
+#include "decimal_p.h"
 
-namespace dingodb::expr::calc {
+namespace dingodb {
+namespace types {
 
-template <>
-bool IsTrue<String>([[maybe_unused]] const Operand &v) {
-  return false;
+std::ostream &operator<<(std::ostream &os, const DecimalP &v) {
+  os << *(v.m_ptr);
+  return os;
 }
 
-template <>
-bool IsFalse<String>(const Operand &v) {
-  return v != nullptr;
-}
-
-template <>
-bool IsTrue<DecimalP>([[maybe_unused]] const Operand &v) {
-  return v != nullptr && v.GetValue<DecimalP>().toInt();
-}
-
-template <>
-bool IsFalse<DecimalP>(const Operand &v) {
-  return v != nullptr && v.GetValue<DecimalP>().toInt();;
-}
-
-}  // namespace dingodb::expr::calc
+}  // namespace types
+}  // namespace dingodb

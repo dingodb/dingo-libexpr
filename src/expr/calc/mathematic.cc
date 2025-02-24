@@ -26,8 +26,18 @@ String Min(String v0, String v1) {
 }
 
 template <>
+DecimalP Min(DecimalP v0, DecimalP v1) {
+  return (v0 <= v1) ? v0 : v1;
+}
+
+template <>
 String Max(String v0, String v1) {
   return std::max(*v0, *v1);
+}
+
+template <>
+DecimalP Max(DecimalP v0, DecimalP v1) {
+  return (v0 >= v1) ? v0 : v1;
 }
 
 template <>
@@ -58,6 +68,11 @@ double Abs(double v) {
 }
 
 template <>
+DecimalP Abs(DecimalP v) {
+  return v.Abs();
+}
+
+template <>
 int32_t AbsCheck(int32_t v) {
   if (v == std::numeric_limits<int32_t>::min()) {
     throw ExceedsLimits<TYPE_INT32>();
@@ -71,6 +86,11 @@ int64_t AbsCheck(int64_t v) {
     throw ExceedsLimits<TYPE_INT64>();
   }
   return llabs(v);
+}
+
+template <>
+DecimalP AbsCheck(DecimalP v) {
+  return v.Abs();
 }
 
 }  // namespace dingodb::expr::calc

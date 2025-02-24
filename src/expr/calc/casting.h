@@ -16,8 +16,11 @@
 #define _EXPR_CALC_CASTING_H_
 
 #include "../types.h"
+#include "decimal_p.h"
 
 namespace dingodb::expr::calc {
+
+using namespace dingodb::types;
 
 template <typename D, typename S>
 D Cast(S v) {
@@ -30,6 +33,8 @@ template <>
 int32_t Cast(double v);
 template <>
 int32_t Cast(String v);
+template <>
+int32_t Cast(DecimalP v);
 
 template <>
 int64_t Cast(float v);
@@ -37,12 +42,20 @@ template <>
 int64_t Cast(double v);
 template <>
 int64_t Cast(String v);
+template <>
+int64_t Cast(DecimalP v);
 
 template <>
 float Cast(String v);
 
 template <>
+float Cast(DecimalP v);
+
+template <>
 double Cast(String v);
+
+template <>
+double Cast(DecimalP v);
 
 template <>
 String Cast(int32_t v);
@@ -54,6 +67,24 @@ template <>
 String Cast(float v);
 template <>
 String Cast(double v);
+template <>
+String Cast(DecimalP v);
+
+template <>
+DecimalP Cast(int32_t v);
+template <>
+DecimalP Cast(int64_t v);
+template <>
+DecimalP Cast(bool v);
+template <>
+DecimalP Cast(float v);
+template <>
+DecimalP Cast(double v);
+template <>
+DecimalP Cast(String v);
+
+template <>
+bool Cast(DecimalP v);
 
 template <typename D, typename S>
 D CastCheck(S v) {
