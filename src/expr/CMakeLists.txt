@@ -14,6 +14,7 @@
 
 set(SRCS
     calc/casting.cc
+    calc/arithmetic.cc
     calc/mathematic.cc
     calc/special.cc
     calc/string_fun.cc
