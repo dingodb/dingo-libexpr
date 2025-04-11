@@ -143,7 +143,30 @@ class BinaryOperatorV2 : public OperatorBase<R> {
     auto v0 = stack.Get();
     stack.Pop();
     if (v0 != nullptr && v1 != nullptr) {
-      stack.Push(Calc(v0.GetValue<TypeOf<T0>>(), v1.GetValue<TypeOf<T1>>()));
+      if(R == TYPE_DOUBLE &&
+          (v0.isInt() || v0.isLong()) &&
+          (v1.isInt() || v1.isLong()))
+      {
+        double val0, val1;
+
+        //Get value 0.
+        if(v0.isInt()) {
+          val0 = (double)v0.GetValue<int32_t>();
+        } else if(v0.isLong()) {
+          val0 = (double)v0.GetValue<int64_t>();
+        }
+
+        //Get value 1.
+        if(v1.isInt()) {
+          val1 = (double)v1.GetValue<int32_t>();
+        } else if(v1.isLong()) {
+          val1 = (double)v1.GetValue<int64_t>();
+        }
+
+        stack.Push(Calc(val0, val1));
+      }else {
+        stack.Push(Calc(v0.GetValue<TypeOf<T0>>(), v1.GetValue<TypeOf<T1>>()));
+      }
     } else {
       stack.Push<TypeOf<R>>();
     }

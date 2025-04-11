@@ -57,7 +57,15 @@ class Operand {
 
   template <typename T>
   inline T GetValue() const {
-    return std::get<T>(m_data);
+      return std::get<T>(m_data);
+  }
+
+  inline bool isInt() const {
+    return std::holds_alternative<int32_t>(m_data);
+  }
+
+  inline bool isLong() const {
+    return std::holds_alternative<int64_t>(m_data);
   }
 
   template <typename T>
