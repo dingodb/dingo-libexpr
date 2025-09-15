@@ -23,6 +23,7 @@ namespace dingodb::expr {
 
 using Byte = unsigned char;
 using Date = int64_t;
+using Timestamp = int64_t;
 
 const Byte TYPE_NULL = 0x00;
 const Byte TYPE_INT32 = 0x01;
@@ -33,8 +34,9 @@ const Byte TYPE_DOUBLE = 0x05;
 const Byte TYPE_DECIMAL = 0x06;
 const Byte TYPE_STRING = 0x07;
 const Byte TYPE_DATE  = 0x08;
+const Byte TYPE_TIMESTAMP = 0x09;
 
-const size_t TYPE_NUM = 9;
+const size_t TYPE_NUM = 10;
 
 using Decimal = long double;  // TODO: what's the real type?
 
@@ -86,6 +88,12 @@ class CxxTraits<TYPE_STRING> {
 template <>
 class CxxTraits<TYPE_DATE> {
  public:
+  using Type = int64_t;
+};
+
+template <>
+class CxxTraits<TYPE_TIMESTAMP> {
+public:
   using Type = int64_t;
 };
 

@@ -77,6 +77,11 @@ static Tuple tuple4{"abc", "aBc"};
 static Tuple tuple5{1, 1, 1704067200000};
 static Tuple tuple6{1, 1, nullptr};
 
+//Timestamp values.
+static Tuple tuple7{1, 1580616732000, 1580620393000};   //2020-02-02 12:12:12, 2020-02-02 13:13:13
+static Tuple tuple8{1, 1580616732000, 1580616732000};   //2020-02-02 12:12:12, 2020-02-02 12:12:12
+static Tuple tuple9{1, nullptr, nullptr};
+
 // Test cases with vars
 INSTANTIATE_TEST_SUITE_P(
     VarExpr,
@@ -122,5 +127,67 @@ INSTANTIATE_TEST_SUITE_P(
 
         //date is not null
         std::make_tuple("3802A10851", &tuple5, true),    // is not null
-        std::make_tuple("3802A10851", &tuple6, false)    // is not null
+        std::make_tuple("3802A10851", &tuple6, false),    // is not null,
+
+        //timestamp = != > >= < <=
+        //timestamp = timestamp, expected: false.
+        std::make_tuple("39013902910900", &tuple7, false),
+        //timestamp = timestamp, expected: true.
+        std::make_tuple("39013902910900", &tuple8, true),
+
+        //timestamp != timestamp, expected: true.
+        std::make_tuple("39013902960900", &tuple7, true),
+        //timestamp != timestamp, expected: false.
+        std::make_tuple("39013902960900", &tuple8, false),
+
+        //timestamp > timestamp, expected: false.
+        std::make_tuple("39013902930900", &tuple7, false),
+        //timestamp > timestamp, expected: false.
+        std::make_tuple("39013902930900", &tuple8, false),
+
+        //timestamp >= timestamp, expected: false.
+        std::make_tuple("39013902920900", &tuple7, false),
+        //timestamp >= timestamp, expected: false.
+        std::make_tuple("39013902920900", &tuple8, true),
+
+        //timestamp < timestamp, expected: true.
+        std::make_tuple("39013902950900", &tuple7, true),
+        //timestamp < timestamp, expected: false.
+        std::make_tuple("39013902950900", &tuple8, false),
+
+        //timestamp <= timestamp, expected: true.
+        std::make_tuple("39013902940900", &tuple7, true),
+        //timestamp <= timestamp, expected: false.
+        std::make_tuple("39013902940900", &tuple8, true),
+
+        //test timestamp = null
+        // timestamp = null
+        std::make_tuple("390109910900", &tuple7, nullptr),
+        // timestamp = null
+        std::make_tuple("390109910900", &tuple8, nullptr),
+
+        //timestamp is null
+        std::make_tuple("3801A10900", &tuple7, false),
+        std::make_tuple("3801A10900", &tuple8, false),
+        std::make_tuple("3801A10900", &tuple9, true),
+
+        //timestamp is not null
+        // is not null
+        std::make_tuple("3901A1095100", &tuple7, true),
+        // is not null,
+        std::make_tuple("3901A1095100", &tuple8, true),
+        // is not null,
+        std::make_tuple("3901A1095100", &tuple9, false),
+
+        //timestamp is true
+        // is_true(TIMESTAMP(v))
+        std::make_tuple("3801A20900", &tuple7, true),
+        // is_true(TIMESTAMP(null))
+        std::make_tuple("3801A20900", &tuple9, false),
+
+        //timestamp is false
+        // is_false(TIMESTAMP(v))
+        std::make_tuple("3901A30900", &tuple7, false),
+        // is_false(TIMESTAMP(null))
+        std::make_tuple("3901A30900", &tuple9, false)
         ));
