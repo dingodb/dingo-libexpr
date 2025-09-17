@@ -44,6 +44,14 @@ static Data MakeData() {
   };
 }
 
+static Data MakeDataForSubStr() {
+  return Data{
+    new Tuple{1, "abcdefg"},
+    new Tuple{2, "abc"},
+    new Tuple{3, nullptr},
+};
+}
+
 static const RelRunner *MakeRunner(const std::string &code) {
   auto len = code.size() / 2;
   Byte buf[len];
@@ -159,6 +167,19 @@ INSTANTIATE_TEST_SUITE_P(
             },
             Data{
                 new Tuple{"1.234567761421204"},
+            }
+        ),
+        // PROJECT(input, substr($[1]))
+        std::make_tuple(
+            "72370111011104F12E",
+            MakeDataForSubStr(),
+            Data{
+                //The origin string is longer than range.
+                new Tuple{"abcd"},
+                //The origin string is shorter than range.
+                new Tuple{"abc"},
+                //Deal with null value.
+                new Tuple{nullptr},
             }
         )
     )
