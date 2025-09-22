@@ -52,6 +52,15 @@ static Data MakeDataForSubStr() {
 };
 }
 
+static Data MakeDataForInstr() {
+  return Data{
+    new Tuple{"abcdef"},
+    new Tuple{ "abccde"},
+    new Tuple{ "mkdgd"},
+    new Tuple{ nullptr},
+};
+}
+
 static const RelRunner *MakeRunner(const std::string &code) {
   auto len = code.size() / 2;
   Byte buf[len];
@@ -181,6 +190,28 @@ INSTANTIATE_TEST_SUITE_P(
                 //Deal with null value.
                 new Tuple{nullptr},
             }
+        ),
+        // PROJECT(input, instr($[1]))
+        std::make_tuple(
+            "7237001703636465F130",
+            MakeDataForInstr(),
+            Data{
+                new Tuple{3},
+                new Tuple{4},
+                new Tuple{0},
+                new Tuple{nullptr},
+            }
+        ),
+        // PROJECT(input, instr($[1]))
+        std::make_tuple(
+          "72370007F130",   //For null substring.
+          MakeDataForInstr(),
+          Data{
+              new Tuple{nullptr},
+              new Tuple{nullptr},
+              new Tuple{nullptr},
+              new Tuple{nullptr},
+          }
         )
     )
 );

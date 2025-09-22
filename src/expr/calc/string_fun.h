@@ -43,6 +43,8 @@ String Mid(String v0, int32_t v1, int32_t v2);
 
 String Mid(String v0, int32_t v1);
 
+int Instr(String v0, String v1);
+
 }  // namespace dingodb::expr::calc
 
 #endif /* _EXPR_CALC_STRING_FUN_H_ */
