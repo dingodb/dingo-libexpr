@@ -84,6 +84,17 @@ class String {
     return *m_ptr >= *v.m_ptr;
   }
 
+  int find(const String &v) const {
+    std::size_t found = (*m_ptr).find(*v.GetPtr());
+    if (found != std::string::npos) {
+      return found + 1;
+    } else {
+      return 0;
+    }
+
+    return 0;
+  }
+
  private:
   ValueType m_ptr;
 

@@ -15,6 +15,7 @@
 #include "string_fun.h"
 
 #include <algorithm>
+#include <string>
 
 namespace dingodb::expr::calc {
 
@@ -118,6 +119,10 @@ String Substr(String v0, int32_t v1) {
   } else {
     return v0->substr(v1);
   }
+}
+
+int Instr(String v0, String v1) {
+  return v0.find(v1);
 }
 
 String Mid(String v0, int32_t v1, int32_t v2) {
