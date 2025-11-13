@@ -52,6 +52,18 @@ static Data MakeDataForSubStr() {
 };
 }
 
+static Data MakeDataForDoubleToDecimal() {
+  return Data{
+    new Tuple{1, 5.8},
+};
+}
+
+static Data MakeDataForFloatToDecimal() {
+  return Data{
+    new Tuple{1, (float)5.8},
+};
+}
+
 static Data MakeDataForInstr() {
   return Data{
     new Tuple{"abcdef"},
@@ -189,6 +201,22 @@ INSTANTIATE_TEST_SUITE_P(
                 new Tuple{"abc"},
                 //Deal with null value.
                 new Tuple{nullptr},
+            }
+        ),
+        std::make_tuple(
+          "713501F0651603352E3892063501F0651603352E3894065200",
+          MakeDataForDoubleToDecimal(),
+          Data{
+                //The origin string is longer than range.
+                new Tuple{1, 5.8},
+            }
+        ),
+        std::make_tuple(
+            "713401F0641603352E3892063401F0641603352E3894065200",
+            MakeDataForFloatToDecimal(),
+            Data{
+              //The origin string is longer than range.
+              new Tuple{1, (float)5.8},
             }
         ),
         // PROJECT(input, instr($[1]))
