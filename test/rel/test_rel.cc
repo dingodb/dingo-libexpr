@@ -120,7 +120,7 @@ INSTANTIATE_TEST_SUITE_P(
                 new Tuple{7, "Betty", 70.0f},
                 new Tuple{8, "Alice", 80.0f},
                 nullptr,
-}  // Why code formatted to here?
+        }  // Why code formatted to here?
         ),
         // PROJECT(input, $[0], $[1], $[2] / 10)
         std::make_tuple(
