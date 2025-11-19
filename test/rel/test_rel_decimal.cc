@@ -36,6 +36,12 @@ static Data MakeData() {
   };
 }
 
+static Data MakeDataForCast() {
+  return Data{
+    new Tuple{1, (double)77.77},  //column contains nullptr.
+};
+}
+
 static Data MakeDataInt() {
   return Data{
     new Tuple{10, nullptr},  //column contains nullptr.
@@ -81,6 +87,14 @@ INSTANTIATE_TEST_SUITE_P(
             MakeData(),
             Data{
               new Tuple{1, nullptr},
+            }
+        ),
+        // table t1(id int, a double), value (1, 77.77), select * from t1 where a >= 77.77.
+        std::make_tuple(
+            "713501f065160537372e3737920600",
+            MakeDataForCast(),
+            Data{
+              new Tuple{1, 77.77},
             }
         )
     )

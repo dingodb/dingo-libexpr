@@ -145,6 +145,17 @@ static String CastFloat(float v) {
   return s;
 }
 
+static String CastDouble(double v) {
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(14) << v;
+  auto s = ss.str();
+  s.erase(s.find_last_not_of('0') + 1);
+  if (s.back() == '.') {
+    s += '0';
+  }
+  return s;
+}
+
 template <>
 String Cast(float v) {
   return CastF(v);
@@ -183,7 +194,7 @@ DecimalP Cast(float v) {
 
 template <>
 DecimalP Cast(double v) {
-  String const d2s = CastF(v);
+  String const d2s = CastDouble(v);
   return DecimalP(*d2s.GetPtr());
 }
 
