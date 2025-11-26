@@ -24,6 +24,27 @@ TEST(TestTypeDecimal, DecimalTest) {
   //Test function printDecimal.
   v.printDecimal();
 
+  //Test decimal value 0.
+  Decimal izqval0 = Decimal("0");
+  std::string izqresult0 = izqval0.toString();
+  ASSERT_EQ(izqresult0, "0");
+  std::string izqresulta = izqval0.toString(10,2);
+  ASSERT_EQ(izqresulta, "0.00");
+  std::string izqresultb = izqval0.toString(10,0);
+  ASSERT_EQ(izqresultb, "0");
+  std::string izqresultc = izqval0.toString(10,4);
+  ASSERT_EQ(izqresultc, "0.0000");
+
+  Decimal izqval01 = Decimal("0.000");
+  std::string izqresult01 = izqval01.toString();
+  ASSERT_EQ(izqresult01, "0");
+  std::string izqresulta1 = izqval01.toString(10,2);
+  ASSERT_EQ(izqresulta1, "0.00");
+  std::string izqresultb1 = izqval01.toString(10,0);
+  ASSERT_EQ(izqresultb1, "0");
+  std::string izqresultc1 = izqval01.toString(10,4);
+  ASSERT_EQ(izqresultc1, "0.0000");
+
   Decimal izqval1 = Decimal("100.00");
   std::string izqresult1 = izqval1.toString();
   ASSERT_EQ(izqresult1, "100");
@@ -87,7 +108,7 @@ TEST(TestTypeDecimal, DecimalTest) {
   std::string qresult1 = qval1.toString();
   ASSERT_EQ(qresult1, "0");
   std::string qresult2 = qval1.toString(10,4);
-  ASSERT_EQ(qresult2, "0");
+  ASSERT_EQ(qresult2, "0.0000");
 
   //scale is 0.
   Decimal qqval1 = Decimal("0");
@@ -319,7 +340,7 @@ TEST(TestTypeDecimal, DecimalTest) {
   //Test dec - dec.
   Decimal minusResult = Decimal(std::string("123.123")) - Decimal(std::string("123.123"));
   ASSERT_EQ(minusResult.toString(), "0");
-  ASSERT_EQ(minusResult.toString(5, 2), "0");
+  ASSERT_EQ(minusResult.toString(5, 2), "0.00");
 
   //Test dec == dec.
   ASSERT_TRUE(Decimal(std::string("123.123")) == Decimal(std::string("123.123")));

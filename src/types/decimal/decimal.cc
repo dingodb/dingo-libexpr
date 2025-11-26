@@ -117,7 +117,7 @@ std::string Decimal::toString(long precision, long scale) const {
 
   //fast path.
   if(str.empty() && exp == 0) {
-    return std::move(std::string("0"));
+    str = "0";
   }
 
   //deal with flag.
