@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <iostream>
+#include <sstream>
 #include "decimal.h"
 
 namespace dingodb {
@@ -382,9 +383,9 @@ Decimal Decimal::operator-() const {
     result.append(str, curPos);
   }
   else {
-    result.append(str, curPos, exp);
-    result.push_back('.');
-    result.append(str, curPos + exp);
+    std::ostringstream oss;
+    oss << 0 - v;
+    result = oss.str();
   }
 
   return std::move(Decimal(result));
