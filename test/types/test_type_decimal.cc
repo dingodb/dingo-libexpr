@@ -361,6 +361,10 @@ TEST(TestTypeDecimal, DecimalTest) {
   ASSERT_FALSE(Decimal(std::string("123.123")) > Decimal(std::string("123.124")));
 
   //Test -dec.
+  //This case will append '.00' in serial stage.
+  ASSERT_EQ((-Decimal(std::string("10.00"))).toString(), std::string("-10"));
+
+  //Test -dec.
   ASSERT_EQ((-Decimal(std::string("123.123"))).toString(), std::string("-123.123"));
 
   //Test dec.
