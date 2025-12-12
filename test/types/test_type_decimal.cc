@@ -385,6 +385,10 @@ TEST(TestTypeDecimal, DecimalTest) {
   //Test -dec 0.
   ASSERT_EQ((-Decimal(std::string("0"))).toLong(), 0);
 
+  //Test decimal to double
+  DecimalP dp = DecimalP((double)32.91);
+  ASSERT_EQ(dp.GetPtr()->toString(), std::string("32.9099999999999965894"));
+
   //DecimalP p = DecimalP((float)12.34);
   ASSERT_EQ(DecimalP((long)12).GetPtr()->toString(10,4), std::string("12.0000"));
   ASSERT_EQ(DecimalP((float)12.34).GetPtr()->toString(10,4), std::string("12.3400"));
