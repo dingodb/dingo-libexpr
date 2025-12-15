@@ -30,7 +30,20 @@ namespace types {
 
 Decimal::Decimal(const std::string & var) {
   try {
-    v = mpf_class(var, MAX_PRECISION, BASE);
+    int i = 0;
+    for (; i < var.length(); i++) {
+      if (var[i] != '.' && var[i] != 'e' && var[i] != 'E'
+        && var[i] != '-' && var[i] != '+'
+        && (var[i] < 0x30 || var[i] > 0x39)) {
+        break;
+        }
+    }
+
+    if (i == 0) {
+      v = mpf_class("0", MAX_PRECISION, BASE);
+    } else {
+      v = mpf_class(var.substr(0, i), MAX_PRECISION, BASE);
+    }
     PRINT_DECIMAL;
   } catch (const std::invalid_argument& e) {
     mp_exp_t exp;

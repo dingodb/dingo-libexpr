@@ -239,6 +239,18 @@ TEST(TestTypeDecimal, DecimalTest) {
   std::string str = v1.toString();
   ASSERT_EQ(str, "123.123");
 
+  Decimal cast1 = Decimal(std::string("123abc"));
+  std::string casted1 = cast1.toString();
+  ASSERT_EQ(casted1, "123");
+
+  Decimal cast2 = Decimal(std::string("abc123abc"));
+  std::string casted2 = cast2.toString(5,2);
+  ASSERT_EQ(casted2, "0.00");
+
+  Decimal cast3 = Decimal(std::string(""));
+  std::string casted3 = cast3.toString(5,2);
+  ASSERT_EQ(casted3, "0.00");
+
   Decimal v2 = Decimal(std::string("-123456789.12345678987654321"));
   std::string str2 = v2.toString();
   ASSERT_EQ(str2, "-123456789.12345678987654321");
@@ -251,7 +263,9 @@ TEST(TestTypeDecimal, DecimalTest) {
   std::string str4 = v4.toString();
   ASSERT_EQ(str4, "0");
 
-  EXPECT_ANY_THROW(Decimal(std::string("")));
+  Decimal v41 = Decimal(std::string(""));
+  std::string str41 = v41.toString();
+  ASSERT_EQ(str41, "0");
 
   Decimal a1 = Decimal(std::string("123.456"));
   std::string aStr1 = a1.toString();
