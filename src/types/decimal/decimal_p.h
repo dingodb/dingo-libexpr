@@ -88,7 +88,7 @@ class DecimalP {
   }
 
   DecimalP operator-() const {
-    return -(*m_ptr);
+    return Decimal("0") - (*m_ptr);
   }
 
   bool operator==(const DecimalP &v) const {

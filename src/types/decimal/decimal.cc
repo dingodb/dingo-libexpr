@@ -31,12 +31,20 @@ namespace types {
 Decimal::Decimal(const std::string & var) {
   try {
     int i = 0;
+    bool followingE = false;
+
     for (; i < var.length(); i++) {
-      if (var[i] != '.' && var[i] != 'e' && var[i] != 'E'
+      if (var[i] == 'e' || var[i] == 'E') {
+        followingE = true;
+      }
+      if ((var[i] == '-' || var[i] == '+') && i != 0 && !followingE) {
+        followingE = false;
+        break;
+      } else if (var[i] != '.' && var[i] != 'e' && var[i] != 'E'
         && var[i] != '-' && var[i] != '+'
         && (var[i] < 0x30 || var[i] > 0x39)) {
         break;
-        }
+      }
     }
 
     if (i == 0) {
