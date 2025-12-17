@@ -188,14 +188,12 @@ DecimalP Cast(bool v) {
 
 template <>
 DecimalP Cast(float v) {
-  String const f2s = CastFloat(v);
-  return DecimalP(*f2s.GetPtr());
+  return DecimalP(v);
 }
 
 template <>
 DecimalP Cast(double v) {
-  String const d2s = CastDouble(v);
-  return DecimalP(*d2s.GetPtr());
+  return DecimalP(v);
 }
 
 template <>

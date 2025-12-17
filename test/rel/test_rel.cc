@@ -203,20 +203,32 @@ INSTANTIATE_TEST_SUITE_P(
                 new Tuple{nullptr},
             }
         ),
+        /* create table t1(id int, a double, primary key(id);
+         * insert into t1 values(1, 5.8);
+         * select * from t1 where a >= 5.8 and a <= 5.8.
+         * The expected result is null.
+         * It is compatible with mysql and dingodb scenario when making decimal pushdown disable.
+         */
         std::make_tuple(
           "713501F0651603352E3892063501F0651603352E3894065200",
           MakeDataForDoubleToDecimal(),
           Data{
                 //The origin string is longer than range.
-                new Tuple{1, 5.8},
+                nullptr,
             }
         ),
+        /* create table t1(id int, a double, primary key(id);
+         * insert into t1 values(1, 5.8);
+         * select * from t1 where a >= 5.8 and a <= 5.8.
+         * The expected result is null.
+         * It is compatible with mysql and dingodb scenario when making decimal pushdown disable.
+         */
         std::make_tuple(
             "713401F0641603352E3892063401F0641603352E3894065200",
             MakeDataForFloatToDecimal(),
             Data{
               //The origin string is longer than range.
-              new Tuple{1, (float)5.8},
+              nullptr,
             }
         ),
         // PROJECT(input, instr($[1]))
