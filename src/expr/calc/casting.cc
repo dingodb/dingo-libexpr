@@ -95,7 +95,7 @@ double Cast(String v) {
 
 template <>
 double Cast(DecimalP v) {
-    return v.toDouble();
+    return Cast<double>(String(v->toString()));
 }
 
 template <>

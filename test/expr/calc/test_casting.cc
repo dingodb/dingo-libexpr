@@ -45,6 +45,7 @@ TEST(TestStringTonumber, Cast) {
   ASSERT_EQ((calc::Cast<int64_t>(String("bb"))), 0);
   ASSERT_EQ((calc::Cast<float>(String("ccc"))), 0);
   ASSERT_EQ((calc::Cast<double>(String("ddd"))), 0.0);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("123.45")))), 123.45);
 }
 
 TEST(TestToInt32, Cast) {
@@ -68,9 +69,9 @@ TEST(TestOtherToDecimalP, Cast) {
 
   //float and double should not be compared by operator =.
   ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("123456.123456789")))), 123456.125);
-  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("123456.123456789")))), 123456.12345678899);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("123456.123456789")))), 123456.12345678901);
   ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("-123456.123456789")))), -123456.125);
-  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("-123456.123456789")))), -123456.12345678899);
+  ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("-123456.123456789")))), -123456.12345678901);
   ASSERT_EQ((calc::Cast<float>(DecimalP(std::string("0")))), 0);
   ASSERT_EQ((calc::Cast<double>(DecimalP(std::string("0")))), 0);
 
