@@ -219,7 +219,14 @@ class Decimal {
    * @return
    */
     bool operator==(const Decimal &dec) const {
-      return v == dec.getMpf();
+      const mpf_class& mpf1 = mpf_class(toString());
+      const mpf_class& mpf2 = mpf_class(dec.toString());
+
+      int ret = cmp(mpf1, mpf2);
+      if(ret == 0) {
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -228,7 +235,7 @@ class Decimal {
      * @return
      */
     bool operator!=(const Decimal &dec) const {
-        return v != dec.getMpf();
+        return !(*this == dec);
     }
 
     /**
@@ -237,7 +244,14 @@ class Decimal {
      * @return
      */
     bool operator<(const Decimal &dec) const {
-        return v < dec.getMpf();
+      const mpf_class& mpf1 = mpf_class(toString());
+      const mpf_class& mpf2 = mpf_class(dec.toString());
+
+      int ret = cmp(mpf1, mpf2);
+      if(ret < 0) {
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -246,7 +260,14 @@ class Decimal {
      * @return
      */
     bool operator<=(const Decimal &dec) const {
-        return v <= dec.getMpf();
+      const mpf_class& mpf1 = mpf_class(toString());
+      const mpf_class& mpf2 = mpf_class(dec.toString());
+
+      int ret = cmp(mpf1, mpf2);
+      if(ret <= 0) {
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -255,7 +276,14 @@ class Decimal {
      * @return
      */
     bool operator>(const Decimal &dec) const {
-        return v > dec.getMpf();;
+      const mpf_class& mpf1 = mpf_class(toString());
+      const mpf_class& mpf2 = mpf_class(dec.toString());
+
+      int ret = cmp(mpf1, mpf2);
+      if(ret > 0) {
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -264,7 +292,14 @@ class Decimal {
      * @return
      */
     bool operator>=(const Decimal &dec) const {
-        return v >= dec.getMpf();
+      const mpf_class& mpf1 = mpf_class(toString());
+      const mpf_class& mpf2 = mpf_class(dec.toString());
+
+      int ret = cmp(mpf1, mpf2);
+      if(ret >= 0) {
+        return true;
+      }
+      return false;
     }
 
     /**
