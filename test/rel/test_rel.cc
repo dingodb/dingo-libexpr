@@ -64,6 +64,15 @@ static Data MakeDataForFloatToDecimal() {
 };
 }
 
+static Data MakeDataForCountDecimal() {
+  return Data{
+    new Tuple{1, "12.34"},
+    new Tuple{2, "22.34"},
+    new Tuple{3, "1.00"},
+    new Tuple{4, nullptr},
+};
+}
+
 static Data MakeDataForInstr() {
   return Data{
     new Tuple{"abcdef"},
@@ -301,6 +310,14 @@ INSTANTIATE_TEST_SUITE_P(
             Data{
                 new Tuple{8LL},
             }
+        ),
+        std::make_tuple(
+          "7236000074011600",
+          MakeDataForCountDecimal(),
+          1,
+          Data{
+            new Tuple{4LL},
+          }
         )
     )
 );
