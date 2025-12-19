@@ -23,6 +23,7 @@
 #include "op/project_op.h"
 #include "op/tandem_op.h"
 #include "op/ungrouped_agg_op.h"
+#include "decimal_p.h"
 
 namespace dingodb::rel {
 
@@ -152,6 +153,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
   case rel::AGG_COUNT | TYPE_STRING:
     p = DecodeAgg<rel::op::CountAgg<expr::String>>(value, p);
     break;
+  case rel::AGG_COUNT | TYPE_DECIMAL:
+    p = DecodeAgg<rel::op::CountAgg<dingodb::types::DecimalP>>(value, p);
+    break;
   case rel::AGG_COUNT | TYPE_DATE:
     p = DecodeAgg<rel::op::CountAgg<expr::Date>>(value, p);
     break;
@@ -169,6 +173,9 @@ const Byte *DecodeValue<const rel::op::Agg *>(const rel::op::Agg *&value, const 
     break;
   case rel::AGG_SUM | TYPE_DOUBLE:
     p = DecodeAgg<rel::op::SumAgg<double>>(value, p);
+    break;
+  case rel::AGG_SUM | TYPE_DECIMAL:
+    p = DecodeAgg<rel::op::SumAgg<dingodb::types::DecimalP>>(value, p);
     break;
   case rel::AGG_MAX | TYPE_INT32:
     p = DecodeAgg<rel::op::MaxAgg<int32_t>>(value, p);
