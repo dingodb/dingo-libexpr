@@ -15,7 +15,9 @@
 #ifndef DINGO_LIBEXPR_DECIMAL_P_H
 #define DINGO_LIBEXPR_DECIMAL_P_H
 
+#include <cmath>
 #include <memory>
+
 #include "decimal.h"
 
 namespace dingodb {
@@ -56,11 +58,15 @@ class DecimalP {
   }
 
   int32_t toInt() const {
-    return m_ptr->toInt();
+    double ret = m_ptr->toDouble();
+    int32_t const r = std::llround(ret);
+    return r;
   }
 
   int64_t toLong() const {
-    return m_ptr->toLong();
+    double ret = m_ptr->toDouble();
+    int32_t const r = std::llround(ret);
+    return r;
   }
 
   double toDouble() const {
