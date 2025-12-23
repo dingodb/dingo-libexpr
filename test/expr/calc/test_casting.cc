@@ -30,10 +30,19 @@ using namespace dingodb::types;
 
 TEST(TestToString, Cast) {
   ASSERT_EQ(*((calc::Cast<String>(1.0f))), "1.0");
-  ASSERT_EQ(*((calc::Cast<String>(2.0))), "2.0");
   ASSERT_EQ(*((calc::Cast<String>(2.30f))), "2.299999952316284");
+
+  ASSERT_EQ(*((calc::Cast<String>(2.0))), "2");
   ASSERT_EQ(*((calc::Cast<String>(2.30))), "2.3");
   ASSERT_EQ(*((calc::Cast<String>(2.299999952316284))), "2.299999952316284");
+  ASSERT_EQ(*((calc::Cast<String>(1453.9999))), "1453.9999");
+  ASSERT_EQ(*((calc::Cast<String>(123.456))), "123.456");
+  ASSERT_EQ(*((calc::Cast<String>(-2.299999952316284))), "-2.299999952316284");
+  ASSERT_EQ(*((calc::Cast<String>(0))), "0");
+  ASSERT_EQ(*((calc::Cast<String>(0.0))), "0");
+  ASSERT_EQ(*((calc::Cast<String>(-0.0))), "0");
+  ASSERT_EQ(*((calc::Cast<String>(+0.0))), "0");
+  ASSERT_EQ(*((calc::Cast<String>(-123.456))), "-123.456");
 }
 
 TEST(TestStringTonumber, Cast) {
