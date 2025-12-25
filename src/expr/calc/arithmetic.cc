@@ -15,9 +15,14 @@
 #include <cstdint>
 
 #include "arithmetic.h"
+#include "../exception.h"
+
+typedef __int128 int128;
+#define INT64CONST(x)  (x##L)
+#define EXPR_INT64_MIN	(-INT64CONST(0x7FFFFFFFFFFFFFFF) - 1)
+#define EXPR_INT64_MAX	INT64CONST(0x7FFFFFFFFFFFFFFF)
 
 namespace dingodb::expr::calc {
-
 template <>
 Operand Div<int>(int v0, int v1) {
   if (v1 != 0) {
@@ -42,6 +47,39 @@ Operand Div<::dingodb::types::DecimalP>(
     return v0 / v1;
   }
   return nullptr;
+}
+
+template <>
+long Add<long>(long v0, long v1) {
+  int128 result = (int128)v0 + (int128)v1;
+
+  if (result > EXPR_INT64_MAX || result < EXPR_INT64_MIN) {
+    throw ExceedsLimits<TYPE_INT64>();
+  }
+
+  return (long)result;
+}
+
+template <>
+long Sub<long>(long v0, long v1) {
+  int128 result = (int128)v0 - (int128)v1;
+
+  if (result > EXPR_INT64_MAX || result < EXPR_INT64_MIN) {
+    throw ExceedsLimits<TYPE_INT64>();
+  }
+
+  return (long)result;
+}
+
+template <>
+long Mul<long>(long v0, long v1) {
+  int128 result = (int128)v0 * (int128)v1;
+
+  if (result > EXPR_INT64_MAX || result < EXPR_INT64_MIN) {
+    throw ExceedsLimits<TYPE_INT64>();
+  }
+
+  return (long)result;
 }
 
 }  // namespace dingodb::expr::calc

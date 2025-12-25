@@ -34,15 +34,24 @@ T Add(T v0, T v1) {
   return v0 + v1;
 }
 
+template <>
+long Add(long v0, long v1);
+
 template <typename T>
 T Sub(T v0, T v1) {
   return v0 - v1;
 }
 
+template <>
+long Sub(long v0, long v1);
+
 template <typename T>
 T Mul(T v0, T v1) {
   return v0 * v1;
 }
+
+template <>
+long Mul(long v0, long v1);
 
 template <typename T>
 Operand Div(T v0, T v1) {
